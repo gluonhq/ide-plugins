@@ -40,7 +40,7 @@ import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.api.tasks.testing.TestOutputEvent;
 import org.gradle.internal.operations.BuildOperationExecutor;
-import org.gradle.internal.time.TrueTimeProvider;
+import org.gradle.internal.time.Time;
 import org.gradle.process.ExecResult;
 import org.gradle.process.internal.DefaultJavaExecAction;
 import org.gradle.process.internal.JavaExecAction;
@@ -247,7 +247,7 @@ public final class EclipseTestExecuter implements TestExecuter {
             detector = new EclipsePluginTestClassScanner(testClassFiles, processor);
         }
 
-        new TestMainAction(detector, processor, new NoOpTestResultProcessor(), new TrueTimeProvider(), testTaskOperationId, rootTestSuiteId, String.format("Gradle Eclipse Test Run %s", testTask.getIdentityPath())).run();
+        new TestMainAction(detector, processor, new NoOpTestResultProcessor(), Time.clock(), testTaskOperationId, rootTestSuiteId, String.format("Gradle Eclipse Test Run %s", testTask.getIdentityPath())).run();
         LOGGER.info("collected test class names: {}", processor.classNames);
         return processor.classNames;
     }
