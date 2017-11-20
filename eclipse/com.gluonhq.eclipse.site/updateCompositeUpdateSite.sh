@@ -1,15 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
 # count the child directories and create a 'child' node for each one
 children=""
 numOfChildren=0
-for directory in $(LIST_COMMAND) ; do
+for directory in ${LIST_COMMAND} ; do
     children="$children<child location='$directory'/> "
     ((numOfChildren++))
 done
 
 # define the repository name and the timestamp
-repository='Buildship'
+repository='Gluon Eclipse Update Site'
 timestamp=$(date +%s)
 
 # create compositeArtifacts.xml
