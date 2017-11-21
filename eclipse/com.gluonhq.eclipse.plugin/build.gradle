@@ -3,6 +3,7 @@ import eclipsebuild.BundlePlugin
 apply plugin: BundlePlugin
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url 'http://nexus.gluonhq.com/nexus/content/repositories/releases/'
@@ -12,5 +13,5 @@ repositories {
 dependencies {
     compile withEclipseBundle("org.eclipse.swt.${ECLIPSE_WS}.${ECLIPSE_OS}.${ECLIPSE_ARCH}")
     compile withEclipseBundle("org.eclipse.buildship.core")
-    bundled 'com.gluonhq:ide-plugin-templates:2.7.1'
+    bundled 'com.gluonhq:ide-plugin-templates:2.8.0-SNAPSHOT'
 }
