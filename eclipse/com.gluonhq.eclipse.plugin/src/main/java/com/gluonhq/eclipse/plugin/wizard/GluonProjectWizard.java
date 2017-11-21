@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017, Gluon Software
  * All rights reserved.
  * 
