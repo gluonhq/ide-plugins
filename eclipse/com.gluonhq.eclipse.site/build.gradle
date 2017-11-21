@@ -1,3 +1,5 @@
+import eclipsebuild.BuildshipConfig
+
 apply plugin: eclipsebuild.UpdateSitePlugin
 apply plugin: 'org.hidetake.ssh'
 
@@ -11,11 +13,7 @@ buildscript {
 updateSite {
     extraResources = files('license.html', 'notice.html', 'p2.index')
     signing { File unsignedFolder, File signedFolder ->
-        if (gradle.taskGraph.hasTask(uploadUpdateSite)) {
-            signByEclipseService(signedFolder, unsignedFolder)
-        } else {
-            signLocally(unsignedFolder, signedFolder)
-        }
+        signLocally(unsignedFolder, signedFolder)
     }
     mutateArtifactsXml { Node artifactsXml ->
         addExtraPropertiesToArtifactsXml(artifactsXml)
@@ -134,40 +132,6 @@ def releaseStream() {
     "${matcher[0][1]}.x"
 }
 
-private void signByEclipseService(signedFolder, unsignedFolder) {
-  ssh.run {
-    session(remotes.eclipseDotOrg) {
-      // the remote folder where the jars are signed
-      def remoteFolder = "${ECLIPSE_ORG_TEMP_PATH}/${signedFolder.name}"
-
-      // clean up the folder used for signing if the previous build failed
-      execute """rm -rf $remoteFolder
-                    mkdir -p $remoteFolder"""
-
-      // transfer the unsigned files to the remote host
-      put from: file(unsignedFolder).listFiles() as List, into: remoteFolder
-
-      // perform the signing
-      execute """ cd $remoteFolder
-                    # iterate all jars in the subfolders
-                    for jar in \$(find `pwd` -name '*.jar');
-                    do
-                        # save the signed jar into a temporary file copy and write it's content to the unsigned jar
-                        curl -o signed.jar -F filedata=@\$jar http://build.eclipse.org:31338/sign
-                        cp signed.jar \$jar
-                        rm signed.jar
-                    done
-                    """
-
-      // retrieve the signed content from the remote host into the build/signed-bundles folder
-      get from: remoteFolder, into: signedFolder.parentFile
-
-      // clean up the remote folder
-      execute "rm -rf $remoteFolder"
-    }
-  }
-}
-
 private void signLocally(File unsignedFolder, File signedFolder) {
   def unsignedPluginsDir = new File(unsignedFolder, "plugins")
   def unsignedFeaturesDir = new File(unsignedFolder, "features")
@@ -178,18 +142,38 @@ private void signLocally(File unsignedFolder, File signedFolder) {
   signedFeaturesDir.mkdirs()
 
   File targetDir = signedPluginsDir
-  def signBundle = {
-    project.logger.info("Sign '${it.absolutePath}'")
-    project.ant.signjar(
-        verbose: 'true',
-        destDir: targetDir,
-        alias: project.hasProperty('eclipse.plugin.signing.alias') ? project.getProperty('eclipse.plugin.signing.alias') : '',
-        jar: it,
-        keystore: project.findProject(':').file(project.hasProperty('eclipse.plugin.signing.keystore') ? project.getProperty('eclipse.plugin.signing.keystore') : ''),
-        storepass: project.hasProperty('eclipse.plugin.signing.storepass') ? project.getProperty('eclipse.plugin.signing.storepass') : '',
-        keypass: project.hasProperty('eclipse.plugin.signing.keypass') ? project.getProperty('eclipse.plugin.signing.keypass') : '',
-        tsaurl: project.hasProperty('eclipse.plugin.signing.tsaurl') ? project.getProperty('eclipse.plugin.signing.tsaurl') : '',
-        preservelastmodified: 'true')
+
+  def signBundle
+  def config = BuildshipConfig.on(project)
+  if (config.isDevelopment()) {
+    signBundle = {
+      project.logger.info("Sign '${it.absolutePath}'")
+      project.ant.signjar(
+          verbose: 'true',
+          destDir: targetDir,
+          alias: 'EclipsePlugins',
+          jar: it,
+          keystore: project.findProject(':').file('gradle/config/signing/DevKeystore.jks'),
+          storepass: 'tooling',
+          keypass: 'tooling',
+          sigalg: 'SHA1withDSA',
+          digestalg: 'SHA1',
+          preservelastmodified: 'true')
+    }
+  } else {
+    signBundle = {
+      project.logger.info("Sign '${it.absolutePath}'")
+      project.ant.signjar(
+          verbose: 'true',
+          destDir: targetDir,
+          alias: project.getProperty('eclipse.plugin.signing.alias'),
+          jar: it,
+          keystore: project.findProject(':').file(project.getProperty('eclipse.plugin.signing.keystore')),
+          storepass: project.getProperty('eclipse.plugin.signing.storepass'),
+          keypass: project.getProperty('eclipse.plugin.signing.keypass'),
+          tsaurl: project.getProperty('eclipse.plugin.signing.tsaurl'),
+          preservelastmodified: 'true')
+    }
   }
 
   unsignedPluginsDir.listFiles().each signBundle
