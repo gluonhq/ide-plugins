@@ -23,8 +23,9 @@ class BuildshipConfig {
     static final String RELEASE = 'release'
     static final String MILESTONE = 'milestone'
     static final String SNAPSHOT = 'snapshot'
+    static final String DEVELOPMENT = 'development'
 
-    static final def RELEASE_TYPES = [RELEASE, MILESTONE, SNAPSHOT]
+    static final def RELEASE_TYPES = [RELEASE, MILESTONE, SNAPSHOT, DEVELOPMENT]
 
     final def project
 
@@ -45,7 +46,11 @@ class BuildshipConfig {
     }
 
     def isSnapshot() {
-        project.hasProperty(RELEASE_TYPE_PROJECT_PROPERTY) ? releaseType == SNAPSHOT : true // by default, use as snapshot release
+        project.hasProperty(RELEASE_TYPE_PROJECT_PROPERTY) ? releaseType == SNAPSHOT : false
+    }
+
+    def isDevelopment() {
+        project.hasProperty(RELEASE_TYPE_PROJECT_PROPERTY) ? releaseType == DEVELOPMENT : true // by default, use as development release
     }
 
     private def getReleaseType() {

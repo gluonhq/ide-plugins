@@ -170,8 +170,10 @@ String getVersion(def baseVersion) {
         suffix = '-m'
     } else if (config.isSnapshot()) {
         suffix = '-s'
+    } else if (config.isDevelopment()) {
+        suffix = '-d'
     } else {
-        throw new IllegalStateException("BuildshipConfig must either be a release, milestone, or snapshot.")
+        throw new IllegalStateException("BuildshipConfig must either be a release, milestone, snapshot or development.")
     }
 
     // use full timestamp on CI vs. date-only for local builds
