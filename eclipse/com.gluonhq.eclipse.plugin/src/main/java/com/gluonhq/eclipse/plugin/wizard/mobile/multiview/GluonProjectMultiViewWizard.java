@@ -68,7 +68,7 @@ public class GluonProjectMultiViewWizard extends GluonProjectWizard {
 		pageTwo = new ConfigureSampleClassPage(getProjectData());
 		addPage(pageTwo);
 		
-		pageThree = new ConfigureViewsProjectPage(getProjectData(), false);
+		pageThree = new ConfigureViewsProjectPage(getProjectData(), false, false);
 		addPage(pageThree);
 	}
 

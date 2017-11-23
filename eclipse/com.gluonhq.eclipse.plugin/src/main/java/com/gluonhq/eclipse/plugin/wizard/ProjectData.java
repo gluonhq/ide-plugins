@@ -111,7 +111,8 @@ public class ProjectData {
 		if (this.projectType.equals(GluonProject.DESKTOP_MULTIVIEW) || 
 			this.projectType.equals(GluonProject.DESKTOP_MULTIVIEWFXML) || 
 			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW) || 
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML)) {
+			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) ||
+			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW_GAF)) {
 			parameters.put(ProjectConstants.PARAM_PRIMARY_VIEW, primaryViewName);
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_VIEW, secondaryViewName);
 	        parameters.put(ProjectConstants.PARAM_PRIMARY_CSS, primaryViewCSS);

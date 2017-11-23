@@ -81,6 +81,17 @@
                 project="true">
             <description>Create a Multi View Project with FXML</description>
         </wizard>
+        <wizard
+                id="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxmlgafproject"
+                class="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxmlgaf.GluonProjectMultiViewFXMLGAfWizard"
+                name="Gluon Mobile - Glisten-Afterburner Project"
+                category="com.gluonhq.plugin"
+                icon="icons/GluonMobile_16x16.png"
+                canFinishEarly="false"
+                hasPages="true"
+                project="true">
+            <description>Create a Multiple View Project with Glisten Afterburner</description>
+        </wizard>
     </extension>
     <extension point="org.eclipse.ui.preferencePages">
         <page

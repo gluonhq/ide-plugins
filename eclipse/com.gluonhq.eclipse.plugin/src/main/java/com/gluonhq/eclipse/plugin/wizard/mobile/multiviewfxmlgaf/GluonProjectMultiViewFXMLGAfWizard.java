@@ -27,9 +27,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.gluonhq.eclipse.plugin.wizard.desktop.multiviewfxml;
+package com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxmlgaf;
 
-import com.gluonhq.eclipse.plugin.wizard.*;
+import com.gluonhq.eclipse.plugin.wizard.ConfigureGluonProjectPage;
+import com.gluonhq.eclipse.plugin.wizard.ConfigureOptInProjectPage;
+import com.gluonhq.eclipse.plugin.wizard.ConfigureSampleClassPage;
+import com.gluonhq.eclipse.plugin.wizard.ConfigureViewsProjectPage;
+import com.gluonhq.eclipse.plugin.wizard.GluonProjectWizard;
+import com.gluonhq.eclipse.plugin.wizard.ProjectData;
 import com.gluonhq.plugin.templates.GluonProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
@@ -37,20 +42,20 @@ import org.eclipse.ui.IWorkbench;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
+public class GluonProjectMultiViewFXMLGAfWizard extends GluonProjectWizard {
 
 	private final Map<String, Object> parameters = new HashMap<>();
 	private ConfigureOptInProjectPage pageZero;
 	private ConfigureGluonProjectPage pageOne;
-	private ConfigureDesktopClassPage pageTwo;
+	private ConfigureSampleClassPage pageTwo;
 	private ConfigureViewsProjectPage pageThree;
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
-	public GluonProjectMultiViewFXMLWizard() {
-		super(GluonProject.DESKTOP_MULTIVIEWFXML);
+	public GluonProjectMultiViewFXMLGAfWizard() {
+		super(GluonProject.MOBILE_MULTIVIEW_GAF);
 	}
 
 	@Override
@@ -65,10 +70,10 @@ public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
 		pageOne = new ConfigureGluonProjectPage(getProjectData());
 		addPage(pageOne);
 		
-		pageTwo = new ConfigureDesktopClassPage(getProjectData());
+		pageTwo = new ConfigureSampleClassPage(getProjectData());
 		addPage(pageTwo);
 		
-		pageThree = new ConfigureViewsProjectPage(getProjectData(), false, false);
+		pageThree = new ConfigureViewsProjectPage(getProjectData(), true, true);
 		addPage(pageThree);
 	}
 

@@ -68,7 +68,7 @@ public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
 		pageTwo = new ConfigureSampleClassPage(getProjectData());
 		addPage(pageTwo);
 		
-		pageThree = new ConfigureViewsProjectPage(getProjectData(), true);
+		pageThree = new ConfigureViewsProjectPage(getProjectData(), true, false);
 		addPage(pageThree);
 	}
 

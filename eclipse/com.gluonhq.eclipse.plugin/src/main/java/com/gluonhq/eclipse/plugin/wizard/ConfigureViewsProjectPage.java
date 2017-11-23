@@ -60,12 +60,14 @@ public class ConfigureViewsProjectPage extends WizardPage {
 	
 	private final ProjectData projectData;
 	private final boolean useFXML;
+	private final boolean useGAf;
 
-	public ConfigureViewsProjectPage(ProjectData projectData, boolean useFXML) {
+	public ConfigureViewsProjectPage(ProjectData projectData, boolean useFXML, boolean useGAf) {
 		super("GluonApplicationSettings", "Name of Views", WIZBAN_IMAGE);
 
 		this.projectData = projectData;
 		this.useFXML = useFXML;
+		this.useGAf = useGAf;
 	}
 
 	private void validate() {
@@ -74,13 +76,13 @@ public class ConfigureViewsProjectPage extends WizardPage {
         	setPageComplete(false);
 			return;
 		}
-		
+
 		if (!TemplateUtils.isValidNameView(projectData.secondaryViewName.trim())) {
 			setErrorMessage(projectData.secondaryViewName + " is not a valid view name for the Secondary View Name.");
 			setPageComplete(false);
 			return;
 		}
-		
+
 		setErrorMessage(null);
 		setPageComplete(true);
 	}
@@ -93,14 +95,14 @@ public class ConfigureViewsProjectPage extends WizardPage {
 		{
 			Label l = new Label( container, SWT.NONE );
 			l.setText( "Primary View Name:" );
-			
+
 			primaryViewNameText = new Text(container,SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
 			primaryViewNameText.setLayoutData(layoutData);
 			primaryViewNameText.setText(projectData.primaryViewName);
 			primaryViewNameText.addModifyListener(new ModifyListener() {
-				
+
 				@Override
 				public void modifyText(ModifyEvent e) {
 					if (!TemplateUtils.isValidNameView(primaryViewNameText.getText().trim())) {
@@ -120,14 +122,14 @@ public class ConfigureViewsProjectPage extends WizardPage {
 		{
 			Label l = new Label( container, SWT.NONE );
 			l.setText( "Secondary View Name:" );
-			
+
 			secondaryViewNameText = new Text(container,SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
 			secondaryViewNameText.setLayoutData(layoutData);
 			secondaryViewNameText.setText(projectData.secondaryViewName);
 			secondaryViewNameText.addModifyListener(new ModifyListener() {
-				
+
 				@Override
 				public void modifyText(ModifyEvent e) {
 					if (!TemplateUtils.isValidNameView(projectData.secondaryViewName.trim())) {
@@ -140,7 +142,7 @@ public class ConfigureViewsProjectPage extends WizardPage {
 						projectData.secondaryViewCSS = secondary.toLowerCase(Locale.ROOT);
 						validate();
 					}
-			        
+
 				}
 			});
 		}
@@ -159,7 +161,7 @@ public class ConfigureViewsProjectPage extends WizardPage {
 			projectCheckBox.setLayoutData(layoutData);
 			projectCheckBox.setSelection(true);
 			projectCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -176,7 +178,7 @@ public class ConfigureViewsProjectPage extends WizardPage {
 			primaryViewCheckBox.setLayoutData(layoutData);
 			primaryViewCheckBox.setSelection(true);
 			primaryViewCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -187,13 +189,14 @@ public class ConfigureViewsProjectPage extends WizardPage {
 					validate();
 				}
 			});
+			primaryViewCheckBox.setEnabled(!useGAf);
 
 			secondaryViewCheckBox = new Button(container, SWT.CHECK);
 			secondaryViewCheckBox.setText(" Secondary View ");
 			secondaryViewCheckBox.setLayoutData(layoutData);
 			secondaryViewCheckBox.setSelection(true);
 			secondaryViewCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -204,9 +207,10 @@ public class ConfigureViewsProjectPage extends WizardPage {
 					validate();
 				}
 			});
-			
+			secondaryViewCheckBox.setEnabled(!useGAf);
+
 		}
-		if (useFXML) {
+		if (useFXML && !useGAf) {
 			{
 				Label l = new Label( container, SWT.NONE );
 				l.setText( "" );
