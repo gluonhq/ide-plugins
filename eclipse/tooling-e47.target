@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Buildship Eclipse Oxygen Target Platform" sequenceNumber="1">
+<?pde version="3.8"?><target name="Buildship Eclipse Oxygen Target Platform" sequenceNumber="3">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="4.7.0.I20170612-0950"/>
@@ -31,9 +31,16 @@
 <unit id="org.eclipse.swtbot.ide.feature.group" version="2.2.1.201402241301"/>
 <repository location="http://builds.gradle.org:8000/eclipse/update-site/mirror/swtbot/release/"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.fx.runtime.min.feature.feature.group" version="3.0.0.201705220748"/>
+<repository location="http://download.eclipse.org/efxclipse/runtime-shared-released/3.0.0/site/"/>
+</location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 <launcherArgs>
-<vmArgs>-XX:MaxPermSize=128M</vmArgs>
+<vmArgs>-XX:MaxPermSize=128M
+-Defxclipse.osgi.hook.debug=true
+-Dorg.osgi.framework.bundle.parent=ext
+-Dosgi.framework.extensions=org.eclipse.fx.osgi</vmArgs>
 </launcherArgs>
 </target>

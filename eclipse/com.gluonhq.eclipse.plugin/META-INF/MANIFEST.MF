@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 1
-Bundle-Name: Eclipse Plug-in for Gluon
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.gluonhq.eclipse.plugin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Gluon
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.gluonhq.eclipse.plugin.UiPlugin
 Require-Bundle: org.eclipse.buildship.core,
  org.eclipse.core.runtime,
