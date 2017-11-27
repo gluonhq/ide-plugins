@@ -64,7 +64,9 @@ public class ValidationSourceProvider extends AbstractSourceProvider {
                 }
                 IStructuredSelection ss = (IStructuredSelection) sel;
                 Object o = ss.getFirstElement();
-                if (o == null) return;
+                if (o == null) {
+                		return;
+                }
                
                 IContainer container = null;
                 if (!(o instanceof IContainer)) {
@@ -87,8 +89,8 @@ public class ValidationSourceProvider extends AbstractSourceProvider {
         //Register listener
         Display.getDefault().asyncExec(() -> {
             ISelectionService ss = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-            ss.addPostSelectionListener(IPageLayout.ID_PROJECT_EXPLORER, listener); 
-            ss.addPostSelectionListener("org.eclipse.jdt.ui.PackageExplorer", listener); 
+            ss.addSelectionListener(IPageLayout.ID_PROJECT_EXPLORER, listener); 
+            ss.addSelectionListener("org.eclipse.jdt.ui.PackageExplorer", listener); 
         });
     }
 	
@@ -96,8 +98,8 @@ public class ValidationSourceProvider extends AbstractSourceProvider {
 	public void dispose() {
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             ISelectionService ss = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-            ss.removePostSelectionListener(IPageLayout.ID_PROJECT_EXPLORER, listener); 
-            ss.removePostSelectionListener("org.eclipse.jdt.ui.PackageExplorer", listener); 
+            ss.removeSelectionListener(IPageLayout.ID_PROJECT_EXPLORER, listener); 
+            ss.removeSelectionListener("org.eclipse.jdt.ui.PackageExplorer", listener); 
         }
 	}
 
