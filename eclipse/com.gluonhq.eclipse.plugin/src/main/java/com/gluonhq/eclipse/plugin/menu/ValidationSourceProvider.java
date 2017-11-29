@@ -81,8 +81,8 @@ public class ValidationSourceProvider extends AbstractSourceProvider {
                 }
                
                 if (container != null && container.isAccessible()) {
-                	 	ProjectUtils utils = new ProjectUtils(container);
-                	 	setGluonFound(utils.isGluonProject());
+                    ProjectUtils utils = new ProjectUtils(container);
+                    setGluonFound(utils.isGluonProject());
                 }
             }
         };

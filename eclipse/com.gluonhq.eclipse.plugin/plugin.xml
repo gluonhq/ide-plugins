@@ -113,6 +113,11 @@
   	<extension
           point="org.eclipse.ui.commands">
        <command
+             defaultHandler="com.gluonhq.eclipse.plugin.menu.function.AddGluonFunctionHandler"
+             id="com.gluonhq.eclipse.plugin.commands.add_gluon_function"
+             name="Add Gluon Function command">
+       </command>
+       <command
              defaultHandler="com.gluonhq.eclipse.plugin.menu.down.GluonMobileSettingsHandler"
              id="com.gluonhq.eclipse.plugin.commands.mobile_settings"
              name="Gluon Mobile Settings command">
@@ -131,6 +136,15 @@
          	id="com.gluonhq.eclipse.plugin.menu.gluon"
             icon="icons/GluonMobile_16x16.png"
             label="%plugin.menu.root">
+         		<command
+	               commandId="com.gluonhq.eclipse.plugin.commands.add_gluon_function"
+	               label="%plugin.menu.submenu.add_gluon_function"
+	               style="push">
+         		</command>
+         		<separator 
+         			name="com.gluonhq.eclipse.plugin.separator"
+       				visible="true">
+           		</separator>
          		<command
 	               commandId="com.gluonhq.eclipse.plugin.commands.mobile_settings"
 	               label="%plugin.menu.submenu.mobile_settings"

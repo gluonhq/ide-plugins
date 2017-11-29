@@ -39,6 +39,7 @@ import java.util.UUID;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -47,10 +48,15 @@ import javax.swing.SwingUtilities;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 
 import com.gluonhq.eclipse.plugin.menu.cloudlink.JCloudLink;
 import com.gluonhq.plugin.templates.ProjectConstants;
+
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 
 public class ProjectUtils {
 	
@@ -96,12 +102,12 @@ public class ProjectUtils {
     public IResource getCloudLinkFile() {
         if (mobileProject != null && getGradleBuildFile(mobileProject) != null) {
             // find cloudLink config file
-        		IResource path = mobileProject.findMember("src/main/resources/" + CLOUDLINK_CONFIG_FILE);
-        		if (path == null) {
+            IResource path = mobileProject.findMember("src/main/resources/" + CLOUDLINK_CONFIG_FILE);
+            if (path == null) {
                 // file doesn't exist, sets the folder where it can be created
-        			path = mobileProject.findMember("src/main/resources");
+                path = mobileProject.findMember("src/main/resources");
             }
-        		return path;
+            return path;
         }
         return null;
     }
@@ -148,7 +154,7 @@ public class ProjectUtils {
 
         if (gluonMobileProject) {
             mobileProject = project;
-            IContainer parentProject = project.getParent();
+            IContainer parentProject = getParentProject(project);
             if (parentProject != null) {
                 rootProject = parentProject;
             } else {
@@ -156,7 +162,7 @@ public class ProjectUtils {
             }
         } else if (isGluonFunctionProject(project)) {
             gluonFunctionProject = true;
-            IContainer parentProject = project.getParent();
+            IContainer parentProject = getParentProject(project);
             if (parentProject != null) {
                 rootProject = parentProject;
             } else {
@@ -183,6 +189,21 @@ public class ProjectUtils {
 				}
             }
         }
+    }
+    
+    private IContainer getParentProject(IContainer project) {
+        IPath location = project.getRawLocation();
+        if (location != null && location.segmentCount() > 1) {
+            String parentName = location.removeLastSegments(1).lastSegment();
+            if (parentName != null && ! parentName.isEmpty()) {
+                return Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects())
+                                .filter(p -> p.getName().equals(parentName))
+                                .map(IContainer.class::cast)
+                                .findFirst().orElse(null);
+            }
+            return null;
+        }
+        return null;
     }
     
     private void loadProjectPreferences() {
@@ -218,7 +239,7 @@ public class ProjectUtils {
     }
     
     public static IFile getGradleBuildFile(IContainer project) {
-    		IResource resource = project.findMember("build.gradle");
+        IResource resource = project.findMember("build.gradle");
 		if (resource != null && resource.exists()) {
 			return (IFile) resource;
 		}
@@ -226,7 +247,7 @@ public class ProjectUtils {
     }
     
     public static IFile getGradleSettingsFile(IContainer project) {
-    		IResource resource = project.findMember("settings.gradle");
+        IResource resource = project.findMember("settings.gradle");
 		if (resource != null && resource.exists()) {
 			return (IFile) resource;
 		}
@@ -238,7 +259,7 @@ public class ProjectUtils {
             return;
         }
         try {
-			project.refreshLocal(IResource.DEPTH_ZERO, null);
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -247,7 +268,7 @@ public class ProjectUtils {
     public static String getCloudLinkConfig(IResource cloudLinkConfig) {
         if (cloudLinkConfig != null && cloudLinkConfig.getType() == IResource.FILE) {
             try {
-                Path jsonPath = Paths.get(cloudLinkConfig.getLocation().toOSString());
+                Path jsonPath = Paths.get(cloudLinkConfig.getLocationURI());
                 return Files.lines(jsonPath).collect(Collectors.joining("\n"));
             } catch (IOException ex) { }
         }
@@ -258,9 +279,8 @@ public class ProjectUtils {
     private static boolean isGluonMobileProject(IContainer project) {
         IFile iFile = getGradleBuildFile(project);
         if (iFile != null) {
-        		String buildFile = iFile.getLocation().makeAbsolute().toOSString();
         		try {
-                return Files.lines(Paths.get(buildFile))
+                return Files.lines(Paths.get(iFile.getLocationURI()))
                         .anyMatch(line -> line.contains("downConfig"));
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -269,13 +289,12 @@ public class ProjectUtils {
         return false;
     }
     
- // check if build.gradle contains the gfBundle task
+    // check if build.gradle contains the gfBundle task
     private static boolean isGluonFunctionProject(IContainer project) {
         IFile iFile = getGradleBuildFile(project);
         if (iFile != null) {
-	        	String buildFile = iFile.getLocation().makeAbsolute().toOSString();
-	    		try {
-	            return Files.lines(Paths.get(buildFile))
+            try {
+	            return Files.lines(Paths.get(iFile.getLocationURI()))
 	                    .anyMatch(line -> line.contains("task gfBundle"));
 	        } catch (IOException ex) {
 	            ex.printStackTrace();
@@ -284,31 +303,46 @@ public class ProjectUtils {
         return false;
     }
     
-    public boolean cloudLinkSignIn() {
+    private final ReadOnlyBooleanWrapper cloudLinkSignedIn = new ReadOnlyBooleanWrapper();
+    
+    private void setCloudLinkSignedIn() {
         IResource cloudLinkConfig = getCloudLinkFile();
-        if (getCloudLinkUserKey() == null || getCloudLinkConfig(cloudLinkConfig) == null || getCloudLinkIdeKey() == null) {
-            final JCloudLink jCloudLink = new JCloudLink(this, getCloudLinkIdeKey() != null);
-            showDialog(jCloudLink);
-
-            cloudLinkConfig = getCloudLinkFile();
-            return !(getCloudLinkUserKey() == null || getCloudLinkConfig(cloudLinkConfig) == null || getCloudLinkIdeKey() == null);
-        }
-        return true;
+        cloudLinkSignedIn.set(! (getCloudLinkUserKey() == null || getCloudLinkConfig(cloudLinkConfig) == null || getCloudLinkIdeKey() == null));
+    }
+    
+    public final boolean isCloudLinkSignedIn() {
+        setCloudLinkSignedIn();
+        return cloudLinkSignedIn.get();
+    }
+    
+    public final ReadOnlyBooleanProperty cloudLinkSignedInProperty() { return cloudLinkSignedIn.getReadOnlyProperty(); }
+    
+    public void cloudLinkSignIn() {
+        final JCloudLink jCloudLink = new JCloudLink(this, getCloudLinkIdeKey() != null);
+        showDialog(jCloudLink, 600, 372, () -> setCloudLinkSignedIn());
     }
     
     public void showDialog(JFrame frame) {
         showDialog(frame, 600, 372);
     }
 
-    public void showDialog(JFrame frame, int width, int height ) {
-	    	SwingUtilities.invokeLater(() -> {
-	    		final JDialog dialog = new JDialog(frame, Dialog.ModalityType.APPLICATION_MODAL);
+    public void showDialog(JFrame frame, int width, int height) {
+    		showDialog(frame, width, height, null);
+    }
+    
+    private void showDialog(JFrame frame, int width, int height, Runnable runnable) {
+        SwingUtilities.invokeLater(() -> {
+            final JDialog dialog = new JDialog(frame, Dialog.ModalityType.APPLICATION_MODAL);
 	        dialog.setContentPane(frame.getRootPane());
 	        dialog.setMinimumSize(new Dimension(width, height));
 	        dialog.pack();
 	        dialog.setLocationRelativeTo(null);
 	        dialog.setVisible(true);
-	    	});
+	        
+	        if (runnable != null) {
+	        		runnable.run();
+	        }
+        });
     }
 
 }
