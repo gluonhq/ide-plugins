@@ -36,56 +36,45 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 
 import com.gluonhq.plugin.down.PluginsBean;
-import com.gluonhq.plugin.down.PluginsFX;
+import com.gluonhq.plugin.down.PluginsSWT;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
+public class JPlugins {
 
-public class JPlugins extends JFrame {
+    public JPlugins(IFile buildFile) {
+        Path buildPath = Paths.get(buildFile.getLocation().makeAbsolute().toOSString());
+    		
+        List<String> lines = null;
+        try {
+            lines = Files.readAllLines(buildPath);
+        } catch (IOException ex) {
+            MessageDialog.openError(new Shell(), "Error", "Error reading build.gradle: " + ex);
+        }  
 
-    private static final long serialVersionUID = 5870263352595504969L;
-
-	public JPlugins(IFile buildFile) {
-    		Path buildPath = Paths.get(buildFile.getLocation().makeAbsolute().toOSString());
-    		final JFXPanel fxPanel = new JFXPanel();
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            List<String> lines = null;
-            try {
-            		lines = Files.readAllLines(buildPath);
-            } catch (IOException ex) {
-                PluginsFX.showError("Error reading build.gradle: " + ex);
-            }  
-
-            PluginsFX pluginsFX = new PluginsFX();
-            PluginsBean pluginsBean = pluginsFX.loadBuildLines(lines);
-            pluginsBean.addPropertyChangeListener(e -> {
-                if (e.getNewValue() != null) {
-                    try {
-                        final List<String> editedBuild = pluginsBean.savePlugins();
-                        if (editedBuild != null && !editedBuild.isEmpty()) {
-                            Files.write(buildPath, editedBuild, StandardCharsets.UTF_8);
-                        } 
-                        buildFile.refreshLocal(IResource.DEPTH_ZERO, null);
-                    } catch (IOException | CoreException ex) {
-                        PluginsFX.showError("Error writing build.gradle: " + ex);
-                    }
+        if (lines != null) {
+	        
+            PluginsSWT pluginsSWT = new PluginsSWT(null, lines);
+            pluginsSWT.open();
+	        
+            final PluginsBean pluginsBean = pluginsSWT.getPluginsBean();
+            if (pluginsBean.getPlugins() != null) {
+                try {
+                    final List<String> editedBuild = pluginsBean.savePlugins();
+                    if (editedBuild != null && !editedBuild.isEmpty()) {
+                        Files.write(buildPath, editedBuild, StandardCharsets.UTF_8);
+                    } 
+                    buildFile.refreshLocal(IResource.DEPTH_ZERO, null);
+                } catch (IOException | CoreException ex) {
+                    MessageDialog.openError(new Shell(), "Error", "Error writing build.gradle: " + ex);
                 }
-                dispose();
-            });
-            final Scene scene = new Scene(pluginsFX);
-            fxPanel.setScene(scene);
-        });
-        
-        getContentPane().add(fxPanel);
+            }
+        }
     }
 
 }

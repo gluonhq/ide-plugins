@@ -42,8 +42,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.swing.JFrame;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -70,21 +68,15 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 
 import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
 import com.gluonhq.plugin.function.Function;
-import com.gluonhq.plugin.function.FunctionFX;
+import com.gluonhq.plugin.function.FunctionSWT;
 import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.Template;
 import com.gluonhq.plugin.templates.TemplateManager;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-
-public class JFunction extends JFrame {
+public class JFunction {
 	
-	private static final long serialVersionUID = 3225873452245298682L;
-	
-	private final ProjectUtils utils;
+    private final ProjectUtils utils;
     private final IContainer project;
     private List<String> lines = null;
 
@@ -92,173 +84,166 @@ public class JFunction extends JFrame {
         this.utils = utils;
         this.project = project;
 
-        getContentPane().add(runFunctionFX());
+        runFunction();
     }
 
-    private JFXPanel runFunctionFX() {
-        final JFXPanel fxPanel = new JFXPanel();
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            FunctionFX functionFX = new FunctionFX();
-            Function function = functionFX.getFunction();
-            function.addPropertyChangeListener(e -> {
-                if (function.getFunctionName() != null && function.getPackageName() != null) {
-					GluonSubProject gluonSubProject = new GluonSubProject("Gluon Function", function);
-					gluonSubProject.setUser(true);
-					gluonSubProject.schedule();
-                }
-                dispose();
-            });
-
-            final Scene scene = new Scene(functionFX);
-            fxPanel.setScene(scene);
-        });
-        return fxPanel;
+    private void runFunction() {
+        FunctionSWT functionSWT = new FunctionSWT(null);
+        
+        functionSWT.open();
+        
+        Function function = functionSWT.getFunction();
+        if (function.getFunctionName() != null && function.getPackageName() != null) {
+            GluonSubProject gluonSubProject = new GluonSubProject("Gluon Function", function);
+            gluonSubProject.setUser(true);
+            gluonSubProject.schedule();
+        }
     }
     
     /**
-	 * Initializes a new Gluon subproject 
-	 */
-	private final class GluonSubProject extends Job {
-		
-		private final Function function;
-		
-		public GluonSubProject(String jobName, Function function) {
-			super(jobName);
-			this.function = function;
-		}
+    * Initializes a new Gluon subproject 
+    */
+    private final class GluonSubProject extends Job {
 
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask("Add Gluon subProject", 100);
-			try {
-				File rootFile = new File(utils.getRootProject().getLocationURI());
-				final String fnProjectName = rootFile.getName() + function.getFunctionName();
-				monitor.worked(10);
+        private final Function function;
 
-				// Create and open project
+        public GluonSubProject(String jobName, Function function) {
+            super(jobName);
+            this.function = function;
+        }
 
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		        IProjectDescription projectDescription = workspace.newProjectDescription(fnProjectName);
-	            projectDescription.setLocation(utils.getRootProject().getLocation().append(File.separator).append(fnProjectName));
-	            projectDescription.setComment(String.format("Gluon subproject %s", fnProjectName));
-	            IProject fnProject = workspace.getRoot().getProject(fnProjectName);
-	            try {
-					fnProject.create(projectDescription, monitor);
-					fnProject.open(IResource.BACKGROUND_REFRESH, monitor);
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-	            monitor.worked(20);
-		    	
-				// Run Template
-		        
-		        Map<String, Object> parameters = new HashMap<>();
-		        parameters.put(ProjectConstants.PARAM_GLUON_FUNCTION_NAME, function.getFunctionName());
-		        parameters.put(ProjectConstants.PARAM_GLUON_FUNCTION_METHOD_NAME, function.getMethodName());
-		        parameters.put(ProjectConstants.PARAM_PACKAGE_NAME, function.getPackageName());
-		        parameters.put(ProjectConstants.PARAM_PACKAGE_FOLDER, function.getPackageName().replaceAll("\\.", "/"));
-		        parameters.put(ProjectConstants.PARAM_GLUON_FUNCTION_PROJECT_NAME, fnProjectName);
-		    
-		        List<File> filesToOpen = new ArrayList<>();
-		        TemplateManager templateManager = TemplateManager.getInstance();
-		        Template template = templateManager.getProjectTemplate(GluonProject.FUNCTION.getType());
-		
-		        template.render(rootFile, parameters);
-		        filesToOpen.addAll(template.getFilesToOpen());
-		
-		        monitor.worked(30);
-		    	
-		        // create template sources
-		        Template sourceTemplate = templateManager.getSourceTemplate(template.getProjectName());
-		        if (sourceTemplate != null) {
-		            sourceTemplate.render(rootFile, parameters);
-		            filesToOpen.addAll(sourceTemplate.getFilesToOpen());
-		        }
-		        monitor.worked(45);
-		    	
-		        // Add include to settings.build
-		
-		        final IFile settingsFile = ProjectUtils.getGradleSettingsFile(utils.getRootProject());
-		        Path path = null;
-		        if (settingsFile != null) {
-					try {
-			            path = Paths.get(settingsFile.getLocationURI());
-						lines = Files.readAllLines(path);
-			        } catch (IOException ex) {
-			            ex.printStackTrace();
-			        }  
-			    }
-		        
-		        if (path != null && lines != null && !lines.isEmpty()) {
-		            int includeLines = (int) IntStream.range(0, lines.size())
-		                    .filter(i -> lines.get(i).startsWith("include"))
-		                    .count();
-		
-		            List<String> newList = IntStream.range(0, includeLines)
-		                    .mapToObj(lines::get)
-		                    .collect(Collectors.toList());
-		            newList.add("include '" +  fnProjectName + "'");
-		            newList.addAll(IntStream.range(includeLines + 1, lines.size())
-		                    .mapToObj(lines::get)
-		                    .collect(Collectors.toList()));
-		            try {
-		                Files.write(path, newList, StandardCharsets.UTF_8);
-						settingsFile.refreshLocal(IResource.DEPTH_ZERO, null);
-					} catch (IOException | CoreException e) {
-						e.printStackTrace();
-					}
-		            monitor.worked(55);
-		        }
-		        
-		        ProjectUtils.refreshProject(project);
-		        monitor.worked(65);
-		        
-		        // Open function class
-		        
-		        if (! filesToOpen.isEmpty()) {
-					Display.getDefault().asyncExec(() -> {
-						IWorkbench workbench = PlatformUI.getWorkbench();
-						IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-						if (activeWorkbenchWindow != null) {
-							IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
+        @Override
+        protected IStatus run(IProgressMonitor monitor) {
+            monitor.beginTask("Add Gluon subProject", 100);
+            try {
+                File rootFile = new File(utils.getRootProject().getLocationURI());
+                final String fnProjectName = rootFile.getName() + function.getFunctionName();
+                monitor.worked(10);
 
-							filesToOpen.stream()
-								.filter(File::exists)
-								.map(file -> org.eclipse.core.runtime.Path.fromOSString(file.getAbsolutePath()))
-								.map(iPath -> workspace.getRoot().getFileForLocation(iPath))
-								.forEach(iFile -> {
-									try {
-										iFile.refreshLocal(IResource.DEPTH_ZERO, null);
-										// open file
-										IEditorDescriptor fileDescriptor = workbench.getEditorRegistry().getDefaultEditor(iFile.getName());
-										IDE.openEditor(page, iFile, fileDescriptor == null ?  "org.eclipse.ui.DefaultTextEditor" : fileDescriptor.getId(), false);
-									} catch (CoreException e) {
-										e.printStackTrace();
-									}
-									// expand project explorer
-									IViewPart view = page.findView(IPageLayout.ID_PROJECT_EXPLORER);
-									if (view != null && view instanceof ISetSelectionTarget) {
-										((ISetSelectionTarget) view).selectReveal(new StructuredSelection(iFile));
-									}
-								});
-						}
-					});
-		        }
-		        
-		        monitor.worked(85);
-		    	
-		        
-		        // TODO: build and upload gluon function
-	            //ExecuteUploadFunction executeUpload = new ExecuteUploadFunction(fnProject);
-	            //executeUpload.execute();
-		        
-		        monitor.worked(100);
-		    	
-			} finally {
-				monitor.done();
-			}
-			return Status.OK_STATUS;
-		}
-	}
+                // Create and open project
+
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IProjectDescription projectDescription = workspace.newProjectDescription(fnProjectName);
+                projectDescription.setLocation(utils.getRootProject().getLocation().append(File.separator).append(fnProjectName));
+                projectDescription.setComment(String.format("Gluon subproject %s", fnProjectName));
+                IProject fnProject = workspace.getRoot().getProject(fnProjectName);
+                try {
+                    fnProject.create(projectDescription, monitor);
+                    fnProject.open(IResource.BACKGROUND_REFRESH, monitor);
+                } catch (CoreException e) {
+                    e.printStackTrace();
+                }
+                monitor.worked(20);
+
+                // Run Template
+
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put(ProjectConstants.PARAM_GLUON_FUNCTION_NAME, function.getFunctionName());
+                parameters.put(ProjectConstants.PARAM_GLUON_FUNCTION_METHOD_NAME, function.getMethodName());
+                parameters.put(ProjectConstants.PARAM_PACKAGE_NAME, function.getPackageName());
+                parameters.put(ProjectConstants.PARAM_PACKAGE_FOLDER, function.getPackageName().replaceAll("\\.", "/"));
+                parameters.put(ProjectConstants.PARAM_GLUON_FUNCTION_PROJECT_NAME, fnProjectName);
+
+                List<File> filesToOpen = new ArrayList<>();
+                TemplateManager templateManager = TemplateManager.getInstance();
+                Template template = templateManager.getProjectTemplate(GluonProject.FUNCTION.getType());
+
+                template.render(rootFile, parameters);
+                filesToOpen.addAll(template.getFilesToOpen());
+
+                monitor.worked(30);
+
+                // create template sources
+                Template sourceTemplate = templateManager.getSourceTemplate(template.getProjectName());
+                if (sourceTemplate != null) {
+                    sourceTemplate.render(rootFile, parameters);
+                    filesToOpen.addAll(sourceTemplate.getFilesToOpen());
+                }
+                monitor.worked(45);
+
+                // Add include to settings.build
+
+                final IFile settingsFile = ProjectUtils.getGradleSettingsFile(utils.getRootProject());
+                Path path = null;
+                if (settingsFile != null) {
+                    try {
+                        path = Paths.get(settingsFile.getLocationURI());
+                        lines = Files.readAllLines(path);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }  
+                
+
+                    if (path != null && lines != null && !lines.isEmpty()) {
+                        int includeLines = (int) IntStream.range(0, lines.size())
+                                .filter(i -> lines.get(i).startsWith("include"))
+                                .count();
+
+                        List<String> newList = IntStream.range(0, includeLines)
+                                .mapToObj(lines::get)
+                                .collect(Collectors.toList());
+                        newList.add("include '" +  fnProjectName + "'");
+                        newList.addAll(IntStream.range(includeLines + 1, lines.size())
+                                .mapToObj(lines::get)
+                                .collect(Collectors.toList()));
+                        try {
+                            Files.write(path, newList, StandardCharsets.UTF_8);
+                            settingsFile.refreshLocal(IResource.DEPTH_ZERO, null);
+                        } catch (IOException | CoreException e) {
+                            e.printStackTrace();
+                        }
+                        monitor.worked(55);
+                    }   
+                }
+                
+                ProjectUtils.refreshProject(project);
+                monitor.worked(65);
+
+                // Open function class
+
+                if (! filesToOpen.isEmpty()) {
+                    Display.getDefault().asyncExec(() -> {
+                        IWorkbench workbench = PlatformUI.getWorkbench();
+                        IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+                        if (activeWorkbenchWindow != null) {
+                            IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
+
+                            filesToOpen.stream()
+                                .filter(File::exists)
+                                .map(file -> org.eclipse.core.runtime.Path.fromOSString(file.getAbsolutePath()))
+                                .map(iPath -> workspace.getRoot().getFileForLocation(iPath))
+                                .forEach(iFile -> {
+                                    try {
+                                        iFile.refreshLocal(IResource.DEPTH_ZERO, null);
+                                        // open file
+                                        IEditorDescriptor fileDescriptor = workbench.getEditorRegistry().getDefaultEditor(iFile.getName());
+                                        IDE.openEditor(page, iFile, fileDescriptor == null ?  "org.eclipse.ui.DefaultTextEditor" : fileDescriptor.getId(), false);
+                                    } catch (CoreException e) {
+                                        e.printStackTrace();
+                                    }
+                                    // expand project explorer
+                                    IViewPart view = page.findView(IPageLayout.ID_PROJECT_EXPLORER);
+                                    if (view != null && view instanceof ISetSelectionTarget) {
+                                        ((ISetSelectionTarget) view).selectReveal(new StructuredSelection(iFile));
+                                    }
+                                });
+                            }
+                    });
+                }
+
+                ProjectUtils.refreshProject(fnProject);
+                monitor.worked(85);
+
+                // build and upload gluon function
+                ExecuteUploadFunction executeUpload = new ExecuteUploadFunction(fnProject);
+                executeUpload.execute();
+
+                monitor.worked(100);
+
+            } finally {
+                monitor.done();
+            }
+            return Status.OK_STATUS;
+        }
+    }
 }

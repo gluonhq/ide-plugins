@@ -3,5 +3,5 @@
    <feature url="features/com.gluonhq.eclipse_0.0.0.qualifier.jar" id="com.gluonhq.eclipse" version="0.0.0">
       <category name="Gluon"/>
    </feature>
-   <category-def name="Gluon" label="Eclipse Plug-in for Gluon"/>
+   <category-def name="Gluon" label="Gluon Plug-in for Eclipse"/>
 </site>

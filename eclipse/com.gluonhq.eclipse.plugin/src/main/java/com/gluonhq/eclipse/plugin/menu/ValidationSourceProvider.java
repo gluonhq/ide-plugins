@@ -48,74 +48,82 @@ import org.eclipse.ui.PlatformUI;
 
 public class ValidationSourceProvider extends AbstractSourceProvider {
 
-	public static final String SHOW_MENU = "com.gluonhq.eclipse.plugin.menu.show";
+    public static final String SHOW_MENU = "com.gluonhq.eclipse.plugin.menu.show";
     private final static String GLUON_FOUND = "gluonFound"; 
     private final static String GLUON_NOT_FOUND = "gluonNotFound";
     
-	private final ISelectionListener listener;
-	private boolean gluonFound = false; 
-
+    public static final String SHOW_FUNCTION_MENU = "com.gluonhq.eclipse.plugin.menu.function.show";
+    private final static String GLUON_FUNCTION_FOUND = "gluonFunctionFound"; 
+    private final static String GLUON_FUNCTION_NOT_FOUND = "gluonFunctionNotFound";
+    
+    private final ISelectionListener listener;
+    private boolean gluonFound = false; 
+    private boolean gluonFunctionFound = false; 
+	
     public ValidationSourceProvider() {
-        listener = new ISelectionListener() {
-        	
-            public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-                if (! (sel instanceof IStructuredSelection)) {
-                    return;
+        listener = (IWorkbenchPart part, ISelection sel) -> {
+            if (! (sel instanceof IStructuredSelection)) {
+                setGluonFound(false);
+                setGluonFunctionFound(false);
+                return;
+            }
+            IStructuredSelection ss = (IStructuredSelection) sel;
+            Object o = ss.getFirstElement();
+            if (o == null) {
+                setGluonFound(false);
+                setGluonFunctionFound(false);
+                return;
+            }
+            
+            IContainer container = null;
+            if (!(o instanceof IContainer)) {
+                // Package Explorer
+                IProject project = (IProject) Platform.getAdapterManager().getAdapter(o, IProject.class);
+                if (project != null) {
+                    container = (IContainer) project;
                 }
-                IStructuredSelection ss = (IStructuredSelection) sel;
-                Object o = ss.getFirstElement();
-                if (o == null) {
-                		return;
-                }
-               
-                IContainer container = null;
-                if (!(o instanceof IContainer)) {
-                    // Package Explorer
-                    IProject project = (IProject) Platform.getAdapterManager().getAdapter(o, IProject.class);
-                    if (project != null) {
-                        container = (IContainer) project;
-                    }
-                } else {
-                    // Project Explorer
-                    container = (IContainer) o;
-                }
-               
-                if (container != null && container.isAccessible()) {
-                    ProjectUtils utils = new ProjectUtils(container);
-                    setGluonFound(utils.isGluonProject());
-                }
+            } else {
+                // Project Explorer
+                container = (IContainer) o;
+            }
+            if (container != null && container.isAccessible()) {
+                ProjectUtils utils = new ProjectUtils(container);
+                setGluonFound(utils.isGluonProject());
+                setGluonFunctionFound(utils.isGluonFunctionProject());
             }
         };
         //Register listener
         Display.getDefault().asyncExec(() -> {
             ISelectionService ss = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-            ss.addSelectionListener(IPageLayout.ID_PROJECT_EXPLORER, listener); 
-            ss.addSelectionListener("org.eclipse.jdt.ui.PackageExplorer", listener); 
+            ss.addSelectionListener(listener); 
         });
     }
 	
-	@Override
-	public void dispose() {
-		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+    @Override
+    public void dispose() {
+        if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
             ISelectionService ss = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
             ss.removeSelectionListener(IPageLayout.ID_PROJECT_EXPLORER, listener); 
             ss.removeSelectionListener("org.eclipse.jdt.ui.PackageExplorer", listener); 
         }
-	}
+    }
 
-	@Override
-	public Map<String, Object> getCurrentState() {
-		Map<String, Object> map = new HashMap<>(1);
+    @Override
+    public Map<String, Object> getCurrentState() {
+        Map<String, Object> map = new HashMap<>(1);
 		
         String currentState = gluonFound ? GLUON_FOUND : GLUON_NOT_FOUND; 
-        
         map.put(SHOW_MENU, currentState);
+        
+        currentState = gluonFunctionFound ? GLUON_FUNCTION_FOUND : GLUON_FUNCTION_NOT_FOUND; 
+        map.put(SHOW_FUNCTION_MENU, currentState);
+        
         return map;
     }
 
     @Override
     public String[] getProvidedSourceNames() {
-        return new String[] { SHOW_MENU };
+        return new String[] { SHOW_MENU, SHOW_FUNCTION_MENU };
     }
 	
     private void setGluonFound(boolean gluonFound) { 
@@ -124,6 +132,14 @@ public class ValidationSourceProvider extends AbstractSourceProvider {
         this.gluonFound = gluonFound;  
         String currentState = gluonFound ? GLUON_FOUND : GLUON_NOT_FOUND; 
         fireSourceChanged(ISources.WORKBENCH, SHOW_MENU, currentState); 
+    }
+    
+    private void setGluonFunctionFound(boolean gluonFunctionFound) { 
+        if (this.gluonFunctionFound == gluonFunctionFound) return;
+		
+        this.gluonFunctionFound = gluonFunctionFound;  
+        String currentState = gluonFunctionFound ? GLUON_FUNCTION_FOUND : GLUON_FUNCTION_NOT_FOUND; 
+        fireSourceChanged(ISources.WORKBENCH, SHOW_FUNCTION_MENU, currentState); 
     }
 
 }

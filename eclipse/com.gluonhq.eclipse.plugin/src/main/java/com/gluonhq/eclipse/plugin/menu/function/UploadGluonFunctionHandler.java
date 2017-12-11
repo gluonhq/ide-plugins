@@ -36,14 +36,13 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
 
-public class AddGluonFunctionHandler extends AbstractHandler {
+public class UploadGluonFunctionHandler extends AbstractHandler {
 	
     private IContainer container = null;
 
@@ -67,9 +66,10 @@ public class AddGluonFunctionHandler extends AbstractHandler {
 
             ProjectUtils projectUtils = new ProjectUtils(container);
             if (! projectUtils.isCloudLinkSignedIn()) {
-                projectUtils.cloudLinkSignIn(() -> Display.getDefault().asyncExec(() -> new JFunction(projectUtils, container)));
+                projectUtils.cloudLinkSignIn(() -> new ExecuteUploadFunction(container).execute());
             } else {
-                Display.getDefault().asyncExec(() -> new JFunction(projectUtils, container));
+                ExecuteUploadFunction executeUpload = new ExecuteUploadFunction(container);
+                executeUpload.execute();
             }
         }
         return null;

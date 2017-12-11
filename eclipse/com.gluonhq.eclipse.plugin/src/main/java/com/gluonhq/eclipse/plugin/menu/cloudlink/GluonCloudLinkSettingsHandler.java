@@ -36,6 +36,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -44,14 +45,14 @@ import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
 
 public class GluonCloudLinkSettingsHandler extends AbstractHandler {
 	
-	@Override
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-	    IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-	    if (window != null) {
-	        IWorkbenchPage activePage = window.getActivePage();
-	        IStructuredSelection ss = (IStructuredSelection) activePage.getSelection();
-	        Object o = ss.getFirstElement();
-	        IContainer container = null;
+        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+        if (window != null) {
+            IWorkbenchPage activePage = window.getActivePage();
+            IStructuredSelection ss = (IStructuredSelection) activePage.getSelection();
+            Object o = ss.getFirstElement();
+            IContainer container = null;
             if (!(o instanceof IContainer)) {
                 // Package Explorer
                 IProject project = (IProject) Platform.getAdapterManager().getAdapter(o, IProject.class);
@@ -64,9 +65,9 @@ public class GluonCloudLinkSettingsHandler extends AbstractHandler {
             }
             
             ProjectUtils projectUtils = new ProjectUtils(container);
-            projectUtils.showDialog(new JCloudLink(projectUtils));
+            Display.getDefault().asyncExec(() -> new JCloudLink(projectUtils));
         }
-	    return null;
+        return null;
     }
 
 }

@@ -37,6 +37,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -46,14 +47,16 @@ import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
 
 public class GluonMobileSettingsHandler extends AbstractHandler {
 	
-	@Override
+    private IContainer container = null;
+
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-	    IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-	    if (window != null) {
-	        IWorkbenchPage activePage = window.getActivePage();
-	        IStructuredSelection ss = (IStructuredSelection) activePage.getSelection();
-	        Object o = ss.getFirstElement();
-	        IContainer container = null;
+        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+        if (window != null) {
+            IWorkbenchPage activePage = window.getActivePage();
+            IStructuredSelection ss = (IStructuredSelection) activePage.getSelection();
+            Object o = ss.getFirstElement();
+
             if (!(o instanceof IContainer)) {
                 // Package Explorer
                 IProject project = (IProject) Platform.getAdapterManager().getAdapter(o, IProject.class);
@@ -64,15 +67,21 @@ public class GluonMobileSettingsHandler extends AbstractHandler {
                 // Project Explorer
                 container = (IContainer) o;
             }
-            
+
             IEditorPart editor = activePage.getActiveEditor();
-            activePage.saveEditor(editor, false);
-            
+            if (editor != null) {
+                activePage.saveEditor(editor, false);
+            }
+
+            // Early load of font (required on Mac)
+            String fontPath = ProjectUtils.extractResourceToTmp("fontawesome-webfont.ttf");
+            Display.getDefault().loadFont(fontPath);
+
             ProjectUtils projectUtils = new ProjectUtils(container);
             IFile buildFile = ProjectUtils.getGradleBuildFile(projectUtils.getMobileProject());
-            projectUtils.showDialog(new JPlugins(buildFile), 800, 600);
+            Display.getDefault().asyncExec(() -> new JPlugins(buildFile));
         }
-	    return null;
+        return null;
     }
 
 }

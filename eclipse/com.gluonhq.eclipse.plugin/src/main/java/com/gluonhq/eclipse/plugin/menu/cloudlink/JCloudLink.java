@@ -35,113 +35,88 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import javax.swing.JFrame;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 
 import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
-import com.gluonhq.plugin.cloudlink.AccountFX;
-import com.gluonhq.plugin.cloudlink.ApplicationsFX;
+import com.gluonhq.plugin.cloudlink.AccountSWT;
+import com.gluonhq.plugin.cloudlink.ApplicationsSWT;
 import com.gluonhq.plugin.cloudlink.Credentials;
-import com.gluonhq.plugin.down.PluginsFX;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
+public class JCloudLink {
 
-public class JCloudLink extends JFrame {
-
-    private static final long serialVersionUID = 4225983627721313247L;
-	
-	private final ProjectUtils utils;
+    private final ProjectUtils utils;
     private final boolean allowDisableApply;
     private final IResource cloudLinkFile;
+    private final Runnable runnable;
 
     public JCloudLink(ProjectUtils utils) {
-        this(utils, true);
+        this(utils, true, null);
     }
-    public JCloudLink(ProjectUtils utils, boolean allowDisableApply) {
+    
+    public JCloudLink(ProjectUtils utils, boolean allowDisableApply, Runnable runnable) {
         this.utils = utils;
         this.allowDisableApply = allowDisableApply;
+        this.runnable = runnable;
 
         cloudLinkFile = utils.getCloudLinkFile();
-		Path jsonPath = Paths.get(cloudLinkFile.getLocation().toOSString());
+        Path jsonPath = Paths.get(cloudLinkFile.getLocation().toOSString());
         final String userKey = utils.getCloudLinkUserKey();
         if (userKey == null) {
-            getContentPane().add(runLogin(jsonPath));
+            runLogin(jsonPath);
         } else {
-            getContentPane().add(runApplicationsFX(userKey, true, jsonPath));
+            runApplications(userKey, true, jsonPath);
         }
     }
 
-    private JFXPanel runLogin(final Path jsonPath) {
-        final JFXPanel fxPanel = new JFXPanel();
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            AccountFX accountFX = new AccountFX();
-            Credentials credentials = accountFX.getCredentials();
-            credentials.addPropertyChangeListener(e -> {
-                if (Credentials.USERKEY_PROPERTY.equals(e.getPropertyName())) {
-                    String userKey = (String) e.getNewValue();
-                    if (userKey != null) {
-                        if (credentials.isKeepLogged()) {
-                            utils.setCloudLinkUserKey(userKey);
-                        } else {
-                            utils.removeCloudLinkUserKey();
-                        }
-                        getContentPane().remove(fxPanel);
-                        getContentPane().add(runApplicationsFX(userKey, credentials.isKeepLogged(), jsonPath));
-                    } else {
-                        dispose();
-                    }
-                }
-            });
-            final Scene scene = new Scene(accountFX);
-            fxPanel.setScene(scene);
-        });
-
-        return fxPanel;
+    private void runLogin(final Path jsonPath) {
+        AccountSWT account = new AccountSWT(null);
+        Credentials credentials = account.getCredentials();
+        
+        account.open();
+        
+        String userKey = credentials.getUserKey();
+        if (userKey != null) {
+            if (credentials.isKeepLogged()) {
+                utils.setCloudLinkUserKey(userKey);
+            } else {
+                utils.removeCloudLinkUserKey();
+            }
+            runApplications(userKey, credentials.isKeepLogged(), jsonPath);
+        }
     }
 
-    private JFXPanel runApplicationsFX(final String userKey, final boolean keepLogged, final Path jsonPath) {
-        final JFXPanel fxPanel = new JFXPanel();
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            ApplicationsFX applicationsFX = new ApplicationsFX(userKey, keepLogged, allowDisableApply);
-            Credentials credentials = applicationsFX.getCredentials();
-            credentials.addPropertyChangeListener(e -> {
-                if (Credentials.USERKEY_PROPERTY.equals(e.getPropertyName())) {
-                    utils.removeCloudLinkUserKey();
-                    dispose();
-                } else if (Credentials.CREDENTIALS_PROPERTY.equals(e.getPropertyName())) {
-                    String cloudLinkText = (String) e.getNewValue();
-                    if (cloudLinkText != null) {
-                        utils.setCloudLinkIdeKey(credentials.getIdeKey());
-                        Path finalJsonPath = jsonPath;
-                        if (jsonPath.toFile().isDirectory()) {
-                            finalJsonPath = Paths.get(jsonPath.toFile().toString(), ProjectUtils.CLOUDLINK_CONFIG_FILE);
-                        }
-                        try {
-                            Files.write(finalJsonPath, cloudLinkText.getBytes(StandardCharsets.UTF_8));
-                            cloudLinkFile.refreshLocal(IResource.DEPTH_ONE, null);
-                        } catch (IOException | CoreException ex) {
-                            Platform.runLater(() -> PluginsFX.showError("Error writing json file: " + ex));
-                            ex.printStackTrace();
-						}
-                        dispose();
-                    } else {
-                        dispose();
-                    }
-                }
-            });
-
-            final Scene scene = new Scene(applicationsFX);
-            fxPanel.setScene(scene);
-
-            applicationsFX.loadApplications(ProjectUtils.getCloudLinkConfig(cloudLinkFile));
-        });
-        return fxPanel;
+    private void runApplications(final String userKey, final boolean keepLogged, final Path jsonPath) {
+        ApplicationsSWT applications = new ApplicationsSWT(null, userKey, keepLogged, ProjectUtils.getCloudLinkConfig(cloudLinkFile), allowDisableApply);
+        Credentials credentials = applications.getCredentials();
+        
+        applications.open();
+        
+        if (credentials.getCredentials() != null) {
+            utils.setCloudLinkIdeKey(credentials.getIdeKey());
+            Path finalJsonPath = jsonPath;
+            if (jsonPath.toFile().isDirectory()) {
+                finalJsonPath = Paths.get(jsonPath.toFile().toString(), ProjectUtils.CLOUDLINK_CONFIG_FILE);
+            }
+            String cloudLinkText = credentials.getCredentials();
+            try {
+                Files.write(finalJsonPath, cloudLinkText.getBytes(StandardCharsets.UTF_8));
+                cloudLinkFile.refreshLocal(IResource.DEPTH_ONE, null);
+            } catch (IOException | CoreException ex) {
+                MessageDialog.openError(new Shell(), "Error", "Error writing json file: " + ex);
+                ex.printStackTrace();
+            }
+        } 
+        if (credentials.getUserKey() == null) {
+            utils.removeCloudLinkUserKey();
+            return;
+        } 
+    
+        if (credentials.getCredentials() != null && runnable != null) {
+            runnable.run();
+        }
     }
 
 }

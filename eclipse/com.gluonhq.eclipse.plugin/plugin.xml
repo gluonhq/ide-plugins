@@ -118,6 +118,11 @@
              name="Add Gluon Function command">
        </command>
        <command
+             defaultHandler="com.gluonhq.eclipse.plugin.menu.function.UploadGluonFunctionHandler"
+             id="com.gluonhq.eclipse.plugin.commands.upload_gluon_function"
+             name="Upload Gluon Function command">
+       </command>
+       <command
              defaultHandler="com.gluonhq.eclipse.plugin.menu.down.GluonMobileSettingsHandler"
              id="com.gluonhq.eclipse.plugin.commands.mobile_settings"
              name="Gluon Mobile Settings command">
@@ -127,7 +132,21 @@
              id="com.gluonhq.eclipse.plugin.commands.cloudlink_settings"
              name="Gluon CloudLink Settings command">
        </command>
+       <command
+             defaultHandler="com.gluonhq.eclipse.plugin.code.InsertGluonFunctionHandler"
+             id="com.gluonhq.eclipse.plugin.commands.insert_gluon_function"
+             name="Insert Gluon Function command">
+       </command>
     </extension>
+    <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="com.gluonhq.eclipse.plugin.code.InsertFunctionTester"
+            id="com.gluonhq.eclipse.plugin.code.insertFunctionTester"
+            namespace="com.gluonhq.eclipse.plugin.commands"
+            properties="gluonMobileFound"
+            type="java.lang.Object">
+      </propertyTester>
+	</extension>
   	<extension
           point="org.eclipse.ui.menus">
       <menuContribution
@@ -140,6 +159,19 @@
 	               commandId="com.gluonhq.eclipse.plugin.commands.add_gluon_function"
 	               label="%plugin.menu.submenu.add_gluon_function"
 	               style="push">
+         		</command>
+         		<command
+	               commandId="com.gluonhq.eclipse.plugin.commands.upload_gluon_function"
+	               label="%plugin.menu.submenu.upload_gluon_function"
+	               style="push">
+	               <visibleWhen>
+		               <with
+		                     variable="com.gluonhq.eclipse.plugin.menu.function.show">
+		                  <equals
+		                        value="gluonFunctionFound">
+		                  </equals>
+		               </with>
+		            </visibleWhen>
          		</command>
          		<separator 
          			name="com.gluonhq.eclipse.plugin.separator"
@@ -165,5 +197,19 @@
 	            </visibleWhen>
          </menu>
        </menuContribution>
+       <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.jdt.ui.source.menu?after=codeGroup">
+         <command
+               commandId="com.gluonhq.eclipse.plugin.commands.insert_gluon_function"
+               label="Insert Gluon Function"
+               style="push">
+         </command>
+         <visibleWhen>
+             <test
+                 property="com.gluonhq.eclipse.plugin.commands.gluonMobileFound">
+             </test>
+          </visibleWhen>
+      </menuContribution>
     </extension>
 </plugin>

@@ -31,10 +31,6 @@
 <unit id="org.jetbrains.kotlin.feature.feature.group" version="0.8.2.v20170906-0933"/>
 <repository location="https://teamcity.jetbrains.com/guestAuth/repository/download/Kotlin_EclipsePlugin/1160530:id/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.fx.runtime.min.feature.feature.group" version="2.4.0.201605100504"/>
-<repository location="http://download.eclipse.org/efxclipse/runtime-shared-released/2.4.0/site/"/>
-</location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 <launcherArgs>

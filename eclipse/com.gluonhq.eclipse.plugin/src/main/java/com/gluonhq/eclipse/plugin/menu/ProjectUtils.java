@@ -29,21 +29,21 @@
  */
 package com.gluonhq.eclipse.plugin.menu;
 
-import java.awt.Dialog;
-import java.awt.Dimension;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -51,18 +51,20 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.swt.widgets.Display;
 
 import com.gluonhq.eclipse.plugin.menu.cloudlink.JCloudLink;
+import com.gluonhq.plugin.down.PluginsSWT;
 import com.gluonhq.plugin.templates.ProjectConstants;
-
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
 
 public class ProjectUtils {
 	
-	public static final String CLOUDLINK_CONFIG_FILE = "gluoncloudlink_config.json";
-	private final static Preferences PREFERENCES = Preferences.userRoot().node("com.gluonhq.plugin.eclipse");
+    public static final String CLOUDLINK_CONFIG_FILE = "gluoncloudlink_config.json";
+
+    private final static Preferences PREFERENCES = Preferences.userRoot().node("com.gluonhq.plugin.eclipse");
     private final static String PATH = "Path";
+    private final static Map<String, String> FONT_CACHE = new HashMap<>();
+    
     private Preferences PROJECT_PREFERENCES;
     
     private final IContainer project;
@@ -75,8 +77,9 @@ public class ProjectUtils {
         this.project = project;
 
         if (project != null && getGradleBuildFile(project) != null) {
-        		configure();
+            configure();
         }
+        
     }
 
     public boolean isGluonProject() {
@@ -173,33 +176,33 @@ public class ProjectUtils {
         if (mobileProject == null && rootProject != project) {
             IContainer projectToInspect = rootProject != null ? rootProject : project;
             if (getGradleBuildFile(projectToInspect) != null && 
-            		getGradleSettingsFile(projectToInspect) != null) {
+                getGradleSettingsFile(projectToInspect) != null) {
                 try {
-					for (IResource file : projectToInspect.members()) {
-					    if (file != null && file instanceof IContainer) {
-					        if (file != null && isGluonMobileProject((IContainer) file)) {
-					            mobileProject = (IContainer) file;
-					            rootProject = projectToInspect;
-					            break;
-					        }
-					    }
-					}
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
+                    for (IResource file : projectToInspect.members()) {
+                        if (file != null && file instanceof IContainer) {
+                            if (file != null && isGluonMobileProject((IContainer) file)) {
+                                mobileProject = (IContainer) file;
+                                rootProject = projectToInspect;
+                                break;
+                            }
+                        }
+                    }
+                } catch (CoreException e) {
+                        e.printStackTrace();
+                }
             }
         }
     }
     
-    private IContainer getParentProject(IContainer project) {
+    public IContainer getParentProject(IContainer project) {
         IPath location = project.getRawLocation();
         if (location != null && location.segmentCount() > 1) {
             String parentName = location.removeLastSegments(1).lastSegment();
             if (parentName != null && ! parentName.isEmpty()) {
                 return Stream.of(ResourcesPlugin.getWorkspace().getRoot().getProjects())
-                                .filter(p -> p.getName().equals(parentName))
-                                .map(IContainer.class::cast)
-                                .findFirst().orElse(null);
+                        .filter(p -> p.getName().equals(parentName))
+                        .map(IContainer.class::cast)
+                        .findFirst().orElse(null);
             }
             return null;
         }
@@ -240,18 +243,18 @@ public class ProjectUtils {
     
     public static IFile getGradleBuildFile(IContainer project) {
         IResource resource = project.findMember("build.gradle");
-		if (resource != null && resource.exists()) {
-			return (IFile) resource;
-		}
-		return null;
+            if (resource != null && resource.exists()) {
+                return (IFile) resource;
+            }
+            return null;
     }
     
     public static IFile getGradleSettingsFile(IContainer project) {
         IResource resource = project.findMember("settings.gradle");
-		if (resource != null && resource.exists()) {
-			return (IFile) resource;
-		}
-		return null;
+            if (resource != null && resource.exists()) {
+                return (IFile) resource;
+            }
+            return null;
 	}
     
     public static void refreshProject(IContainer project) {
@@ -259,10 +262,10 @@ public class ProjectUtils {
             return;
         }
         try {
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
+            project.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getCloudLinkConfig(IResource cloudLinkConfig) {
@@ -279,7 +282,7 @@ public class ProjectUtils {
     private static boolean isGluonMobileProject(IContainer project) {
         IFile iFile = getGradleBuildFile(project);
         if (iFile != null) {
-        		try {
+            try {
                 return Files.lines(Paths.get(iFile.getLocationURI()))
                         .anyMatch(line -> line.contains("downConfig"));
             } catch (IOException ex) {
@@ -294,55 +297,46 @@ public class ProjectUtils {
         IFile iFile = getGradleBuildFile(project);
         if (iFile != null) {
             try {
-	            return Files.lines(Paths.get(iFile.getLocationURI()))
+                return Files.lines(Paths.get(iFile.getLocationURI()))
 	                    .anyMatch(line -> line.contains("task gfBundle"));
-	        } catch (IOException ex) {
-	            ex.printStackTrace();
-	        } 
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } 
         }
         return false;
     }
     
-    private final ReadOnlyBooleanWrapper cloudLinkSignedIn = new ReadOnlyBooleanWrapper();
-    
-    private void setCloudLinkSignedIn() {
-        IResource cloudLinkConfig = getCloudLinkFile();
-        cloudLinkSignedIn.set(! (getCloudLinkUserKey() == null || getCloudLinkConfig(cloudLinkConfig) == null || getCloudLinkIdeKey() == null));
-    }
-    
     public final boolean isCloudLinkSignedIn() {
-        setCloudLinkSignedIn();
-        return cloudLinkSignedIn.get();
+        IResource cloudLinkConfig = getCloudLinkFile();
+        return ! (getCloudLinkUserKey() == null || getCloudLinkConfig(cloudLinkConfig) == null || getCloudLinkIdeKey() == null);
     }
     
-    public final ReadOnlyBooleanProperty cloudLinkSignedInProperty() { return cloudLinkSignedIn.getReadOnlyProperty(); }
-    
-    public void cloudLinkSignIn() {
-        final JCloudLink jCloudLink = new JCloudLink(this, getCloudLinkIdeKey() != null);
-        showDialog(jCloudLink, 600, 372, () -> setCloudLinkSignedIn());
+    public void cloudLinkSignIn(Runnable runnable) {
+        Display.getDefault().asyncExec(() -> new JCloudLink(this, getCloudLinkIdeKey() != null, runnable));
     }
     
-    public void showDialog(JFrame frame) {
-        showDialog(frame, 600, 372);
-    }
+    public static String extractResourceToTmp(String resourceFileName) {
+        if (FONT_CACHE.containsKey(resourceFileName)) {
+            return FONT_CACHE.get(resourceFileName);
+        }
 
-    public void showDialog(JFrame frame, int width, int height) {
-    		showDialog(frame, width, height, null);
-    }
-    
-    private void showDialog(JFrame frame, int width, int height, Runnable runnable) {
-        SwingUtilities.invokeLater(() -> {
-            final JDialog dialog = new JDialog(frame, Dialog.ModalityType.APPLICATION_MODAL);
-	        dialog.setContentPane(frame.getRootPane());
-	        dialog.setMinimumSize(new Dimension(width, height));
-	        dialog.pack();
-	        dialog.setLocationRelativeTo(null);
-	        dialog.setVisible(true);
-	        
-	        if (runnable != null) {
-	        		runnable.run();
-	        }
-        });
-    }
+        try (InputStream input = PluginsSWT.class.getResourceAsStream(resourceFileName)) {
 
-}
+            String[] parts = resourceFileName.split("\\/");
+            File tempFile = File.createTempFile("tmp", parts[parts.length-1]);
+            tempFile.deleteOnExit();
+            try (OutputStream output = new FileOutputStream(tempFile)) { 
+	            byte[] buffer = new byte[2048];
+	            int len = input.read(buffer);
+	            while (len != -1) {
+	                output.write(buffer, 0, len);
+	                len = input.read(buffer);
+	            }
+	            FONT_CACHE.put(resourceFileName, tempFile.getAbsolutePath());
+	            return FONT_CACHE.get(resourceFileName);
+            }
+        } catch (IOException e) {
+            return null;
+        }
+    }
+} 
