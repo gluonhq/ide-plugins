@@ -65,6 +65,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 
 import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
 import com.gluonhq.plugin.dialogs.PluginDialog;
+import org.eclipse.swt.graphics.Point;
 
 public class PluginsSWT extends PluginDialog {
 
@@ -94,7 +95,7 @@ public class PluginsSWT extends PluginDialog {
     
     public PluginsSWT(Shell shell, List<String> lines) {
         super(shell);
-        	this.pluginsBean = new PluginsBean(lines);
+        this.pluginsBean = new PluginsBean(lines);
         
         target = pluginsBean.getPlugins();
         source = Stream.of(Plugin.values())
@@ -148,7 +149,7 @@ public class PluginsSWT extends PluginDialog {
         layout.marginRight = 10;
         layout.horizontalSpacing = 5;
         layout.verticalSpacing = 5;
-		center.setLayout(layout);
+        center.setLayout(layout);
         center.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
         Label label = new Label(center, SWT.CENTER);
@@ -240,13 +241,12 @@ public class PluginsSWT extends PluginDialog {
         
         return center;
     }
-    
-    @Override
-    protected void configureShell(Shell shell) {
-        super.configureShell(shell);
-        centerDialog(shell, 800, 600);
-    }
 
+    @Override
+    protected Point getInitialSize() {
+        return new Point(800, 600);
+    }
+    
     @Override
     protected Control createButtonBar(Composite parent) {
         final Composite buttonBar = (Composite) super.createButtonBar(parent);
@@ -432,7 +432,8 @@ public class PluginsSWT extends PluginDialog {
                     .map(fd -> {
                         fd.setHeight(fontSize);
                         return new Font(display, fd);
-                    }).orElse(null);
+                    })
+                    .orElse(null);
         }
         return null;   
     }

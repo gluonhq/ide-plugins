@@ -109,7 +109,9 @@ public class ApplicationsSWT extends PluginDialog {
         center.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
         Label label = new Label(center, SWT.WRAP  | SWT.LEFT);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+        gridData.widthHint = 560;
+        label.setLayoutData(gridData);
         label.setText("Select from the list below the Gluon CloudLink application to which this mobile application will be linked to. Its key and secret tokens will be added to the mobile application.");
         label.setFont(topFont);
         label.setBackground(backColor);
@@ -178,12 +180,6 @@ public class ApplicationsSWT extends PluginDialog {
         return center;
     }
     
-    @Override
-    protected void configureShell(Shell shell) {
-        super.configureShell(shell);
-        centerDialog(shell, 600, 400);
-    }
-
     @Override
     protected Control createButtonBar(Composite parent) {
         final Composite buttonBar = (Composite) super.createButtonBar(parent);

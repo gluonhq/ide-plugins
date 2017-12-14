@@ -102,7 +102,9 @@ public class AccountSWT extends PluginDialog {
         center.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
         Label label = new Label(center, SWT.WRAP  | SWT.LEFT);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+        gridData.widthHint = 560;
+        label.setLayoutData(gridData);
         label.setText("By signing in with your Gluon CloudLink user and password, you will be able to access your Gluon CloudLink applications and link your mobile application to one of them.");
         label.setFont(topFont);
         label.setBackground(backColor);
@@ -200,12 +202,6 @@ public class AccountSWT extends PluginDialog {
         return bottom;
     }
     
-    @Override
-    protected void configureShell(Shell shell) {
-        super.configureShell(shell);
-        centerDialog(shell, 600, 400);
-    }
-
     @Override
     protected Control createButtonBar(Composite parent) {
         final Composite buttonBar = (Composite) super.createButtonBar(parent);

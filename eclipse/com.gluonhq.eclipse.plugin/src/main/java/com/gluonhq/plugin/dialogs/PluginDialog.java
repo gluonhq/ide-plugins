@@ -35,10 +35,13 @@ import java.util.Locale;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,9 +55,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public abstract class PluginDialog extends Dialog {
 
-    protected static OS myOS;
+    protected static final OS myOS;
     protected static enum OS { Windows, Mac, Linux };
     
+    private static final int MIN_HEIGHT;
     static {
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ROOT);
         if (os.contains("mac") || os.contains("darwin")) {
@@ -64,6 +68,7 @@ public abstract class PluginDialog extends Dialog {
         } else {
             myOS = OS.Linux;
         }
+        MIN_HEIGHT = myOS == OS.Mac ? 372 : myOS == OS.Windows ? 400 : 430;
     }
     
     protected Composite composite;
@@ -93,6 +98,15 @@ public abstract class PluginDialog extends Dialog {
         layout.marginWidth = 0;
         layout.verticalSpacing = 0;
         composite.setLayout(layout);
+        
+        composite.addPaintListener(new PaintListener() {
+			
+            @Override
+            public void paintControl(PaintEvent e) {
+                centerDialog(getShell());
+                composite.removePaintListener(this);
+            }
+        });
         return composite;
     }
     
@@ -179,14 +193,23 @@ public abstract class PluginDialog extends Dialog {
 
         return buttonBar;
     }
-    
-    protected void centerDialog(Shell shell, int width, int height) {
+
+    @Override
+    protected Point getInitialSize() {
+        final Point initialSize = super.getInitialSize();
+        if (initialSize.y < MIN_HEIGHT) {
+            initialSize.y = MIN_HEIGHT;
+        }
+        return initialSize;
+    }
+
+    private void centerDialog(Shell shell) {
         Monitor primary = display.getPrimaryMonitor();
-        Rectangle bounds = primary.getBounds();
-        int x = bounds.x + (bounds.width - width) / 2;
-        int y = bounds.y + (bounds.height - height) / 2;
+        Rectangle visualBounds = primary.getClientArea();
+        final Point dialogSize = shell.getSize();
+        int x = visualBounds.x + (visualBounds.width - dialogSize.x) / 2;
+        int y = visualBounds.y + (visualBounds.height - dialogSize.y) / 2;
         shell.setLocation(x, y);
-        shell.setSize(width, height);
     }
     
     @Override

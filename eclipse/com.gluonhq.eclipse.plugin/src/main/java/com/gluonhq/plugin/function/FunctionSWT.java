@@ -88,7 +88,9 @@ public class FunctionSWT extends PluginDialog {
         center.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
         Label label = new Label(center, SWT.WRAP  | SWT.LEFT);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+        gridData.widthHint = 560;
+        label.setLayoutData(gridData);
         label.setText("Add a Gluon Function subproject to your project by providing a function name and a package name. Later on, this function can be pushed to Gluon CloudLink at any time using Upload Gluon Function.");
         label.setFont(topFont);
         label.setBackground(backColor);
@@ -145,12 +147,6 @@ public class FunctionSWT extends PluginDialog {
         return center;
     }
     
-    @Override
-    protected void configureShell(Shell shell) {
-        super.configureShell(shell);
-        centerDialog(shell, 600, 400);
-    }
-
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
