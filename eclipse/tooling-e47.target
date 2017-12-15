@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Buildship Eclipse Oxygen Target Platform" sequenceNumber="1">
+<?pde version="3.8"?><target includeMode="feature" name="Buildship Eclipse Oxygen Target Platform" sequenceNumber="5">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.7.0.I20170612-0950"/>
-<unit id="org.eclipse.m2e.feature.feature.group" version="1.8.0.20160921-2002"/>
 <unit id="org.eclipse.buildship.core" version="2.1.2.v20170807-1324"/>
 <unit id="org.eclipse.fx.ide.jdt.core" version="3.0.0.201705220750"/>
+<unit id="org.eclipse.m2e.feature.feature.group" version="1.8.0.20160921-2002"/>
+<unit id="org.eclipse.sdk.ide" version="4.7.0.I20170612-0950"/>
 <repository location="http://builds.gradle.org:8000/eclipse/update-site/mirror/releases-oxygen/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.gradle.toolingapi" version="3.5.0.v20170801075239"/>
-<unit id="com.gradleware.tooling.utils" version="0.19.3.v20170801075239"/>
 <unit id="com.gradleware.tooling.client" version="0.19.3.v20170801075239"/>
 <unit id="com.gradleware.tooling.model" version="0.19.3.v20170801075239"/>
+<unit id="com.gradleware.tooling.utils" version="0.19.3.v20170801075239"/>
+<unit id="org.gradle.toolingapi" version="3.5.0.v20170801075239"/>
 <repository location="jar:https://repo.gradle.org/gradle/tooling-libs-releases-local/com/gradleware/tooling/p2-repository/0.19.3/p2-repository-0.19.3.zip!/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
