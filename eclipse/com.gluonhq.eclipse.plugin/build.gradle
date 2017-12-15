@@ -12,5 +12,5 @@ repositories {
 dependencies {
     compile withEclipseBundle("org.eclipse.swt.${ECLIPSE_WS}.${ECLIPSE_OS}.${ECLIPSE_ARCH}")
     compile withEclipseBundle("org.eclipse.buildship.core")
-    bundled 'com.gluonhq:ide-plugin-templates:2.7.3'
+    bundled 'com.gluonhq:ide-plugin-templates:2.7.4'
 }

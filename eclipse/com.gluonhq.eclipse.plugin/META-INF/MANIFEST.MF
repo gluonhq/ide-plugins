@@ -32,5 +32,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/controlsfx-8.40.12.jar,
  lib/freemarker-2.3.23.jar,
- lib/ide-plugin-templates-2.7.3.jar,
+ lib/ide-plugin-templates-2.7.4.jar,
  lib/javax.json-1.0.4.jar
