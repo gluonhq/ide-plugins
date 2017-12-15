@@ -31,12 +31,11 @@ package com.gluonhq.plugin.dialogs;
 
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
@@ -99,14 +98,6 @@ public abstract class PluginDialog extends Dialog {
         layout.verticalSpacing = 0;
         composite.setLayout(layout);
         
-        composite.addPaintListener(new PaintListener() {
-			
-            @Override
-            public void paintControl(PaintEvent e) {
-                centerDialog(getShell());
-                composite.removePaintListener(this);
-            }
-        });
         return composite;
     }
     
@@ -203,13 +194,17 @@ public abstract class PluginDialog extends Dialog {
         return initialSize;
     }
 
-    private void centerDialog(Shell shell) {
-        Monitor primary = display.getPrimaryMonitor();
-        Rectangle visualBounds = primary.getClientArea();
-        final Point dialogSize = shell.getSize();
-        int x = visualBounds.x + (visualBounds.width - dialogSize.x) / 2;
-        int y = visualBounds.y + (visualBounds.height - dialogSize.y) / 2;
-        shell.setLocation(x, y);
+    @Override
+    protected Point getInitialLocation(Point initialSize) {
+        Monitor activeMonitor = Stream.of(display.getMonitors())
+                .filter(m -> m.getBounds().intersects(getShell().getBounds()))
+                .findFirst()
+                .orElse(display.getPrimaryMonitor());
+
+        Rectangle visualBounds = activeMonitor.getClientArea();
+        int x = visualBounds.x + (visualBounds.width - initialSize.x) / 2;
+        int y = visualBounds.y + (visualBounds.height - initialSize.y) / 2;
+        return new Point(x, y);
     }
     
     @Override
