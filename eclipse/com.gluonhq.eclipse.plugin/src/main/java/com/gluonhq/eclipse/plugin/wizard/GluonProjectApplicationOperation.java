@@ -79,8 +79,10 @@ public class GluonProjectApplicationOperation {
 			
 			parameters.put(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
+			parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_GVM_VERSION, ProjectConstants.getMobileGvmVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_DOWN_VERSION, ProjectConstants.getDownVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_PLUGIN, ProjectConstants.getPluginVersion());
+			parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_GVM_PLUGIN, ProjectConstants.getPluginGvmVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
 
 			List<File> filesToOpen = new ArrayList<>();
