@@ -2,7 +2,10 @@
 <?pde version="3.8"?><target includeMode="feature" name="Buildship Eclipse Oxygen Target Platform" sequenceNumber="5">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.buildship.core" version="2.1.2.v20170807-1324"/>
+<unit id="org.eclipse.buildship.core" version="2.2.1.v20180125-1441"/>
+<repository location="http://download.eclipse.org/buildship/updates/e47/releases/2.x/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.fx.ide.jdt.core" version="3.0.0.201705220750"/>
 <unit id="org.eclipse.m2e.feature.feature.group" version="1.8.0.20160921-2002"/>
 <unit id="org.eclipse.sdk.ide" version="4.7.0.I20170612-0950"/>
