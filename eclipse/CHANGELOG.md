@@ -1,5 +1,5 @@
 #### 2.5.2
-_2018_02_05
+_2018_02_05_
 * Update compatibility with Eclipse Buildship 2.2.x
 
 ##### 2.5.1
