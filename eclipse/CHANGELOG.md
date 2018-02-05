@@ -1,3 +1,7 @@
+#### 2.5.2
+_2018_02_05
+* Update compatibility with Eclipse Buildship 2.2.x
+
 ##### 2.5.1
 _2018-01-17_
 * Add Gluon options to project context menu
