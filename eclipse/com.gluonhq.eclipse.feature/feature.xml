@@ -19,6 +19,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.buildship" version="2.2.0" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="com.gluonhq.eclipse.plugin"
          download-size="0"
