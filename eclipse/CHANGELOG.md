@@ -1,5 +1,9 @@
+#### 2.5.3
+_2018-02-06_
+* Declare a requirement to [Buildship](https://marketplace.eclipse.org/content/buildship-gradle-integration) 2.2.0+
+
 #### 2.5.2
-_2018_02_05_
+_2018-02-05_
 * Update compatibility with Eclipse Buildship 2.2.x
 
 ##### 2.5.1
