@@ -1,0 +1,11 @@
+# Gradle
+build/
+.gradle/
+
+# IntelliJ IDEA
+.idea/
+
+# Netbeans
+.nb-gradle/
+.nb-gradle-properties
+sandbox/
