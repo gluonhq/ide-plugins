@@ -1,0 +1,119 @@
+<idea-plugin version="2">
+    <id>com.gluonhq.plugin.intellij</id>
+    <name>Gluon Plugin</name>
+    <version>2.6.2</version>
+    <vendor email="support@gluonhq.com" url="http://gluonhq.com">Gluon</vendor>
+
+    <description><![CDATA[
+      The Gluon Plugin allows developers to create Java applications that target the Android and iOS mobile platforms as well as the Desktop platform using the same codebase.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      <b>2.6.3</b>
+      <ul>
+      <li>Introduce Single View project using Gluon VM</li>
+      </ul>
+      <b>2.6.2</b>
+      <ul>
+      <li>Fix NullPointerException when opening context menu in gradle projects with only one project</li>
+      <li>Fix issue on Linux when opening a browser window</li>
+      </ul>
+      <b>2.6.1</b>
+      <ul>
+      <li>Fix for issue with opt-in</li>
+      </ul>
+      <b>2.6.0</b>
+      <ul>
+      <li>Sign in with your Gluon CloudLink account.</li>
+      <li>Add Gluon Functions to your Gluon Mobile application.</li>
+      <li>Add Gluon Mobile dependency to Glisten Afterburner projects.</li>
+      </ul>
+      <b>2.5.1</b>
+      <ul>
+      <li>Added latest Charm Down services.</li>
+      <li>Fix the "directory already exists" issue when creating a new Gluon Project.</li>
+      <li>Fix a bug when Charm Down services are updated from the Gluon Mobile Settings dialog.</li>
+      <li>Fix bug when adding the Charm Down Pictures service.</li>
+      </ul>
+      <b>2.5.0</b>
+      <ul>
+      <li>New Gluon Mobile template using Glisten Afterburner.</li>
+      <li>Gluon Mobile settings dialog to allow easy configuration of Charm Down services.</li>
+      </ul>
+      <b>2.4.0</b>
+      <ul>
+      <li>Use Gluon Mobile 4.0.0 when creating projects.</li>
+      </ul>
+      <b>2.3.0</b>
+      <ul>
+      <li>Use most recent Gluon Mobile and Gluon Desktop by default when creating projects.</li>
+      </ul>
+      <b>2.2.0</b>
+      <ul>
+      <li>Update jfxmobile plugin version to 1.0.8</li>
+      </ul>
+      <b>2.1.1</b>
+      <ul>
+      <li>Make plugin compatible with IntelliJ IDEA 2016.</li>
+      </ul>
+      <b>2.1.0</b>
+      <ul>
+      <li>Provide extra templates for bootstrapping projects using Gluon Desktop.</li>
+      <li>Allow easy configuration of licences in your apps. (see IDE Settings)</li>
+      </ul>
+      <b>2.0.0</b>
+      <ul><li>Provide extra templates for bootstrapping projects using Gluon Mobile.</li></ul>
+      <b>1.0.1</b>
+      <ul><li>Make plugin compatible with IntelliJ IDEA 15.</li></ul>
+      <b>1.0.0</b>
+      <ul><li>Initial release.</li></ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="131"/>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends>org.jetbrains.plugins.gradle</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectTemplatesFactory implementation="com.gluonhq.plugin.intellij.module.GluonProjectTemplatesFactory"/>
+        <!-- groupId="build.tools" -->
+        <applicationConfigurable instance="com.gluonhq.plugin.intellij.options.Options"/>
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
+
+    <actions>
+        <group id="GluonRoot" class="com.gluonhq.plugin.intellij.menu.GluonAction" text="Gluon" popup="true"
+               icon="/com/gluonhq/plugin/templates/icons/Gluon_16x16.png">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <action id="FunctionConfig" class="com.gluonhq.plugin.intellij.menu.function.AddGluonFunctionAction"
+                    text="Gluon Function" description="Add a Gluon Function project"/>
+            <action id="UploadConfig" class="com.gluonhq.plugin.intellij.menu.function.UploadGluonFunctionAction"
+                    text="Upload Gluon Function" description="Upload Gluon Function"/>
+            <separator />
+            <action id="DownConfig" class="com.gluonhq.plugin.intellij.menu.down.GluonMobileSettingsAction"
+                    text="Gluon Mobile" description="Edit Gluon Mobile settings"/>
+            <action id="CloudLinkConfig" class="com.gluonhq.plugin.intellij.menu.cloudlink.GluonCloudLinkSettingsAction"
+                    text="Gluon CloudLink" description="Edit Gluon CloudLink settings"/>
+        </group>
+        <action id="GluonCode" class="com.gluonhq.plugin.intellij.menu.code.FunctionGenerator"
+                text="Gluon Function..." description="Generate Function Code">
+            <add-to-group group-id="GenerateGroup" anchor="first" />
+        </action>
+    </actions>
+
+    <module-components>
+        <!-- Add your module components here -->
+    </module-components>
+
+</idea-plugin>
