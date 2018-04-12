@@ -1,0 +1,38 @@
+plugins {
+    id "org.jetbrains.intellij" version "0.2.17"
+}
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url 'http://nexus.gluonhq.com/nexus/content/repositories/releases'
+    }
+}
+
+dependencies {
+    compile 'com.gluonhq:ide-plugin-templates:2.8.0'
+}
+
+
+intellij {
+    version = 'IC-2017.3'
+    downloadSources = true
+    plugins = [ 'IntelliLang', 'gradle' ]
+    pluginName 'Gluon Plugin'
+    updateSinceUntilBuild false
+    sandboxDirectory = "${rootProject.projectDir}/idea-sandbox"
+}
+
+publishPlugin {
+    username intellijPublishUsername
+    password intellijPublishPassword
+}
