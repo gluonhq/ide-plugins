@@ -1,0 +1,120 @@
+apply plugin: 'nbm'
+
+group = 'com.gluonhq.plugin'
+version = '2.6.2'
+
+ext.scriptFile = { String fileName ->
+    new File(new File(rootDir, 'gradle'), fileName)
+}
+
+apply from: scriptFile('compiler-settings.gradle')
+int javaVersion = 8
+
+configureJavaCompilers(javaVersion)
+
+String netbeansVersion = 'RELEASE80'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'http://nexus.gluonhq.com/nexus/content/repositories/releases/' }
+    maven { url 'http://bits.netbeans.org/nexus/content/groups/netbeans' }
+    maven { url 'http://bits.netbeans.org/maven2/' }
+    maven { url 'http://repo.gradle.org/gradle/libs-releases-local' }
+    maven { url 'http://dl.bintray.com/kelemen/maven' }
+}
+
+compileJava {
+    String resDirsPath = sourceSets.main.resources.srcDirs.collect({ it.path }).join(File.pathSeparator)
+    options.compilerArgs = ['-Xlint', '-sourcepath', resDirsPath]
+}
+
+def tryGetProperty = {String name, String defaultValue ->
+    if (!project.hasProperty(name)) {
+        return defaultValue
+    }
+
+    return project.property(name)?.toString()
+}
+
+nbm {
+    moduleName = 'com.gluon.plugin.netbeans'
+    localizingBundle = 'com/gluonhq/plugin/netbeans/Bundle.properties'
+
+    requires('cnb.org.netbeans.gradle.project')
+
+    keyStore {
+        keyStoreFile = file('keystore')
+        username = 'gluon'
+        password = tryGetProperty('gluonPluginKeyStorePass', '')
+    }
+}
+
+def netbeansModule = { String groupName, String moduleName ->
+    [
+        group: groupName,
+        name: moduleName,
+        version: netbeansVersion
+    ]
+}
+
+def netbeansApi = { String moduleName ->
+    netbeansModule('org.netbeans.api', moduleName)
+}
+
+dependencies {
+    providedCompile netbeansApi('org-netbeans-api-progress')
+    providedCompile netbeansApi('org-netbeans-modules-autoupdate-services')
+    providedCompile netbeansApi('org-netbeans-modules-options-api')
+    providedCompile netbeansApi('org-netbeans-modules-projectapi')
+    providedCompile netbeansApi('org-netbeans-modules-projectuiapi')
+    providedCompile netbeansApi('org-netbeans-modules-editor-lib2')
+    providedCompile netbeansApi('org-netbeans-modules-editor-mimelookup')
+    providedCompile netbeansApi('org-netbeans-modules-java-source')
+    providedCompile netbeansApi('org-netbeans-libs-javacapi')
+    providedCompile netbeansApi('org-openide-awt')
+    providedCompile netbeansApi('org-openide-dialogs')
+    providedCompile netbeansApi('org-openide-filesystems')
+    providedCompile netbeansApi('org-openide-loaders')
+    providedCompile netbeansApi('org-openide-modules')
+    providedCompile netbeansApi('org-openide-nodes')
+    providedCompile netbeansApi('org-openide-util')
+    providedCompile netbeansApi('org-openide-util-lookup')
+    providedCompile files(findToolsJar(javaVersion))
+
+    providedCompile 'com.github.kelemen:netbeans-gradle-plugin:1.4.2'
+
+    compile 'com.gluonhq:ide-plugin-templates:2.8.0'
+    compile 'org.apache.logging.log4j:log4j-1.2-api:2.5'
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
+// If NetBeans fails to start, click Disable modules and continue, go to plugins,
+// and install Gradle. 
+// Then check if Gluon plugin is installed but not activated: activate and restart.
+// If it wasn't installed, close NB and run the task again
+
+task netBeansRun(type: Exec) {
+    doFirst {
+        def confFile = project.file("sandbox/testuserdir/etc/netbeans.conf")
+        if (!confFile.parentFile.exists()) {
+            confFile.parentFile.mkdirs()
+            confFile.write "netbeans_extraclusters=\"$project.buildDir/module\""
+        }
+    }
+
+    workingDir "sandbox"
+
+    def executable = System.getProperty('os.name').toLowerCase().contains('windows') ? 'netbeans.exe' : 'netbeans'
+    if (project.hasProperty('netBeansInstallDir')) {
+        executable = netBeansInstallDir + executable
+    } else {
+        logger.warn('netBeansInstallDir property is not specified. Assuming \'netbeans\' executable is on PATH.')
+    }
+    commandLine executable, '--userdir', "testuserdir"
+}
