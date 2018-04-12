@@ -1,4 +1,4 @@
-# Change Log
+## Changelog IntelliJ IDEA
 
 #### 2.6.3
 
