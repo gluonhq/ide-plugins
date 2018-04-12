@@ -13,3 +13,7 @@ The Gluon Plugin for Eclipse has the following dependency:
 ## Release Notes
 
 [Eclipse](https://github.com/gluonhq/ide-plugins/blob/master/eclipse/CHANGELOG.md)
+
+[IntelliJ IDEA](https://github.com/gluonhq/ide-plugins/blob/master/intellij/CHANGELOG.md)
+
+[NetBeans](https://github.com/gluonhq/ide-plugins/blob/master/netbeans/CHANGELOG.md)
