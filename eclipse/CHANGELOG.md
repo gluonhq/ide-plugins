@@ -1,7 +1,7 @@
 ## Changelog Eclipse
 
 #### 2.6.0
-_2018-04-24
+_2018-04-24_
 * Update templates for Gluon Mobile 5
 
 #### 2.5.3
