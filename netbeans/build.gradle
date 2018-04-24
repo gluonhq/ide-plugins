@@ -1,7 +1,7 @@
 apply plugin: 'nbm'
 
 group = 'com.gluonhq.plugin'
-version = '2.6.2'
+version = '2.7.0'
 
 ext.scriptFile = { String fileName ->
     new File(new File(rootDir, 'gradle'), fileName)
