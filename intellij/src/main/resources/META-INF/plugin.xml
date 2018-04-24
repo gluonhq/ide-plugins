@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>com.gluonhq.plugin.intellij</id>
     <name>Gluon Plugin</name>
-    <version>2.6.2</version>
+    <version>2.7.0</version>
     <vendor email="support@gluonhq.com" url="http://gluonhq.com">Gluon</vendor>
 
     <description><![CDATA[
@@ -9,64 +9,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      <b>2.6.3</b>
+      <b>2.7.0</b>
       <ul>
-      <li>Introduce Single View project using Gluon VM</li>
+      <li>Update templates for Gluon Mobile 5</li>
       </ul>
-      <b>2.6.2</b>
-      <ul>
-      <li>Fix NullPointerException when opening context menu in gradle projects with only one project</li>
-      <li>Fix issue on Linux when opening a browser window</li>
-      </ul>
-      <b>2.6.1</b>
-      <ul>
-      <li>Fix for issue with opt-in</li>
-      </ul>
-      <b>2.6.0</b>
-      <ul>
-      <li>Sign in with your Gluon CloudLink account.</li>
-      <li>Add Gluon Functions to your Gluon Mobile application.</li>
-      <li>Add Gluon Mobile dependency to Glisten Afterburner projects.</li>
-      </ul>
-      <b>2.5.1</b>
-      <ul>
-      <li>Added latest Charm Down services.</li>
-      <li>Fix the "directory already exists" issue when creating a new Gluon Project.</li>
-      <li>Fix a bug when Charm Down services are updated from the Gluon Mobile Settings dialog.</li>
-      <li>Fix bug when adding the Charm Down Pictures service.</li>
-      </ul>
-      <b>2.5.0</b>
-      <ul>
-      <li>New Gluon Mobile template using Glisten Afterburner.</li>
-      <li>Gluon Mobile settings dialog to allow easy configuration of Charm Down services.</li>
-      </ul>
-      <b>2.4.0</b>
-      <ul>
-      <li>Use Gluon Mobile 4.0.0 when creating projects.</li>
-      </ul>
-      <b>2.3.0</b>
-      <ul>
-      <li>Use most recent Gluon Mobile and Gluon Desktop by default when creating projects.</li>
-      </ul>
-      <b>2.2.0</b>
-      <ul>
-      <li>Update jfxmobile plugin version to 1.0.8</li>
-      </ul>
-      <b>2.1.1</b>
-      <ul>
-      <li>Make plugin compatible with IntelliJ IDEA 2016.</li>
-      </ul>
-      <b>2.1.0</b>
-      <ul>
-      <li>Provide extra templates for bootstrapping projects using Gluon Desktop.</li>
-      <li>Allow easy configuration of licences in your apps. (see IDE Settings)</li>
-      </ul>
-      <b>2.0.0</b>
-      <ul><li>Provide extra templates for bootstrapping projects using Gluon Mobile.</li></ul>
-      <b>1.0.1</b>
-      <ul><li>Make plugin compatible with IntelliJ IDEA 15.</li></ul>
-      <b>1.0.0</b>
-      <ul><li>Initial release.</li></ul>
     ]]>
     </change-notes>
 

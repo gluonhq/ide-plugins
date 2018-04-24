@@ -1,5 +1,9 @@
 ## Changelog IntelliJ IDEA
 
+#### 2.7.0
+_2018-04-24_
+* Update templates for Gluon Mobile 5
+
 #### 2.6.3
 
 * Introduce Single View project using Gluon VM

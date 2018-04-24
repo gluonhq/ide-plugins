@@ -1,5 +1,9 @@
 ## Changelog Eclipse
 
+#### 2.6.0
+_2018-04-24_
+* Update templates for Gluon Mobile 5
+
 #### 2.5.3
 _2018-02-06_
 * Declare a requirement to [Buildship](https://marketplace.eclipse.org/content/buildship-gradle-integration) 2.2.0+
