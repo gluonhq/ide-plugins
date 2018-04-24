@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.gluonhq:ide-plugin-templates:2.8.0'
+    compile 'com.gluonhq:ide-plugin-templates:2.9.0'
 }
 
 
