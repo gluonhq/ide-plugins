@@ -9,3 +9,6 @@ build/
 .nb-gradle/
 .nb-gradle-properties
 sandbox/
+
+# Files
+keystore
