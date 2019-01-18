@@ -35,11 +35,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.buildship.core.CorePlugin;
-import org.eclipse.buildship.core.configuration.BuildConfiguration;
-import org.eclipse.buildship.core.configuration.RunConfiguration;
-import org.eclipse.buildship.core.console.ProcessStreams;
-import org.eclipse.buildship.core.util.progress.DelegatingProgressListener;
+import org.eclipse.buildship.core.internal.CorePlugin;
+import org.eclipse.buildship.core.internal.configuration.BuildConfiguration;
+import org.eclipse.buildship.core.internal.configuration.RunConfiguration;
+import org.eclipse.buildship.core.internal.console.ProcessStreams;
+import org.eclipse.buildship.core.internal.util.progress.DelegatingProgressListener;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -58,7 +58,6 @@ import com.gluonhq.eclipse.plugin.menu.ProjectUtils;
 import com.gluonhq.plugin.function.UploadFunction;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
-import com.gradleware.tooling.toolingmodel.repository.TransientRequestAttributes;
 
 public class ExecuteUploadFunction {
 
@@ -128,21 +127,21 @@ public class ExecuteUploadFunction {
                     .loadBuildConfiguration(new File(project.getRawLocationURI()));
 
             RunConfiguration runConfiguration = CorePlugin.configurationManager().createDefaultRunConfiguration(buildConfig);
-
+            /* TODO:
             BuildLauncher launcher = CorePlugin.gradleWorkspaceManager().getGradleBuild(buildConfig)
                             .newBuildLauncher(runConfiguration, CharStreams.nullWriter(), 
                                             getTransientRequestAttributes(GradleConnector.newCancellationTokenSource().token(), monitor));
             launcher.forTasks(":" + project.getName() + ":gfBundle").run();
-
+			*/
             return Status.OK_STATUS;
         }
-
+/* TODO:
         private TransientRequestAttributes getTransientRequestAttributes(CancellationToken token, IProgressMonitor monitor) {
             ProcessStreams streams = CorePlugin.processStreamsProvider().getBackgroundJobProcessStreams();
             List<ProgressListener> progressListeners = ImmutableList.<ProgressListener> of(DelegatingProgressListener.withoutDuplicateLifecycleEvents(monitor));
             ImmutableList<org.gradle.tooling.events.ProgressListener> noEventListeners = ImmutableList.<org.gradle.tooling.events.ProgressListener> of();
             return new TransientRequestAttributes(false, streams.getOutput(), streams.getError(), streams.getInput(), progressListeners, noEventListeners, token);
         }
-
+*/
     }
 }

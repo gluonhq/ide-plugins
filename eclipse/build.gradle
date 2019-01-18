@@ -13,7 +13,7 @@ ext.toolingApiBundleVersion = getBundleVersion(toolingApiVersion)
 
 // define version mapping for the 3rd-party dependencies that are not specific to a particular Eclipse version
 def eclipseVersionAgnosticDependencies = [
-     'org.gradle.toolingapi'             : toolingApiBundleVersion,
+    'org.gradle.toolingapi'             : toolingApiBundleVersion,
     'org.slf4j.api'                     : '1.7.2',
     'org.slf4j.simple'                  : '1.7.2',
     'com.google.guava'                  : '21.0.0',

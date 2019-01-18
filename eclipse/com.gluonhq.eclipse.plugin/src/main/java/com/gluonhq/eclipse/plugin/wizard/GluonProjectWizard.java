@@ -31,13 +31,10 @@ package com.gluonhq.eclipse.plugin.wizard;
 
 import java.io.File;
 
-import org.eclipse.buildship.core.util.progress.AsyncHandler;
-import org.eclipse.buildship.core.workspace.NewProjectHandler;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.buildship.core.internal.workspace.NewProjectHandler;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
-import org.gradle.tooling.CancellationToken;
 
 import com.gluonhq.eclipse.plugin.HelpContext;
 import com.gluonhq.eclipse.plugin.UiPlugin;
@@ -54,8 +51,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
     private static final String WIZARD_ID = "com.gluonhq.eclipse.plugin.wizard"; //$NON-NLS-1$
 	
 	private final ProjectData projectData;
-	private final GluonProjectApplicationOperation operation;
-
+	
 	// the controllers that contain the wizard logic
 	private final ProjectImportWizardController importController;
 
@@ -66,8 +62,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         setDialogSettings(getOrCreateDialogSection(UiPlugin.getInstance().getDialogSettings()));
         
 		projectData = new ProjectData(gluonProject);
-		operation = new GluonProjectApplicationOperation(projectData);
-
+		
 		// instantiate the controllers for this wizard
 		this.importController = new ProjectImportWizardController(this);
 	}
@@ -94,7 +89,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 	@Override
 	public boolean performFinish() {
 		importController.getConfiguration().setProjectDir(new File(projectData.projectLocation));
-		return this.importController.performImportProject(new NewGluonProjectInitializer(), NewProjectHandler.IMPORT_AND_MERGE);
+		return this.importController.performImportProject(getContainer(), projectData, NewProjectHandler.IMPORT_AND_MERGE);
 	}
 
 	protected ProjectData getProjectData() {
@@ -109,25 +104,4 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         }
         return section;
     }
-	
-	/**
-	 * Initializes a new Gluon project from the given configuration.
-	 */
-	private final class NewGluonProjectInitializer implements AsyncHandler {
-
-		@Override
-		public void run(IProgressMonitor monitor, CancellationToken token) {
-			monitor.beginTask("Init Gluon project", IProgressMonitor.UNKNOWN);
-			try {
-				File projectDir = new File(projectData.projectLocation);
-				if (!projectDir.exists()) {
-					if (projectDir.mkdir()) {
-						operation.perform(monitor, projectDir);
-					}
-				}
-			} finally {
-				monitor.done();
-			}
-		}
-	}
 }

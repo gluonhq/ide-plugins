@@ -12,7 +12,7 @@
 package com.gluonhq.eclipse.plugin.wizard;
 
 import com.google.common.base.Preconditions;
-import com.gradleware.tooling.toolingutils.binding.Property;
+import org.eclipse.buildship.core.internal.util.binding.Property;
 
 import java.io.File;
 
