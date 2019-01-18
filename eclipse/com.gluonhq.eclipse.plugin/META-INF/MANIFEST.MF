@@ -7,7 +7,7 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.gluonhq.eclipse.plugin.UiPlugin
 Require-Bundle: org.eclipse.buildship.core,
- org.eclipse.buildship.ui;bundle-version="3.0.0",
+ org.eclipse.buildship.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.help,
@@ -31,4 +31,5 @@ Bundle-ClassPath: .,
  lib/controlsfx-8.40.12.jar,
  lib/freemarker-2.3.23.jar,
  lib/ide-plugin-templates-2.9.0.jar,
- lib/javax.json-1.0.4.jar
+ lib/javax.json-1.0.4.jar,
+ lib/org.eclipse.buildship.ui-3.0.1.jar

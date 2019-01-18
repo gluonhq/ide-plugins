@@ -139,7 +139,9 @@ public class ExecuteUploadFunction {
         }
 
         private GradleProgressAttributes getGradleProgressAttributes(CancellationTokenSource tokenSource, IProgressMonitor monitor) {
-            return GradleProgressAttributes.builder(tokenSource, monitor).build();
+            return GradleProgressAttributes.builder(tokenSource, monitor)
+            		.withFullProgress()
+            		.build();
         }
 
     }

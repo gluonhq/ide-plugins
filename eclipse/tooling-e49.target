@@ -2,9 +2,9 @@
 <?pde version="3.8"?><target name="Buildship Eclipse 2018-09 Target Platform" sequenceNumber="1">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-        <unit id="org.eclipse.buildship.core" version="3.0.0.v20181205-1821"/>
-        <unit id="org.eclipse.buildship.ui" version="3.0.0.v20181205-1821"/>
-        <repository location="http://download.eclipse.org/buildship/updates/e410/releases/3.x/"/>
+        <unit id="org.eclipse.buildship.core" version="3.0.1.v20181217-1550"/>
+        <unit id="org.eclipse.buildship.ui" version="3.0.1.v20181217-1550"/>
+        <repository location="http://download.eclipse.org/buildship/updates/e49/releases/3.x/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
             <unit id="org.eclipse.fx.ide.jdt.core" version="3.3.0.201809010700"/>

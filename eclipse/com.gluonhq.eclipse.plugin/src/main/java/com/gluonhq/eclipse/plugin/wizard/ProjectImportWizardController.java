@@ -15,31 +15,12 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.gradle.tooling.GradleConnector;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
-import org.eclipse.ui.PlatformUI;
-
 import org.eclipse.buildship.core.GradleCore;
 import org.eclipse.buildship.core.GradleDistribution;
 import org.eclipse.buildship.core.SynchronizationResult;
 import org.eclipse.buildship.core.internal.CorePlugin;
 import org.eclipse.buildship.core.internal.DefaultGradleBuild;
 import org.eclipse.buildship.core.internal.configuration.BuildConfiguration;
-import org.eclipse.buildship.core.internal.i18n.CoreMessages;
-import org.eclipse.buildship.core.internal.operation.ToolingApiOperation;
 import org.eclipse.buildship.core.internal.operation.ToolingApiStatus;
 import org.eclipse.buildship.core.internal.operation.ToolingApiStatus.ToolingApiStatusType;
 import org.eclipse.buildship.core.internal.util.binding.Property;
@@ -55,8 +36,23 @@ import org.eclipse.buildship.ui.internal.util.workbench.WorkingSetUtils;
 import org.eclipse.buildship.ui.internal.view.execution.ExecutionsView;
 import org.eclipse.buildship.ui.internal.view.task.TaskView;
 import org.eclipse.buildship.ui.internal.wizard.project.ProjectImportConfiguration;
+import org.eclipse.buildship.ui.internal.wizard.project.ProjectImportWizard;
 import org.eclipse.buildship.ui.internal.wizard.project.ProjectWizardMessages;
-import org.eclipse.buildship.ui.internal.wizard.project.WizardHelper;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.PlatformUI;
+import org.gradle.tooling.GradleConnector;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Controller class for the {@link ProjectImportWizard}. Contains all non-UI related calculations
@@ -83,17 +79,17 @@ public class ProjectImportWizardController {
 
     public ProjectImportWizardController(IWizard projectImportWizard) {
         // assemble configuration object that serves as the data model of the wizard
-        Validator<File> projectDirValidator = Validators.and(
+    	Validator<File> projectDirValidator = Validators.and(
                 Validators.requiredDirectoryValidator(ProjectWizardMessages.Label_ProjectRootDirectory),
                 Validators.nonWorkspaceFolderValidator(ProjectWizardMessages.Label_ProjectRootDirectory));
         Validator<GradleDistributionViewModel> gradleDistributionValidator = GradleDistributionViewModel.validator();
         Validator<Boolean> applyWorkingSetsValidator = Validators.nullValidator();
         Validator<List<String>> workingSetsValidator = Validators.nullValidator();
-        Validator<File> gradleUserHomeValidator = Validators.optionalDirectoryValidator(CoreMessages.Preference_Label_Gradle_User_Home);
-        Validator<File> javaHomeValidator = Validators.optionalDirectoryValidator(CoreMessages.Preference_Label_Java_Home);
-
+        Validator<File> gradleUserHomeValidator = Validators.optionalDirectoryValidator("Gradle user home");
+        Validator<File> javaHomeValidator = Validators.optionalDirectoryValidator("Java Home");
+        
         this.configuration = new ProjectImportConfiguration(projectDirValidator, gradleDistributionValidator, gradleUserHomeValidator, javaHomeValidator, applyWorkingSetsValidator, workingSetsValidator);
-
+        
         // initialize values from the persisted dialog settings
         IDialogSettings dialogSettings = projectImportWizard.getDialogSettings();
         Optional<File> projectDir = FileUtils.getAbsoluteFile(dialogSettings.get(SETTINGS_KEY_PROJECT_DIR));
@@ -109,7 +105,7 @@ public class ProjectImportWizardController {
         List<String> jvmArguments = ImmutableList.copyOf(CollectionsUtils.nullToEmpty(dialogSettings.getArray(SETTINGS_KEY_JVM_ARGUMENTS)));
         boolean showConsoleView = dialogSettings.getBoolean(SETTINGS_KEY_SHOW_CONSOLE_VIEW);
         boolean showExecutionsView = dialogSettings.getBoolean(SETTINGS_KEY_SHOW_EXECUTIONS_VIEW);
-
+        
         this.configuration.setProjectDir(projectDir.orNull());
         this.configuration.setOverwriteWorkspaceSettings(false);
         GradleDistribution distribution;
@@ -130,7 +126,7 @@ public class ProjectImportWizardController {
         this.configuration.setJvmArguments(jvmArguments);
         this.configuration.setShowConsoleView(showConsoleView);
         this.configuration.setShowExecutionsView(showExecutionsView);
-
+        
         // store the values every time they change
         saveFilePropertyWhenChanged(dialogSettings, SETTINGS_KEY_PROJECT_DIR, this.configuration.getProjectDir());
         saveDistributionPropertyWhenChanged(dialogSettings, this.configuration.getDistribution());
@@ -222,10 +218,9 @@ public class ProjectImportWizardController {
                 }
             });
         } catch (InvocationTargetException e) {
-            //ToolingApiStatus status = WizardHelper.containerExceptionToToolingApiStatus(e);
-            //status.log();
-        	e.printStackTrace();
-            return false; //!ToolingApiStatusType.IMPORT_ROOT_DIR_FAILED.matches(status);
+            ToolingApiStatus status = containerExceptionToToolingApiStatus(e);
+            status.log();
+        	return !ToolingApiStatusType.IMPORT_ROOT_DIR_FAILED.matches(status);
         } catch (InterruptedException ignored) {
             return false;
         }
@@ -233,6 +228,15 @@ public class ProjectImportWizardController {
         return true;
     }
 
+    private ToolingApiStatus containerExceptionToToolingApiStatus(InvocationTargetException exception) {
+        Throwable target = exception.getTargetException() == null ? exception : exception.getTargetException();
+        if (target instanceof CoreException && ((CoreException) target).getStatus() instanceof ToolingApiStatus) {
+           return (ToolingApiStatus) ((CoreException) target).getStatus();
+        } else {
+            return ToolingApiStatus.from("Project import", target);
+        }
+    }
+    
     /**
      * A delegating {@link NewProjectHandler} which adds workingsets to the imported projects and
      * ensures that the Gradle views are visible.
