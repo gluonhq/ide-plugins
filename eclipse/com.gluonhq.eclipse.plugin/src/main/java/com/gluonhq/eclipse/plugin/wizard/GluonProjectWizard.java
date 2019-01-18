@@ -36,19 +36,16 @@ import java.util.List;
 import org.eclipse.buildship.core.GradleCore;
 import org.eclipse.buildship.core.GradleDistribution;
 import org.eclipse.buildship.core.SynchronizationResult;
-import org.eclipse.buildship.core.internal.CorePlugin;
 import org.eclipse.buildship.core.internal.DefaultGradleBuild;
 import org.eclipse.buildship.core.internal.configuration.BuildConfiguration;
 import org.eclipse.buildship.core.internal.operation.ToolingApiStatus;
 import org.eclipse.buildship.core.internal.operation.ToolingApiStatus.ToolingApiStatusType;
-import org.eclipse.buildship.core.internal.util.binding.Validator;
-import org.eclipse.buildship.core.internal.util.binding.Validators;
-import org.eclipse.buildship.core.internal.util.collections.CollectionsUtils;
-import org.eclipse.buildship.core.internal.util.file.FileUtils;
 import org.eclipse.buildship.core.internal.workspace.NewProjectHandler;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
@@ -60,14 +57,16 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.UIPlugin;
 import org.gradle.tooling.GradleConnector;
 
 import com.gluonhq.eclipse.plugin.HelpContext;
 import com.gluonhq.eclipse.plugin.UiPlugin;
 import com.gluonhq.plugin.templates.GluonProject;
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
-import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
@@ -85,25 +84,20 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 	private final ProjectImportConfiguration configuration;
 	
 	public GluonProjectWizard(GluonProject gluonProject) {
-		
-		// store the dialog settings on the wizard and use them to retrieve / persist the most
-        // recent values entered by the user
-        setDialogSettings(getOrCreateDialogSection(UiPlugin.getInstance().getDialogSettings()));
-        
-		projectData = new ProjectData(gluonProject);	
-		
-		// assemble configuration object that serves as the data model of the wizard
-    	Validator<File> projectDirValidator = Validators.and(
-                Validators.requiredDirectoryValidator("Project root directory"),
-                Validators.nonWorkspaceFolderValidator("Project root directory"));
-        Validator<GradleDistribution> gradleDistributionValidator = Validators.nullValidator();
-        Validator<Boolean> applyWorkingSetsValidator = Validators.nullValidator();
-        Validator<List<String>> workingSetsValidator = Validators.nullValidator();
-        Validator<File> gradleUserHomeValidator = Validators.optionalDirectoryValidator("Gradle user home");
-        Validator<File> javaHomeValidator = Validators.optionalDirectoryValidator("Java Home");
-        
-        this.configuration = new ProjectImportConfiguration(projectDirValidator, gradleDistributionValidator, 
-        		gradleUserHomeValidator, javaHomeValidator, applyWorkingSetsValidator, workingSetsValidator);
+		try {
+			// store the dialog settings on the wizard and use them to retrieve / persist the most
+	        // recent values entered by the user
+	        setDialogSettings(getOrCreateDialogSection(UiPlugin.getInstance().getDialogSettings()));
+	        
+			projectData = new ProjectData(gluonProject);	
+			
+			this.configuration = new ProjectImportConfiguration();
+		} catch (Throwable t) {
+			// log exception to workspace/.metadata/.log
+			UIPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, UiPlugin.PLUGIN_ID, 
+					"Error project " + gluonProject + " :: " + t.getMessage(), t));
+			throw t;
+		}
       
 	}
 
@@ -133,8 +127,8 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 		
 		IDialogSettings dialogSettings = getDialogSettings();
 		String gradleDistributionString = dialogSettings.get("gradle_distribution");
-        Optional<File> gradleUserHome = FileUtils.getAbsoluteFile(dialogSettings.get("gradle_user_home"));
-        Optional<File> javaHome = FileUtils.getAbsoluteFile(dialogSettings.get("java_home"));
+        Optional<File> gradleUserHome = getAbsoluteFile(dialogSettings.get("gradle_user_home"));
+        Optional<File> javaHome = getAbsoluteFile(dialogSettings.get("java_home"));
         GradleDistribution distribution;
         try {
             distribution = GradleDistribution.fromString(gradleDistributionString);
@@ -142,12 +136,12 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
             distribution = GradleDistribution.fromBuild();
         }
         boolean applyWorkingSets = dialogSettings.get("apply_working_sets") != null && dialogSettings.getBoolean("apply_working_sets");
-        List<String> workingSets = ImmutableList.copyOf(CollectionsUtils.nullToEmpty(dialogSettings.getArray("working_sets")));
+        List<String> workingSets = ImmutableList.copyOf(nullToEmpty(dialogSettings.getArray("working_sets")));
         boolean buildScansEnabled = dialogSettings.getBoolean("build_scans");
         boolean offlineMode = dialogSettings.getBoolean("offline_mode");
         boolean autoSync = dialogSettings.getBoolean("auto_sync");
-        List<String> arguments = ImmutableList.copyOf(CollectionsUtils.nullToEmpty(dialogSettings.getArray("arguments")));
-        List<String> jvmArguments = ImmutableList.copyOf(CollectionsUtils.nullToEmpty(dialogSettings.getArray("jvm_arguments")));
+        List<String> arguments = ImmutableList.copyOf(nullToEmpty(dialogSettings.getArray("arguments")));
+        List<String> jvmArguments = ImmutableList.copyOf(nullToEmpty(dialogSettings.getArray("jvm_arguments")));
         boolean showConsoleView = dialogSettings.getBoolean("show_console_view");
         boolean showExecutionsView = dialogSettings.getBoolean("show_executions_view");
 
@@ -176,12 +170,9 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 
                     ImportWizardNewProjectHandler workingSetsAddingNewProjectHandler = new ImportWizardNewProjectHandler(NewProjectHandler.IMPORT_AND_MERGE, 
                     		configuration, showExecutionsView);
-                    try {
-                    	GluonProjectApplicationOperation operation = new GluonProjectApplicationOperation(internalBuildConfiguration, projectData);
-                        CorePlugin.operationManager().run(operation, monitor);
-                    } catch (Exception e) {
-                        throw new InvocationTargetException(e);
-                    }
+                    
+                	GluonProjectApplicationOperation operation = new GluonProjectApplicationOperation(projectData);
+                	operation.perform(monitor, buildConfiguration.getRootProjectDirectory().getAbsoluteFile());
 
                     SynchronizationResult result = ((DefaultGradleBuild)gradleBuild).synchronize(workingSetsAddingNewProjectHandler, GradleConnector.newCancellationTokenSource(), monitor);
                     if (!result.getStatus().isOK()) {
@@ -222,6 +213,18 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         return section;
     }
 	
+	private static Optional<File> getAbsoluteFile(String path) {
+        if (Strings.isNullOrEmpty(path)) {
+            return Optional.absent();
+        } else {
+            return Optional.of(new File(path.trim()).getAbsoluteFile());
+        }
+    }
+	
+	private static String[] nullToEmpty(String[] array) {
+        return array == null ? new String[0] : array;
+    }
+	
 	/**
      * A delegating {@link NewProjectHandler} which adds workingsets to the imported projects and
      * ensures that the Gradle views are visible.
@@ -255,7 +258,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         }
 
         private void addWorkingSets(IProject project) {
-            List<String> workingSetNames = this.configuration.getApplyWorkingSets().getValue() ? ImmutableList.copyOf(this.configuration.getWorkingSets().getValue())
+            List<String> workingSetNames = this.configuration.getApplyWorkingSets() ? ImmutableList.copyOf(this.configuration.getWorkingSets())
                     : ImmutableList.<String> of();
             IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
             IWorkingSet[] workingSets = toWorkingSets(workingSetNames);

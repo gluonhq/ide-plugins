@@ -29,36 +29,27 @@
  */
 package com.gluonhq.eclipse.plugin.wizard;
 
-import com.gluonhq.plugin.templates.OptInHelper;
-import com.gluonhq.plugin.templates.ProjectConstants;
-import com.gluonhq.plugin.templates.Template;
-import com.gluonhq.plugin.templates.TemplateManager;
-
-import org.eclipse.buildship.core.internal.configuration.BuildConfiguration;
-import org.eclipse.buildship.core.internal.operation.BaseToolingApiOperation;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.gradle.tooling.CancellationTokenSource;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GluonProjectApplicationOperation extends BaseToolingApiOperation {
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.gluonhq.plugin.templates.OptInHelper;
+import com.gluonhq.plugin.templates.ProjectConstants;
+import com.gluonhq.plugin.templates.Template;
+import com.gluonhq.plugin.templates.TemplateManager;
+
+public class GluonProjectApplicationOperation  {
 
 	private final ProjectData projectData;
 
 	private Template projectTemplate = null;
 	private Template sourceTemplate = null;
 
-	private final BuildConfiguration buildConfiguration;
-
-	public GluonProjectApplicationOperation(BuildConfiguration buildConfiguration, ProjectData projectData) {
-		super("Initialize project " + buildConfiguration.getRootProjectDirectory().getName());
-		this.buildConfiguration = buildConfiguration;
-        this.projectData = projectData;
+	public GluonProjectApplicationOperation(ProjectData projectData) {
+		this.projectData = projectData;
 
 		TemplateManager templateManager = TemplateManager.getInstance();
 
@@ -66,20 +57,8 @@ public class GluonProjectApplicationOperation extends BaseToolingApiOperation {
 		sourceTemplate = templateManager.getSourceTemplate(projectTemplate.getProjectName());
 	}
 
-	@Override
-    public void runInToolingApi(CancellationTokenSource tokenSource, IProgressMonitor monitor) throws Exception {
-        initProjectIfNotExists(this.buildConfiguration, tokenSource, monitor);
-
-    }
-	
-	@Override
-    public ISchedulingRule getRule() {
-        return ResourcesPlugin.getWorkspace().getRoot();
-    }
-	
-	private  void initProjectIfNotExists(BuildConfiguration buildConfig, CancellationTokenSource tokenSource, IProgressMonitor monitor) {
-		File projectDir = buildConfig.getRootProjectDirectory().getAbsoluteFile();
-    	createProjectContents(monitor, projectDir);
+	public void perform(IProgressMonitor mon, File projectDir) {
+		createProjectContents(mon, projectDir);
 
 		// OptIn
 	    if (!ProjectData.alreadyOptedIn()) {
