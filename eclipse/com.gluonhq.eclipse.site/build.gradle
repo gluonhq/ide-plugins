@@ -31,7 +31,6 @@ remotes {
 
 dependencies {
     compile withEclipseBundle("org.eclipse.buildship.core")
-    compile withEclipseBundle("org.eclipse.buildship.ui")
     localPlugin project(':com.gluonhq.eclipse.plugin')
     localFeature project(':com.gluonhq.eclipse.feature')
 
