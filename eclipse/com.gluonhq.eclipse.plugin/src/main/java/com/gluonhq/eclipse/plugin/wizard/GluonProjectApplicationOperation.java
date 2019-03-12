@@ -29,18 +29,19 @@
  */
 package com.gluonhq.eclipse.plugin.wizard;
 
-import com.gluonhq.plugin.templates.OptInHelper;
-import com.gluonhq.plugin.templates.ProjectConstants;
-import com.gluonhq.plugin.templates.Template;
-import com.gluonhq.plugin.templates.TemplateManager;
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GluonProjectApplicationOperation {
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.gluonhq.plugin.templates.OptInHelper;
+import com.gluonhq.plugin.templates.ProjectConstants;
+import com.gluonhq.plugin.templates.Template;
+import com.gluonhq.plugin.templates.TemplateManager;
+
+public class GluonProjectApplicationOperation  {
 
 	private final ProjectData projectData;
 

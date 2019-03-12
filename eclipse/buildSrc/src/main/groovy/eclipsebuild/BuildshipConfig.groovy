@@ -46,7 +46,7 @@ class BuildshipConfig {
     }
 
     def isSnapshot() {
-        project.hasProperty(RELEASE_TYPE_PROJECT_PROPERTY) ? releaseType == SNAPSHOT : false
+        project.hasProperty(RELEASE_TYPE_PROJECT_PROPERTY) ? releaseType == SNAPSHOT : false // by default, use as snapshot release
     }
 
     def isDevelopment() {
@@ -58,7 +58,7 @@ class BuildshipConfig {
         if (RELEASE_TYPES.contains(releaseType)) {
             releaseType
         } else {
-          throw new IllegalArgumentException("Unsupported value for project property '$RELEASE_TYPE_PROJECT_PROPERTY': $releaseType. Supported values: $RELEASE_TYPES")
+            throw new IllegalArgumentException("Unsupported value for project property '$RELEASE_TYPE_PROJECT_PROPERTY': $releaseType. Supported values: $RELEASE_TYPES")
         }
     }
 

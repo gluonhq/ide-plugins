@@ -13,10 +13,15 @@
 package com.gluonhq.eclipse.plugin;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
-import org.eclipse.buildship.core.Logger;
-import org.eclipse.buildship.core.util.logging.EclipseLogger;
+import org.eclipse.buildship.core.internal.CoreTraceScopes;
+import org.eclipse.buildship.core.internal.Logger;
+import org.eclipse.buildship.core.internal.TraceScope;
+import org.eclipse.buildship.core.internal.util.logging.EclipseLogger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -73,7 +78,12 @@ public final class UiPlugin extends AbstractUIPlugin {
     }
 
     private EclipseLogger createLogger() {
-        return new EclipseLogger(getLog(), PLUGIN_ID, isDebugging());
+        Map<TraceScope, Boolean> tracingEnablement = new HashMap<>();
+        for (TraceScope scope : CoreTraceScopes.values()) {
+            String option = Platform.getDebugOption("org.eclipse.buildship.ui/trace/" + scope.getScopeKey());
+            tracingEnablement.put(scope, "true".equalsIgnoreCase(option));
+        }
+        return new EclipseLogger(getLog(), PLUGIN_ID, tracingEnablement);
     }
 
     private void unregisterServices() {
