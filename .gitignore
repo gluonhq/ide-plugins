@@ -1,0 +1,10 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ Idea
+.idea/
+*.iml
+
+# Eclipse
+bin/

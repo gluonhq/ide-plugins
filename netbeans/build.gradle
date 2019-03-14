@@ -17,11 +17,11 @@ String netbeansVersion = 'RELEASE80'
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'http://nexus.gluonhq.com/nexus/content/repositories/releases/' }
+    maven { url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/' }
     maven { url 'http://bits.netbeans.org/nexus/content/groups/netbeans' }
     maven { url 'http://bits.netbeans.org/maven2/' }
-    maven { url 'http://repo.gradle.org/gradle/libs-releases-local' }
-    maven { url 'http://dl.bintray.com/kelemen/maven' }
+    maven { url 'https://repo.gradle.org/gradle/libs-releases-local' }
+    maven { url 'https://dl.bintray.com/kelemen/maven' }
 }
 
 compileJava {
