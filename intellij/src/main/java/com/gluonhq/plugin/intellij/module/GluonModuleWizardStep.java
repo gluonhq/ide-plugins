@@ -31,7 +31,6 @@ package com.gluonhq.plugin.intellij.module;
 
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +66,7 @@ public class GluonModuleWizardStep extends ModuleWizardStep {
     }
 
     @Override
-    public boolean validate() throws ConfigurationException {
+    public boolean validate() {
         return appPropertiesEditor.isValid();
     }
 
@@ -100,6 +99,6 @@ public class GluonModuleWizardStep extends ModuleWizardStep {
         moduleBuilder.updateParameter(ProjectConstants.PARAM_IOS_ENABLED, appPropertiesEditor.isIosSelected());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_DESKTOP_ENABLED, appPropertiesEditor.isDesktopSelected());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_EMBEDDED_ENABLED, appPropertiesEditor.isEmbeddedSelected());
+        moduleBuilder.updateParameter(ProjectConstants.PARAM_BUILD_TOOL, appPropertiesEditor.getBuildTool());
     }
-
 }

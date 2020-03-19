@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.intellij" version "0.2.17"
+    id "org.jetbrains.intellij" version "0.4.16"
 }
 
 apply plugin: 'java'
@@ -19,14 +19,15 @@ repositories {
 }
 
 dependencies {
-    compile 'com.gluonhq:ide-plugin-templates:2.9.0'
+    compile 'com.gluonhq:ide-plugin-templates:2.10.0-SNAPSHOT'
 }
 
 
 intellij {
-    version = 'IC-2017.3'
-    downloadSources = true
-    plugins = [ 'IntelliLang', 'gradle' ]
+    version = 'IC-2018.3'
+    localPath = '/home/itachi/Documents/ideaIC-2018.3'
+    // downloadSources = true
+    plugins = [ 'IntelliLang', 'gradle', 'maven' ]
     pluginName 'Gluon Plugin'
     updateSinceUntilBuild false
     sandboxDirectory = "${rootProject.projectDir}/idea-sandbox"
