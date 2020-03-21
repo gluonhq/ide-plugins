@@ -30,12 +30,10 @@
 package org.gradle.plugins.nbm
 
 import org.gradle.api.Action
-import org.gradle.api.GradleException;
-import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.file.CopySpec
 import org.gradle.api.file.FileCollection
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaPlugin
@@ -47,7 +45,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.concurrent.Callable
+import java.util.concurrent.Callable 
 
 public class NbmPlugin implements Plugin<Project> {
     public static final String PROVIDED_COMPILE_CONFIGURATION_NAME = "providedCompile";
@@ -192,17 +190,18 @@ public class NbmPlugin implements Plugin<Project> {
         compileJavaTask.doLast { JavaCompile it ->
             new File(generatedClasses).mkdirs()
             project.copy {
-                from project.sourceSets.main.output.classesDir
+                from project.sourceSets.main.output.classesDirs
                 into generatedClasses
                 include '**/*.properties'
                 includeEmptyDirs false
             }
-            project.fileTree(dir: project.sourceSets.main.output.classesDir).include('**/*.properties').visit {
+            project.sourceSets.main.output.classesDirs.filter {
+                include '**/*.properties'
+            }.each {
                 if (!it.isDirectory()) {
                     it.file.delete()
                 }
             }
-
         }
         Copy processResourcesTask = project.tasks.getByName('processResources')
         processResourcesTask.outputs.dir(generatedResources)

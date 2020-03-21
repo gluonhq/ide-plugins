@@ -31,14 +31,15 @@ package com.gluonhq.plugin.netbeans.template.visuals;
 
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.TemplateUtils;
-import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.Document;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.Document;
+import java.io.File;
 
 public class GluonMobilePanelVisual extends GluonBasePanelVisual {
 
@@ -83,6 +84,14 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
         platformIosCheckbox = new javax.swing.JCheckBox();
         platformDesktopCheckbox = new javax.swing.JCheckBox();
         platformEmbeddedCheckbox = new javax.swing.JCheckBox();
+        buildToolsLabel = new javax.swing.JLabel();
+        buildToolMavenRadioButton = new javax.swing.JRadioButton();
+        buildToolGradleRadioButton = new javax.swing.JRadioButton();
+        buildToolMavenRadioButton.setActionCommand("maven");
+        buildToolGradleRadioButton.setActionCommand("gradle");
+        buildTool = new ButtonGroup();
+        buildTool.add(buildToolMavenRadioButton);
+        buildTool.add(buildToolGradleRadioButton);
 
         projectNameLabel.setLabelFor(projectNameTextField);
         org.openide.awt.Mnemonics.setLocalizedText(projectNameLabel, org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.projectNameLabel.text")); // NOI18N
@@ -126,6 +135,19 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
         org.openide.awt.Mnemonics.setLocalizedText(platformDesktopCheckbox, org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.platformDesktopCheckbox.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(platformEmbeddedCheckbox, org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.platformEmbeddedCheckbox.text")); // NOI18N
+        platformEmbeddedCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                platformEmbeddedCheckboxActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(buildToolsLabel, org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.buildToolsLabel.text")); // NOI18N
+
+        buildToolMavenRadioButton.setSelected(true);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/gluonhq/plugin/netbeans/template/visuals/Bundle"); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(buildToolMavenRadioButton, bundle.getString("GluonMobilePanelVisual.buildToolMavenRadioButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(buildToolGradleRadioButton, bundle.getString("GluonMobilePanelVisual.buildToolGradleRadioButton.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -140,7 +162,8 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
                     .addComponent(packageNameLabel)
                     .addComponent(mainClassNameLabel)
                     .addComponent(mainClassLabel)
-                    .addComponent(platformsLabel))
+                    .addComponent(platformsLabel)
+                    .addComponent(buildToolsLabel))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -155,10 +178,12 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
                         .addComponent(browseButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buildToolGradleRadioButton)
                             .addComponent(platformEmbeddedCheckbox)
                             .addComponent(platformDesktopCheckbox)
                             .addComponent(platformIosCheckbox)
-                            .addComponent(platformAndroidCheckbox))
+                            .addComponent(platformAndroidCheckbox)
+                            .addComponent(buildToolMavenRadioButton))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -195,12 +220,22 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
                     .addComponent(platformsLabel)
                     .addComponent(platformAndroidCheckbox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(platformIosCheckbox)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(platformIosCheckbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(platformDesktopCheckbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(platformEmbeddedCheckbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buildToolMavenRadioButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(buildToolsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(platformDesktopCheckbox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(platformEmbeddedCheckbox)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addComponent(buildToolGradleRadioButton)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -227,8 +262,15 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
 
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    private void platformEmbeddedCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_platformEmbeddedCheckboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_platformEmbeddedCheckboxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.JRadioButton buildToolGradleRadioButton;
+    private javax.swing.JRadioButton buildToolMavenRadioButton;
+    private javax.swing.JLabel buildToolsLabel;
     private javax.swing.JLabel createdFolderLabel;
     private javax.swing.JTextField createdFolderTextField;
     private javax.swing.JTextField createdMainClassTextField;
@@ -247,6 +289,8 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
     private javax.swing.JLabel projectNameLabel;
     private javax.swing.JTextField projectNameTextField;
     // End of variables declaration//GEN-END:variables
+    
+    private ButtonGroup buildTool;
 
     @Override
     public void addNotify() {
@@ -345,6 +389,7 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
         d.putProperty(ProjectConstants.PARAM_IOS_ENABLED, platformIosCheckbox.isSelected());
         d.putProperty(ProjectConstants.PARAM_DESKTOP_ENABLED, platformDesktopCheckbox.isSelected());
         d.putProperty(ProjectConstants.PARAM_EMBEDDED_ENABLED, platformEmbeddedCheckbox.isSelected());
+        d.putProperty(ProjectConstants.PARAM_BUILD_TOOL, buildTool.getSelection().getActionCommand());
     }
 
     @Override

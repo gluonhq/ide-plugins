@@ -12,7 +12,7 @@ int javaVersion = 8
 
 configureJavaCompilers(javaVersion)
 
-String netbeansVersion = 'RELEASE80'
+String netbeansVersion = 'RELEASE110'
 
 repositories {
     mavenLocal()
@@ -24,24 +24,30 @@ repositories {
     maven { url 'https://dl.bintray.com/kelemen/maven' }
 }
 
-compileJava {
-    String resDirsPath = sourceSets.main.resources.srcDirs.collect({ it.path }).join(File.pathSeparator)
-    options.compilerArgs = ['-Xlint', '-sourcepath', resDirsPath]
-}
-
 def tryGetProperty = {String name, String defaultValue ->
     if (!project.hasProperty(name)) {
         return defaultValue
     }
-
     return project.property(name)?.toString()
+}
+
+clean {
+    delete "${rootDir}/sandbox"
+}
+
+compileJava {
+    // String resDirsPath = sourceSets.main.resources.srcDirs.collect({ it.path }).join(File.pathSeparator)
+    options.compilerArgs = ['-Xlint']
+    // options.sourcepath = resDirsPath
 }
 
 nbm {
     moduleName = 'com.gluon.plugin.netbeans'
     localizingBundle = 'com/gluonhq/plugin/netbeans/Bundle.properties'
 
-    requires('cnb.org.netbeans.gradle.project')
+    // Netbeans contains the Gradle plugin
+    // requires('cnb.org.netbeans.gradle.project')
+    requires('cnb.org.netbeans.modules.groovy.and.gradle.kit')
 
     keyStore {
         keyStoreFile = file('keystore')
@@ -82,9 +88,10 @@ dependencies {
     providedCompile netbeansApi('org-openide-util-lookup')
     providedCompile files(findToolsJar(javaVersion))
 
-    providedCompile 'com.github.kelemen:netbeans-gradle-plugin:1.4.2'
+    // TODO: We want to remove this dependency
+    providedCompile 'com.github.kelemen:netbeans-gradle-plugin:2.0.2'
 
-    compile 'com.gluonhq:ide-plugin-templates:2.9.0'
+    compile 'com.gluonhq:ide-plugin-templates:2.10.0-SNAPSHOT'
     compile 'org.apache.logging.log4j:log4j-1.2-api:2.5'
 }
 
