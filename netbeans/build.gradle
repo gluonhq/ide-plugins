@@ -72,6 +72,7 @@ dependencies {
     providedCompile netbeansApi('org-netbeans-modules-editor-lib2')
     providedCompile netbeansApi('org-netbeans-modules-editor-mimelookup')
     providedCompile netbeansApi('org-netbeans-modules-java-source')
+    providedCompile netbeansApi('org-netbeans-modules-gradle-java')
     providedCompile netbeansApi('org-netbeans-libs-javacapi')
     providedCompile netbeansApi('org-openide-awt')
     providedCompile netbeansApi('org-openide-dialogs')
@@ -82,9 +83,6 @@ dependencies {
     providedCompile netbeansApi('org-openide-util')
     providedCompile netbeansApi('org-openide-util-lookup')
     providedCompile files(findToolsJar(javaVersion))
-
-    // TODO: We want to remove this dependency
-    providedCompile 'com.github.kelemen:netbeans-gradle-plugin:2.0.2'
 
     compile 'com.gluonhq:ide-plugin-templates:2.10.0-SNAPSHOT'
     compile 'org.apache.logging.log4j:log4j-1.2-api:2.5'

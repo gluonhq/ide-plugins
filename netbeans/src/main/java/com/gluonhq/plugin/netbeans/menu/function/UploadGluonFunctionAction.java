@@ -50,13 +50,13 @@ public final class UploadGluonFunctionAction implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
-    private final ExecuteUploadFunction executor;
+    // private final ExecuteUploadFunction executor;
 
     private final Project project;
     
     public UploadGluonFunctionAction(Project project) {
         this.project = project;
-        this.executor = new ExecuteUploadFunction(project);
+        // this.executor = new ExecuteUploadFunction(project);
     }
 
     @Override
@@ -66,6 +66,6 @@ public final class UploadGluonFunctionAction implements ActionListener {
             return;
         }
         
-        executor.execute();
+        // executor.execute();
     }
 }
