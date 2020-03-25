@@ -1,4 +1,6 @@
-apply plugin: 'nbm'
+plugins {
+    id "cz.kubacki.nbm" version "1.17.0"
+}
 
 group = 'com.gluonhq.plugin'
 version = '2.7.0'
@@ -20,8 +22,6 @@ repositories {
     maven { url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/' }
     maven { url 'http://bits.netbeans.org/nexus/content/groups/netbeans' }
     maven { url 'http://bits.netbeans.org/maven2/' }
-    maven { url 'https://repo.gradle.org/gradle/libs-releases-local' }
-    maven { url 'https://dl.bintray.com/kelemen/maven' }
 }
 
 def tryGetProperty = {String name, String defaultValue ->
@@ -36,24 +36,19 @@ clean {
 }
 
 compileJava {
-    // String resDirsPath = sourceSets.main.resources.srcDirs.collect({ it.path }).join(File.pathSeparator)
-    options.compilerArgs = ['-Xlint']
-    // options.sourcepath = resDirsPath
+    String resDirsPath = sourceSets.main.resources.srcDirs.collect({ it.path }).join(File.pathSeparator)
+    options.compilerArgs = ['-Xlint', '-sourcepath', resDirsPath]
 }
 
 nbm {
     moduleName = 'com.gluon.plugin.netbeans'
     localizingBundle = 'com/gluonhq/plugin/netbeans/Bundle.properties'
 
-    // Netbeans contains the Gradle plugin
-    // requires('cnb.org.netbeans.gradle.project')
-    requires('cnb.org.netbeans.modules.groovy.and.gradle.kit')
-
-    keyStore {
+    /*keyStore {
         keyStoreFile = file('keystore')
         username = 'gluon'
         password = tryGetProperty('gluonPluginKeyStorePass', '')
-    }
+    }*/
 }
 
 def netbeansModule = { String groupName, String moduleName ->
