@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2020, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ public class ProjectData {
 	public boolean iosSelected = true;
 	public boolean desktopSelected = true;
 	public boolean embeddedSelected = false;
+	public String buildTool = "maven";
 	
 	public String primaryViewName = "Primary";
 	public String secondaryViewName = "Secondary";
@@ -107,6 +108,7 @@ public class ProjectData {
 		parameters.put(ProjectConstants.PARAM_IOS_ENABLED, iosSelected);
 		parameters.put(ProjectConstants.PARAM_DESKTOP_ENABLED, desktopSelected);
 		parameters.put(ProjectConstants.PARAM_EMBEDDED_ENABLED, embeddedSelected);
+		parameters.put(ProjectConstants.PARAM_BUILD_TOOL, buildTool);
 		
 		if (this.projectType.equals(GluonProject.DESKTOP_MULTIVIEW) || 
 			this.projectType.equals(GluonProject.DESKTOP_MULTIVIEWFXML) || 

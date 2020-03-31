@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2020, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,8 @@ public class ConfigureSampleClassPage extends WizardPage {
 	private Button iosCheckBox;
 	private Button desktopCheckBox;
 	private Button embeddedCheckBox;
+	private Button mavenRadioButton;
+	private Button gradleRadioButton;
 
 	private final ProjectData projectData;
 
@@ -89,7 +91,6 @@ public class ConfigureSampleClassPage extends WizardPage {
 			return;
 		}
 
-		
 		if (projectData.androidSelected) {
 			String androidValidation = validateAndroidPackageName(projectData.packageName);
 			if (androidValidation != null) {
@@ -105,6 +106,12 @@ public class ConfigureSampleClassPage extends WizardPage {
 			return;
 		}
 
+        if (projectData.buildTool.trim().isEmpty()) {
+            setErrorMessage("Build tool must be defined");
+            setPageComplete(false);
+            return;
+        }
+
 		IStatus validClassName = JavaConventions.validateJavaTypeName(projectData.mainClassName, "1.5", "1.5");
 		if (!validClassName.isOK()) {
 			setErrorMessage("Main class name is invalid");
@@ -119,19 +126,20 @@ public class ConfigureSampleClassPage extends WizardPage {
 	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite( parent, SWT.NONE );
-		container.setLayout( new GridLayout( 2, false ) );
+		container.setLayout( new GridLayout( 3, false ) );
 
 		{
 			Label l = new Label( container, SWT.NONE );
 			l.setText( "Package Name:" );
-			
+
 			packageName = new Text(container,SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
+			layoutData.horizontalSpan = 2;
 			packageName.setLayoutData(layoutData);
 			packageName.setText(projectData.packageName);
 			packageName.addModifyListener(new ModifyListener() {
-				
+
 				@Override
 				public void modifyText(ModifyEvent e) {
 					projectData.packageName = packageName.getText();
@@ -144,14 +152,15 @@ public class ConfigureSampleClassPage extends WizardPage {
 		{
 			Label l = new Label( container, SWT.NONE );
 			l.setText( "Main Class Name:" );
-			
+
 			mainClassName = new Text(container,SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
+			layoutData.horizontalSpan = 2;
 			mainClassName.setLayoutData(layoutData);
 			mainClassName.setText(projectData.mainClassName);
 			mainClassName.addModifyListener(new ModifyListener() {
-				
+
 				@Override
 				public void modifyText(ModifyEvent e) {
 					projectData.mainClassName = mainClassName.getText();
@@ -168,6 +177,7 @@ public class ConfigureSampleClassPage extends WizardPage {
 			mainClass = new Text(container,SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
+			layoutData.horizontalSpan = 2;
 			mainClass.setLayoutData(layoutData);
 			mainClass.setEnabled(false);
 		}
@@ -183,10 +193,11 @@ public class ConfigureSampleClassPage extends WizardPage {
 			androidCheckBox.setText(" Android ");
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
+			layoutData.horizontalSpan = 2;
 			androidCheckBox.setLayoutData(layoutData);
 			androidCheckBox.setSelection(true);
 			androidCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -203,7 +214,7 @@ public class ConfigureSampleClassPage extends WizardPage {
 			iosCheckBox.setLayoutData(layoutData);
 			iosCheckBox.setSelection(true);
 			iosCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -220,7 +231,7 @@ public class ConfigureSampleClassPage extends WizardPage {
 			desktopCheckBox.setLayoutData(layoutData);
 			desktopCheckBox.setSelection(true);
 			desktopCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -237,7 +248,7 @@ public class ConfigureSampleClassPage extends WizardPage {
 			embeddedCheckBox.setLayoutData(layoutData);
 			embeddedCheckBox.setSelection(false);
 			embeddedCheckBox.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 				}
@@ -246,6 +257,43 @@ public class ConfigureSampleClassPage extends WizardPage {
 				public void widgetSelected(SelectionEvent arg0) {
 					projectData.embeddedSelected = embeddedCheckBox.getSelection();
 					validate();
+				}
+			});
+		}
+		{
+			Label l = new Label( container, SWT.NONE );
+			l.setText( "Build Tool:" );
+			
+			mavenRadioButton = new Button(container, SWT.RADIO);
+			mavenRadioButton.setText(" Maven ");
+			mavenRadioButton.setLayoutData(new GridData());
+			mavenRadioButton.setSelection(true);
+			mavenRadioButton.addSelectionListener(new SelectionListener() {
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+				}
+
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					projectData.buildTool = mavenRadioButton.getText().toLowerCase().trim();
+					validate();
+				}
+			});
+			
+			gradleRadioButton = new Button(container, SWT.RADIO);
+			gradleRadioButton.setText(" Gradle ");
+			gradleRadioButton.setLayoutData(new GridData());
+			gradleRadioButton.setSelection(false);
+			gradleRadioButton.addSelectionListener(new SelectionListener() {
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+				}
+
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					projectData.buildTool = gradleRadioButton.getText().toLowerCase().trim();
 				}
 			});
 		}

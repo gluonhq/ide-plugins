@@ -7,6 +7,8 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.gluonhq.eclipse.plugin.UiPlugin
 Require-Bundle: org.eclipse.buildship.core;bundle-version="[3.0.1,4.0.0)",
+ org.eclipse.m2e.core,
+ org.eclipse.m2e.maven.runtime,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.help,
@@ -22,12 +24,11 @@ Require-Bundle: org.eclipse.buildship.core;bundle-version="[3.0.1,4.0.0)",
  org.eclipse.jface.databinding,
  org.eclipse.jface.text,
  com.ibm.icu,
- com.google.guava;bundle-version="[21.0.0,22.0.0)",
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.fx.ide.jdt.core
+ com.google.guava;bundle-version="[21.0.0,27.1.0)",
+ org.eclipse.ui.workbench.texteditor
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/controlsfx-8.40.12.jar,
  lib/freemarker-2.3.23.jar,
- lib/ide-plugin-templates-2.9.0.jar,
+ lib/ide-plugin-templates-2.10.0-SNAPSHOT.jar,
  lib/javax.json-1.0.4.jar
