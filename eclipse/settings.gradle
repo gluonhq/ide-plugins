@@ -1,3 +1,0 @@
-include ':com.gluonhq.eclipse.plugin'
-include ':com.gluonhq.eclipse.feature'
-include ':com.gluonhq.eclipse.site'
