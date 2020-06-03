@@ -24,8 +24,8 @@ dependencies {
 
 
 intellij {
-    version = 'IC-2018.3'
-    // localPath = '/home/itachi/Documents/ideaIC-2018.3'
+    version = 'IC-2019.1'
+    // localPath = 'path-to-local-installation'
     // downloadSources = true
     plugins = [ 'IntelliLang', 'gradle', 'maven' ]
     pluginName 'Gluon Plugin'
