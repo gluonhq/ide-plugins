@@ -39,3 +39,20 @@ To run or debug the plugin, import the project into Eclipse and run `mvn clean v
 This will download all the third-party dependencies required by the project.
 
 Right click on `com.gluonhq.eclipse.plugin` and select "Run As" or "Debug As" -> "Eclipse Application".
+
+## Release
+
+To release the plugin to your local repository, run the following command:
+
+```
+mvn release:perform -Prelease -Dgoals="clean install"
+```
+
+The project uses `maven-jarsigner-plugin` to sign the jars so as to avoid Eclipse to show a warning while installing the plugin.
+`maven-jarsigner-plugin` needs to be properly setup before running the release goal.
+
+In order to test a release, run the following command:
+
+```
+mvn release:prepare -Prelease
+```
