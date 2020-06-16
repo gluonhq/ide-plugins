@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonDesktopMultiFXML_displayName", description = "gluonDesktopMultiFXMLDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonDesktop_16x16.png")
+// @TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonDesktopMultiFXML_displayName", description = "gluonDesktopMultiFXMLDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonDesktop_16x16.png")
 @Messages("gluonDesktopMultiFXML_displayName=Gluon Desktop - Multi View Project (FXML)")
 public class GluonDesktopMultiFXMLWizardIterator extends GluonBaseWizardIterator {
 
