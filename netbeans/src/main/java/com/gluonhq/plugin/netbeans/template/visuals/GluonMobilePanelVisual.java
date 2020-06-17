@@ -66,6 +66,7 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buildTool = new javax.swing.ButtonGroup();
         projectNameLabel = new javax.swing.JLabel();
         projectNameTextField = new javax.swing.JTextField();
         projectLocationLabel = new javax.swing.JLabel();
@@ -87,11 +88,6 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
         buildToolsLabel = new javax.swing.JLabel();
         buildToolMavenRadioButton = new javax.swing.JRadioButton();
         buildToolGradleRadioButton = new javax.swing.JRadioButton();
-        buildToolMavenRadioButton.setActionCommand("maven");
-        buildToolGradleRadioButton.setActionCommand("gradle");
-        buildTool = new ButtonGroup();
-        buildTool.add(buildToolMavenRadioButton);
-        buildTool.add(buildToolGradleRadioButton);
 
         projectNameLabel.setLabelFor(projectNameTextField);
         org.openide.awt.Mnemonics.setLocalizedText(projectNameLabel, org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.projectNameLabel.text")); // NOI18N
@@ -143,11 +139,15 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
 
         org.openide.awt.Mnemonics.setLocalizedText(buildToolsLabel, org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.buildToolsLabel.text")); // NOI18N
 
+        buildTool.add(buildToolMavenRadioButton);
         buildToolMavenRadioButton.setSelected(true);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/gluonhq/plugin/netbeans/template/visuals/Bundle"); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(buildToolMavenRadioButton, bundle.getString("GluonMobilePanelVisual.buildToolMavenRadioButton.text")); // NOI18N
+        buildToolMavenRadioButton.setActionCommand(org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.buildToolMavenRadioButton.actionCommand")); // NOI18N
 
+        buildTool.add(buildToolGradleRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(buildToolGradleRadioButton, bundle.getString("GluonMobilePanelVisual.buildToolGradleRadioButton.text")); // NOI18N
+        buildToolGradleRadioButton.setActionCommand(org.openide.util.NbBundle.getMessage(GluonMobilePanelVisual.class, "GluonMobilePanelVisual.buildToolGradleRadioButton.actionCommand")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -168,22 +168,24 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(projectLocationTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(createdFolderTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(packageNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(mainClassNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(createdMainClassTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                            .addComponent(projectNameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(projectLocationTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(createdFolderTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(packageNameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(mainClassNameTextField)
+                            .addComponent(createdMainClassTextField, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buildToolGradleRadioButton)
-                            .addComponent(platformEmbeddedCheckbox)
-                            .addComponent(platformDesktopCheckbox)
-                            .addComponent(platformIosCheckbox)
                             .addComponent(platformAndroidCheckbox)
-                            .addComponent(buildToolMavenRadioButton))
+                            .addComponent(platformIosCheckbox)
+                            .addComponent(platformDesktopCheckbox)
+                            .addComponent(platformEmbeddedCheckbox)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(buildToolMavenRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buildToolGradleRadioButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -220,23 +222,22 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
                     .addComponent(platformsLabel)
                     .addComponent(platformAndroidCheckbox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(platformIosCheckbox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(platformDesktopCheckbox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(platformEmbeddedCheckbox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buildToolMavenRadioButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(buildToolsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(platformIosCheckbox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buildToolGradleRadioButton)
-                .addContainerGap())
+                .addComponent(platformDesktopCheckbox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(platformEmbeddedCheckbox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buildToolsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buildToolMavenRadioButton)
+                        .addComponent(buildToolGradleRadioButton)))
+                .addGap(28, 28, 28))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {buildToolGradleRadioButton, buildToolMavenRadioButton});
+
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
@@ -268,6 +269,7 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
+    private javax.swing.ButtonGroup buildTool;
     private javax.swing.JRadioButton buildToolGradleRadioButton;
     private javax.swing.JRadioButton buildToolMavenRadioButton;
     private javax.swing.JLabel buildToolsLabel;
@@ -290,8 +292,6 @@ public class GluonMobilePanelVisual extends GluonBasePanelVisual {
     private javax.swing.JTextField projectNameTextField;
     // End of variables declaration//GEN-END:variables
     
-    private ButtonGroup buildTool;
-
     @Override
     public void addNotify() {
         super.addNotify();
