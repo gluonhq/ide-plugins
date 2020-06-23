@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonDesktopSingle_displayName", description = "gluonDesktopSingleDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonDesktop_16x16.png")
+// @TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonDesktopSingle_displayName", description = "gluonDesktopSingleDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonDesktop_16x16.png")
 @Messages("gluonDesktopSingle_displayName=Gluon Desktop - Single View Project")
 public class GluonDesktopSingleWizardIterator extends GluonBaseWizardIterator {
 

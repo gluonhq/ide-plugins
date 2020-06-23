@@ -36,21 +36,9 @@ import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.Template;
 import com.gluonhq.plugin.templates.TemplateManager;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javax.swing.JFrame;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
@@ -64,6 +52,19 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class JFunction extends JFrame {
 
@@ -198,8 +199,8 @@ public class JFunction extends JFrame {
             handle.progress(85);
 
             // build and upload gluon function
-            ExecuteUploadFunction executeUpload = new ExecuteUploadFunction(fnProject);
-            executeUpload.execute();
+            // ExecuteUploadFunction executeUpload = new ExecuteUploadFunction(fnProject);
+            // executeUpload.execute();
 
             // TODO: Expand function project
 

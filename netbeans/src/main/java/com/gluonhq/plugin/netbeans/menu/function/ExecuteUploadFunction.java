@@ -29,27 +29,9 @@
  */
 package com.gluonhq.plugin.netbeans.menu.function;
 
-import com.gluonhq.plugin.function.UploadFunction;
-import com.gluonhq.plugin.netbeans.menu.ProjectUtils;
-import org.netbeans.api.project.Project;
-import org.netbeans.gradle.project.api.task.CommandCompleteListener;
-import org.netbeans.gradle.project.api.task.CustomCommandActions;
-import org.netbeans.gradle.project.api.task.GradleCommandExecutor;
-import org.netbeans.gradle.project.api.task.GradleCommandTemplate;
-import org.netbeans.gradle.project.api.task.TaskKind;
-import org.openide.filesystems.FileUtil;
-
-import javax.annotation.Nullable;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Properties;
-
 public class ExecuteUploadFunction {
 
-    private final Project project;
+    /*private final Project project;
     private final GradleCommandExecutor executor;
 
     public ExecuteUploadFunction(Project project) {
@@ -94,5 +76,5 @@ public class ExecuteUploadFunction {
 
             executor.executeCommand(command.create(), custom.create());
         }
-    }
+    }*/
 }

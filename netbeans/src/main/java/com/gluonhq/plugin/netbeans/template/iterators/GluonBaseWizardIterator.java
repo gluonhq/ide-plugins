@@ -33,18 +33,6 @@ import com.gluonhq.plugin.netbeans.template.OptInHelper;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.Template;
 import com.gluonhq.plugin.templates.TemplateManager;
-import java.awt.Component;
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import javax.swing.JComponent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
@@ -54,6 +42,15 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
+
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.*;
 
 public abstract class GluonBaseWizardIterator implements WizardDescriptor.InstantiatingIterator {
     
@@ -107,12 +104,15 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
                 (String) wiz.getProperty(ProjectConstants.PARAM_USER_PLUGIN_VERSION), false);
         }
         
+        wiz.putProperty(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
+        wiz.putProperty(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
+        wiz.putProperty(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_MOBILE_GVM_VERSION, ProjectConstants.getMobileGvmVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_DOWN_VERSION, ProjectConstants.getDownVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_MOBILE_PLUGIN, ProjectConstants.getPluginVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_MOBILE_GVM_PLUGIN, ProjectConstants.getPluginGvmVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
         
         Set<FileObject> resultSet = new LinkedHashSet<>();

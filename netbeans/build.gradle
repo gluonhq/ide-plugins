@@ -1,4 +1,6 @@
-apply plugin: 'nbm'
+plugins {
+    id "cz.kubacki.nbm" version "1.17.0"
+}
 
 group = 'com.gluonhq.plugin'
 version = '2.7.0'
@@ -12,7 +14,7 @@ int javaVersion = 8
 
 configureJavaCompilers(javaVersion)
 
-String netbeansVersion = 'RELEASE80'
+String netbeansVersion = 'RELEASE110'
 
 repositories {
     mavenLocal()
@@ -20,8 +22,17 @@ repositories {
     maven { url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/' }
     maven { url 'http://bits.netbeans.org/nexus/content/groups/netbeans' }
     maven { url 'http://bits.netbeans.org/maven2/' }
-    maven { url 'https://repo.gradle.org/gradle/libs-releases-local' }
-    maven { url 'https://dl.bintray.com/kelemen/maven' }
+}
+
+def tryGetProperty = {String name, String defaultValue ->
+    if (!project.hasProperty(name)) {
+        return defaultValue
+    }
+    return project.property(name)?.toString()
+}
+
+clean {
+    delete "${rootDir}/sandbox"
 }
 
 compileJava {
@@ -29,25 +40,15 @@ compileJava {
     options.compilerArgs = ['-Xlint', '-sourcepath', resDirsPath]
 }
 
-def tryGetProperty = {String name, String defaultValue ->
-    if (!project.hasProperty(name)) {
-        return defaultValue
-    }
-
-    return project.property(name)?.toString()
-}
-
 nbm {
     moduleName = 'com.gluon.plugin.netbeans'
     localizingBundle = 'com/gluonhq/plugin/netbeans/Bundle.properties'
 
-    requires('cnb.org.netbeans.gradle.project')
-
-    keyStore {
+    /*keyStore {
         keyStoreFile = file('keystore')
         username = 'gluon'
         password = tryGetProperty('gluonPluginKeyStorePass', '')
-    }
+    }*/
 }
 
 def netbeansModule = { String groupName, String moduleName ->
@@ -71,6 +72,7 @@ dependencies {
     providedCompile netbeansApi('org-netbeans-modules-editor-lib2')
     providedCompile netbeansApi('org-netbeans-modules-editor-mimelookup')
     providedCompile netbeansApi('org-netbeans-modules-java-source')
+    providedCompile netbeansApi('org-netbeans-modules-gradle-java')
     providedCompile netbeansApi('org-netbeans-libs-javacapi')
     providedCompile netbeansApi('org-openide-awt')
     providedCompile netbeansApi('org-openide-dialogs')
@@ -82,9 +84,7 @@ dependencies {
     providedCompile netbeansApi('org-openide-util-lookup')
     providedCompile files(findToolsJar(javaVersion))
 
-    providedCompile 'com.github.kelemen:netbeans-gradle-plugin:1.4.2'
-
-    compile 'com.gluonhq:ide-plugin-templates:2.9.0'
+    compile 'com.gluonhq:ide-plugin-templates:2.10.0-SNAPSHOT'
     compile 'org.apache.logging.log4j:log4j-1.2-api:2.5'
 }
 
