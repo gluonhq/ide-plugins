@@ -30,7 +30,6 @@
 package com.gluonhq.plugin.intellij.module;
 
 import com.gluonhq.plugin.templates.Template;
-import com.intellij.openapi.project.Project;
 import com.intellij.platform.templates.BuilderBasedTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

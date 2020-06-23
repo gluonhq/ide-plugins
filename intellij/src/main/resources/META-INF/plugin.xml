@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>com.gluonhq.plugin.intellij</id>
     <name>Gluon Plugin</name>
     <version>2.7.0</version>

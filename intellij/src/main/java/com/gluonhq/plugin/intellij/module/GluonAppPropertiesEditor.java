@@ -32,11 +32,7 @@ package com.gluonhq.plugin.intellij.module;
 import com.gluonhq.plugin.intellij.util.GluonBundle;
 import com.gluonhq.plugin.intellij.util.Utils;
 import com.gluonhq.plugin.templates.ProjectConstants;
-import com.intellij.lang.java.lexer.JavaLexer;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.java.LanguageLevel;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -57,6 +53,9 @@ public class GluonAppPropertiesEditor implements ChangeListener, DocumentListene
     private JCheckBox desktopCheckBox;
     private JCheckBox embeddedCheckBox;
     private JLabel errorLabel;
+    private JRadioButton mavenRadioButton;
+    private JRadioButton gradleRadioButton;
+    private ButtonGroup buildTool;
 
     private ModulesProvider modulesProvider;
 
@@ -71,6 +70,12 @@ public class GluonAppPropertiesEditor implements ChangeListener, DocumentListene
         mainClassNameField.setText(defaultAppName);
         mainClassNameField.selectAll();
         packageNameField.setText(Utils.getDefaultPackageNameByModuleName(defaultAppName.toLowerCase()));
+
+        mavenRadioButton.setActionCommand("maven");
+        gradleRadioButton.setActionCommand("gradle");
+        buildTool = new ButtonGroup();
+        buildTool.add(mavenRadioButton);
+        buildTool.add(gradleRadioButton);
     }
 
     public JPanel getContentPanel() {
@@ -103,6 +108,10 @@ public class GluonAppPropertiesEditor implements ChangeListener, DocumentListene
 
     public boolean isEmbeddedSelected() {
         return embeddedCheckBox.isSelected();
+    }
+
+    public String getBuildTool() {
+        return buildTool.getSelection().getActionCommand();
     }
 
     public JTextField getMainClassNameField() {

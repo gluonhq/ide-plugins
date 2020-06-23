@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2020, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,7 +85,7 @@ public class GluonProjectTemplatesFactory extends ProjectTemplatesFactory {
             List<Template> templates = templateManager.getProjectTemplates(GluonProjectTarget.IDE);
             for (Template template : templates) {
                 LOG.info("Template: " + template);
-                if (! template.getProjectName().contains("Function")) {
+                if (!(template.getProjectName().contains("Function") || template.getProjectName().contains("Desktop"))) {
                     projectTemplates.add(new GluonProjectTemplate(template));
                 }
             }
