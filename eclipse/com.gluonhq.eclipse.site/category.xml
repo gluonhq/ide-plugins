@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.gluonhq.eclipse_0.0.0.qualifier.jar" id="com.gluonhq.eclipse" version="0.0.0">
+   <feature url="features/com.gluonhq.eclipse.feature_0.0.0.qualifier.jar" id="com.gluonhq.eclipse.feature" version="0.0.0">
       <category name="Gluon"/>
    </feature>
    <category-def name="Gluon" label="Gluon Plug-in for Eclipse"/>

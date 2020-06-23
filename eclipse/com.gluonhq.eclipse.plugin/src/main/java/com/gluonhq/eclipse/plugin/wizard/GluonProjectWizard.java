@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2020, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,10 @@ package com.gluonhq.eclipse.plugin.wizard;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.model.Model;
 import org.eclipse.buildship.core.GradleCore;
 import org.eclipse.buildship.core.GradleDistribution;
 import org.eclipse.buildship.core.SynchronizationResult;
@@ -42,13 +44,20 @@ import org.eclipse.buildship.core.internal.operation.ToolingApiStatus;
 import org.eclipse.buildship.core.internal.operation.ToolingApiStatus.ToolingApiStatusType;
 import org.eclipse.buildship.core.internal.workspace.NewProjectHandler;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.m2e.core.MavenPlugin;
+import org.eclipse.m2e.core.project.IMavenProjectImportResult;
+import org.eclipse.m2e.core.project.MavenProjectInfo;
+import org.eclipse.m2e.core.project.ResolverConfiguration;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -72,12 +81,6 @@ import com.google.common.collect.ImmutableList;
 
 public abstract class GluonProjectWizard extends Wizard implements INewWizard, HelpContextIdProvider {
 
-	/**
-     * The section name declaration for {@link org.eclipse.jface.dialogs.DialogSettings} where the import wizard stores its
-     * preferences.
-     *
-     * @see org.eclipse.jface.dialogs.DialogSettings#getOrCreateSection(IDialogSettings, String)
-     */
     private static final String WIZARD_ID = "com.gluonhq.eclipse.plugin.wizard"; //$NON-NLS-1$
 	
 	private final ProjectData projectData;
@@ -88,9 +91,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 			// store the dialog settings on the wizard and use them to retrieve / persist the most
 	        // recent values entered by the user
 	        setDialogSettings(getOrCreateDialogSection(UiPlugin.getInstance().getDialogSettings()));
-	        
 			projectData = new ProjectData(gluonProject);	
-			
 			this.configuration = new ProjectImportConfiguration();
 		} catch (Throwable t) {
 			// log exception to workspace/.metadata/.log
@@ -126,15 +127,10 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 		configuration.setOverwriteWorkspaceSettings(false);
 		
 		IDialogSettings dialogSettings = getDialogSettings();
-		String gradleDistributionString = dialogSettings.get("gradle_distribution");
-        Optional<File> gradleUserHome = getAbsoluteFile(dialogSettings.get("gradle_user_home"));
+	
         Optional<File> javaHome = getAbsoluteFile(dialogSettings.get("java_home"));
-        GradleDistribution distribution;
-        try {
-            distribution = GradleDistribution.fromString(gradleDistributionString);
-        } catch (RuntimeException ignore) {
-            distribution = GradleDistribution.fromBuild();
-        }
+        
+    	
         boolean applyWorkingSets = dialogSettings.get("apply_working_sets") != null && dialogSettings.getBoolean("apply_working_sets");
         List<String> workingSets = ImmutableList.copyOf(nullToEmpty(dialogSettings.getArray("working_sets")));
         boolean buildScansEnabled = dialogSettings.getBoolean("build_scans");
@@ -144,9 +140,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         List<String> jvmArguments = ImmutableList.copyOf(nullToEmpty(dialogSettings.getArray("jvm_arguments")));
         boolean showConsoleView = dialogSettings.getBoolean("show_console_view");
         boolean showExecutionsView = dialogSettings.getBoolean("show_executions_view");
-
-        configuration.setDistribution(distribution);
-        configuration.setGradleUserHome(gradleUserHome.orNull());
+        
         configuration.setJavaHomeHome(javaHome.orNull());
         configuration.setApplyWorkingSets(applyWorkingSets);
         configuration.setWorkingSets(workingSets);
@@ -157,38 +151,83 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         configuration.setJvmArguments(jvmArguments);
         configuration.setShowConsoleView(showConsoleView);
         configuration.setShowExecutionsView(showExecutionsView);
+        
+        if ("gradle".equals(projectData.buildTool)) {
+	        String gradleDistributionString = dialogSettings.get("gradle_distribution");
+	        Optional<File> gradleUserHome = getAbsoluteFile(dialogSettings.get("gradle_user_home"));
+	        GradleDistribution distribution;
+	        try {
+	            distribution = GradleDistribution.fromString(gradleDistributionString);
+	        } catch (RuntimeException ignore) {
+	            distribution = GradleDistribution.fromBuild();
+	        }
+	        
+	        configuration.setDistribution(distribution);
+	        configuration.setGradleUserHome(gradleUserHome.orNull());
+	
+			try {
+				getContainer().run(true, true, new IRunnableWithProgress() {
 
-		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
+	                @Override
+	                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	                    BuildConfiguration internalBuildConfiguration = configuration.toGradleInternalBuildConfiguration();
+	                    boolean showExecutionsView = internalBuildConfiguration.getWorkspaceConfiguration().isShowExecutionsView();
+	                    org.eclipse.buildship.core.BuildConfiguration buildConfiguration = configuration.toGradleBuildConfiguration();
+	                    org.eclipse.buildship.core.GradleBuild gradleBuild = GradleCore.getWorkspace().createBuild(buildConfiguration);
+	
+	                    GradleImportWizardNewProjectHandler workingSetsAddingNewProjectHandler = new GradleImportWizardNewProjectHandler(
+	                    		NewProjectHandler.IMPORT_AND_MERGE,
+	                    		configuration,
+	                    		showExecutionsView);
 
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    BuildConfiguration internalBuildConfiguration = configuration.toInternalBuildConfiguration();
-                    boolean showExecutionsView = internalBuildConfiguration.getWorkspaceConfiguration().isShowExecutionsView();
-                    org.eclipse.buildship.core.BuildConfiguration buildConfiguration = configuration.toBuildConfiguration();
-                    org.eclipse.buildship.core.GradleBuild gradleBuild = GradleCore.getWorkspace().createBuild(buildConfiguration);
+	                	GluonProjectApplicationOperation operation = new GluonProjectApplicationOperation(projectData);
+	                	operation.perform(monitor, buildConfiguration.getRootProjectDirectory().getAbsoluteFile());
 
-                    ImportWizardNewProjectHandler workingSetsAddingNewProjectHandler = new ImportWizardNewProjectHandler(NewProjectHandler.IMPORT_AND_MERGE, 
-                    		configuration, showExecutionsView);
-                    
-                	GluonProjectApplicationOperation operation = new GluonProjectApplicationOperation(projectData);
-                	operation.perform(monitor, buildConfiguration.getRootProjectDirectory().getAbsoluteFile());
+	                    SynchronizationResult result = ((DefaultGradleBuild)gradleBuild).synchronize(workingSetsAddingNewProjectHandler, GradleConnector.newCancellationTokenSource(), monitor);
+	                    if (!result.getStatus().isOK()) {
+	                        throw new InvocationTargetException(new CoreException(result.getStatus()));
+	                    }
+	                }
+	            });
+	        } catch (InvocationTargetException e) {
+	            ToolingApiStatus status = containerExceptionToToolingApiStatus(e);
+	            status.log();
+	        	return !ToolingApiStatusType.IMPORT_ROOT_DIR_FAILED.matches(status);
+	        } catch (InterruptedException ignored) {
+	            return false;
+	        }
+	        return true;
+        } else {
+        	try {
+				getContainer().run(true, true, new IRunnableWithProgress() {
+	                @Override
+	                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	                	monitor.beginTask("Create maven project "+ projectData.projectName, 5);
+						Job.getJobManager().beginRule(ResourcesPlugin.getWorkspace().getRoot(), new SubProgressMonitor(monitor, 1));
+						try {
+							// 1. Create Project files
+							GluonProjectApplicationOperation operation = new GluonProjectApplicationOperation(projectData);
+							operation.perform(monitor, configuration.getProjectDir());
+							monitor.worked(1);
 
-                    SynchronizationResult result = ((DefaultGradleBuild)gradleBuild).synchronize(workingSetsAddingNewProjectHandler, GradleConnector.newCancellationTokenSource(), monitor);
-                    if (!result.getStatus().isOK()) {
-                        throw new InvocationTargetException(new CoreException(result.getStatus()));
-                    }
-                }
-            });
-        } catch (InvocationTargetException e) {
-            ToolingApiStatus status = containerExceptionToToolingApiStatus(e);
-            status.log();
-        	return !ToolingApiStatusType.IMPORT_ROOT_DIR_FAILED.matches(status);
-        } catch (InterruptedException ignored) {
-            return false;
+							//2. Materialize eclipse project from pom.xml
+							File pomFile = new File(projectData.projectLocation, "pom.xml");
+							createEclipseProjectFromExistingMavenProject(pomFile, new SubProgressMonitor(monitor, 3));
+						} catch (Throwable e) {
+							throw new InvocationTargetException(e);
+						}
+						finally {
+							Job.getJobManager().endRule(ResourcesPlugin.getWorkspace().getRoot());
+							monitor.done();
+							// TODO: Open Maven Goals View
+						}
+	                }
+				});
+	        } catch (InvocationTargetException | InterruptedException e) {
+	            return false;
+	        }
+	        return true;
         }
-
-        return true;
     }
 
     private ToolingApiStatus containerExceptionToToolingApiStatus(InvocationTargetException exception) {
@@ -203,7 +242,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 	protected ProjectData getProjectData() {
 		return projectData;
 	}
-	
+
 	private static IDialogSettings getOrCreateDialogSection(IDialogSettings dialogSettings) {
         // in Eclipse 3.6 the method DialogSettings#getOrCreateSection does not exist
         IDialogSettings section = dialogSettings.getSection(WIZARD_ID);
@@ -212,7 +251,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
         }
         return section;
     }
-	
+
 	private static Optional<File> getAbsoluteFile(String path) {
         if (Strings.isNullOrEmpty(path)) {
             return Optional.absent();
@@ -220,18 +259,13 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
             return Optional.of(new File(path.trim()).getAbsoluteFile());
         }
     }
-	
+
 	private static String[] nullToEmpty(String[] array) {
         return array == null ? new String[0] : array;
     }
 	
-	/**
-     * A delegating {@link NewProjectHandler} which adds workingsets to the imported projects and
-     * ensures that the Gradle views are visible.
-     *
-     * @author Stefan Oehme
-     */
-    private static final class ImportWizardNewProjectHandler implements NewProjectHandler {
+
+    private static final class GradleImportWizardNewProjectHandler implements NewProjectHandler {
 
         private final ProjectImportConfiguration configuration;
         private final NewProjectHandler importedBuildDelegate;
@@ -239,7 +273,7 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
 
         private volatile boolean gradleViewsVisible;
 
-        private ImportWizardNewProjectHandler(NewProjectHandler delegate, ProjectImportConfiguration configuration, boolean showExecutionsView) {
+        private GradleImportWizardNewProjectHandler(NewProjectHandler delegate, ProjectImportConfiguration configuration, boolean showExecutionsView) {
             this.importedBuildDelegate = delegate;
             this.configuration = configuration;
             this.showExecutionsView = showExecutionsView;
@@ -303,4 +337,27 @@ public abstract class GluonProjectWizard extends Wizard implements INewWizard, H
             }).filter(Predicates.notNull()).toArray(IWorkingSet.class);
         }
     }
+    
+    public static void createEclipseProjectFromExistingMavenProject(File pomFile, IProgressMonitor monitor) throws CoreException {
+
+		Model model = MavenPlugin.getMavenModelManager().readMavenModel(pomFile);
+		String derivedProjectName = model.getName();
+
+		MavenProjectInfo parent = null;
+		MavenProjectInfo projectInfo = new MavenProjectInfo(derivedProjectName, pomFile, model, parent);
+		ArrayList<MavenProjectInfo> projectInfos = new ArrayList<MavenProjectInfo>();
+		projectInfos.add(projectInfo);
+		ResolverConfiguration resolverConfiguration = new ResolverConfiguration();
+		String activeProfiles = "pom.xml";
+		resolverConfiguration.setSelectedProfiles(activeProfiles);
+		org.eclipse.m2e.core.project.ProjectImportConfiguration configuration = new org.eclipse.m2e.core.project.ProjectImportConfiguration(resolverConfiguration);
+
+		List<IMavenProjectImportResult> importResults = MavenPlugin.getProjectConfigurationManager().importProjects(projectInfos, configuration,
+				monitor);
+		for (IMavenProjectImportResult importResult : importResults) {
+			// skip projects which have not been properly imported 
+			if (importResult.getProject() != null)
+				MavenPlugin.getProjectConfigurationManager().updateProjectConfiguration(importResult.getProject(), monitor);
+		}
+	}
 }

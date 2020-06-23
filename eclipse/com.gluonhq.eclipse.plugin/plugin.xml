@@ -15,7 +15,7 @@
                 id="com.gluonhq.plugin"
                 name="Gluon">
         </category>
-        <wizard
+        <!--<wizard
                 id="com.gluonhq.eclipse.plugin.wizard.desktop.singleviewproject"
                 class="com.gluonhq.eclipse.plugin.wizard.desktop.singleview.GluonProjectSingleApplicationWizard"
                 name="Gluon Desktop - Single View Project"
@@ -47,7 +47,7 @@
                 hasPages="true"
                 project="true">
             <description>Create a Multi View Project with FXML</description>
-        </wizard>
+        </wizard>-->
         <wizard
                 id="com.gluonhq.eclipse.plugin.wizard.mobile.singleviewproject"
                 class="com.gluonhq.eclipse.plugin.wizard.mobile.singleview.GluonProjectSingleApplicationWizard"
