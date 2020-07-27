@@ -19,9 +19,16 @@ String netbeansVersion = 'RELEASE110'
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/' }
     maven { url 'http://bits.netbeans.org/nexus/content/groups/netbeans' }
     maven { url 'http://bits.netbeans.org/maven2/' }
+    maven { url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/' }
+    maven { 
+        url 'https://nexus.gluonhq.com/nexus/content/repositories/snapshots/'
+        credentials {
+            username = gluonNexusUsername
+            password = gluonNexusPassword
+        }
+    }
 }
 
 def tryGetProperty = {String name, String defaultValue ->
