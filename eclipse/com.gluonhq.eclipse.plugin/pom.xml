@@ -11,6 +11,13 @@
   <artifactId>com.gluonhq.eclipse.plugin</artifactId>
   <packaging>eclipse-plugin</packaging>
 
+  <repositories>
+    <repository>
+      <id>gluon-nexus</id>
+      <url>http://nexus.gluonhq.com/nexus/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+
   <!--  These dependencies are downloaded and stored in target/dependency. -->
   <!--  These are then accessed by eclipse platform via bundle classpath in MANIFEST.MF -->
   <dependencies>
