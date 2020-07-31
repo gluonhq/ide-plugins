@@ -25,6 +25,7 @@
          on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
     <depends>org.jetbrains.plugins.gradle</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectTemplatesFactory implementation="com.gluonhq.plugin.intellij.module.GluonProjectTemplatesFactory"/>
@@ -49,7 +50,7 @@
             <action id="UploadConfig" class="com.gluonhq.plugin.intellij.menu.function.UploadGluonFunctionAction"
                     text="Upload Gluon Function" description="Upload Gluon Function"/>
             <separator />
-            <action id="DownConfig" class="com.gluonhq.plugin.intellij.menu.down.GluonMobileSettingsAction"
+            <action id="AttachConfig" class="com.gluonhq.plugin.intellij.menu.down.GluonMobileSettingsAction"
                     text="Gluon Mobile" description="Edit Gluon Mobile settings"/>
             <action id="CloudLinkConfig" class="com.gluonhq.plugin.intellij.menu.cloudlink.GluonCloudLinkSettingsAction"
                     text="Gluon CloudLink" description="Edit Gluon CloudLink settings"/>

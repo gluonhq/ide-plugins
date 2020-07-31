@@ -227,8 +227,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
             final File[] files = baseDir.listFiles((dir, name) -> FileUtil.namesEqual(MavenConstants.POM_XML, name));
             if (files != null && files.length != 0) {
                 baseFile = files[0].getPath();
-                projectImportProvider = new MavenProjectImportProvider(new MavenProjectBuilder());
-
+                projectImportProvider = new MavenProjectImportProvider();
             }
         } else if (parameters.get(ProjectConstants.PARAM_BUILD_TOOL).equals("gradle")) {
             final File[] files = baseDir.listFiles((dir, name) -> FileUtil.namesEqual(GradleConstants.DEFAULT_SCRIPT_NAME, name));
