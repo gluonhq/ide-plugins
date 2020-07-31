@@ -1,5 +1,11 @@
 ## Changelog NetBeans
 
+#### 2.8.0
+_2020-07-31_
+* Add Gluon Client support to plugins
+* Update templates to use Gluon Mobile 6
+* Plugin can be used to create projects with either Maven or Gradle build tool
+
 #### 2.7.0
 _2018-04-24_
 * Update templates for Gluon Mobile 5
