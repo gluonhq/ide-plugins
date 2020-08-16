@@ -104,6 +104,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
                 (String) wiz.getProperty(ProjectConstants.PARAM_USER_PLUGIN_VERSION), false);
         }
         
+        wiz.putProperty(ProjectConstants.PARAM_IDE, "netbeans");
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());

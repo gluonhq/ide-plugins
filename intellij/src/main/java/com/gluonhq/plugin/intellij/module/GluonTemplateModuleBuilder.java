@@ -146,7 +146,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
 
         final Project project = rootModel.getProject();
         StartupManager.getInstance(project).runWhenProjectIsInitialized((DumbAwareRunnable) () -> DumbService.getInstance(project).smartInvokeLater(() -> ApplicationManager.getApplication().runWriteAction(() -> createProject(project))));
-        StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable) () -> DumbService.getInstance(project).smartInvokeLater(() -> linkGradleProject(project)));
+        StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable) () -> DumbService.getInstance(project).smartInvokeLater(() -> linkProject(project)));
     }
 
     public void updateParameter(String key, Object value) {
@@ -169,10 +169,11 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
                     false);
         }
 
+        parameters.put(ProjectConstants.PARAM_IDE, "intellij");
+        parameters.put(ProjectConstants.PARAM_PROJECT_NAME, project.getName());
         parameters.put(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
-        parameters.put(ProjectConstants.PARAM_PROJECT_NAME, project.getName());
         parameters.put(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
@@ -219,7 +220,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         });
     }
 
-    private void linkGradleProject(Project project) {
+    private void linkProject(Project project) {
         File baseDir = VfsUtilCore.virtualToIoFile(project.getBaseDir());
         String baseFile = null;
         ProjectImportProvider projectImportProvider = null;
