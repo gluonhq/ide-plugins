@@ -169,7 +169,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
                     false);
         }
 
-        parameters.put(ProjectConstants.PARAM_IDE, "intellij");
+        parameters.put(ProjectConstants.PARAM_IDE, ProjectConstants.IDE_INTELLIJ);
         parameters.put(ProjectConstants.PARAM_PROJECT_NAME, project.getName());
         parameters.put(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
