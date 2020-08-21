@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.gluonhq.plugin'
-version = '2.8.0-SNAPSHOT'
+version = '2.8.0'
 
 ext.scriptFile = { String fileName ->
     new File(new File(rootDir, 'gradle'), fileName)
