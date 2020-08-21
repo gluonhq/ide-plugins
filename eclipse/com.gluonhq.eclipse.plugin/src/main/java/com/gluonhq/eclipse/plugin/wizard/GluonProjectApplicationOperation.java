@@ -76,6 +76,7 @@ public class GluonProjectApplicationOperation  {
 		mon.beginTask("Create project contents", 1);
 		try {
 			Map<String, Object> parameters = projectData.asParameters();
+			parameters.put(ProjectConstants.PARAM_IDE, ProjectConstants.IDE_ECLIPSE);
 			parameters.put(ProjectConstants.PARAM_PROJECT_NAME, projectData.projectName);
             parameters.put(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
             parameters.put(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
