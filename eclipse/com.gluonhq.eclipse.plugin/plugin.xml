@@ -60,17 +60,6 @@
             <description>Create a Single View Project</description>
         </wizard>
         <wizard
-                id="com.gluonhq.eclipse.plugin.wizard.mobile.singleviewgvmproject"
-                class="com.gluonhq.eclipse.plugin.wizard.mobile.singleviewgvm.GluonProjectSingleGvmApplicationWizard"
-                name="Gluon Mobile - Single View Project on Gluon VM"
-                category="com.gluonhq.plugin"
-                icon="icons/GluonMobile_16x16.png"
-                canFinishEarly="false"
-                hasPages="true"
-                project="true">
-            <description>Create a Single View Project on Gluon VM</description>
-        </wizard>
-        <wizard
                 id="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewproject"
                 class="com.gluonhq.eclipse.plugin.wizard.mobile.multiview.GluonProjectMultiViewWizard"
                 name="Gluon Mobile - Multi View Project"
