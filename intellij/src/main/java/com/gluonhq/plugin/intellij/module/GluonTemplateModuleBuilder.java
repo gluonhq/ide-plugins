@@ -44,9 +44,9 @@ import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -55,6 +55,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -64,10 +65,6 @@ import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenConstants;
-import org.jetbrains.idea.maven.wizards.MavenProjectBuilder;
-import org.jetbrains.idea.maven.wizards.MavenProjectImportProvider;
-import org.jetbrains.plugins.gradle.service.project.wizard.GradleProjectImportBuilder;
-import org.jetbrains.plugins.gradle.service.project.wizard.GradleProjectImportProvider;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 import javax.swing.*;
@@ -137,7 +134,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
     }
 
     @Override
-    public void setupRootModel(ModifiableRootModel rootModel) {
+    public void setupRootModel(@NotNull ModifiableRootModel rootModel) throws ConfigurationException {
         if (myJdk != null) {
             rootModel.setSdk(myJdk);
         } else {
@@ -145,8 +142,11 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         }
 
         final Project project = rootModel.getProject();
-        StartupManager.getInstance(project).runWhenProjectIsInitialized((DumbAwareRunnable) () -> DumbService.getInstance(project).smartInvokeLater(() -> ApplicationManager.getApplication().runWriteAction(() -> createProject(project))));
-        StartupManager.getInstance(project).registerPostStartupActivity((DumbAwareRunnable) () -> DumbService.getInstance(project).smartInvokeLater(() -> linkProject(project)));
+        ApplicationManager.getApplication().runWriteAction(() -> createProject(project));
+        StartupManager.getInstance(project).runWhenProjectIsInitialized((DumbAwareRunnable)() -> DumbService.getInstance(project).smartInvokeLater(() -> {
+            importProject(project);
+            openProjectFiles(project);
+        }));
     }
 
     public void updateParameter(String key, Object value) {
@@ -182,67 +182,65 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
 
         final File projectRoot = new File(project.getBasePath());
-        WriteCommandAction.runWriteCommandAction(project, () -> {
+        WriteCommandAction.runWriteCommandAction(project, () -> template.render(projectRoot, parameters));
+    }
 
-            template.render(projectRoot, parameters);
-            List<File> filesToOpen = new ArrayList<>(template.getFilesToOpen());
+    private void openProjectFiles(Project project) {
+        final File projectRoot = new File(project.getBasePath());
+        List<File> filesToOpen = new ArrayList<>(template.getFilesToOpen());
 
-            // create default source
-            Template sourceTemplate = TemplateManager.getInstance().getSourceTemplate(template.getProjectName());
-            if (sourceTemplate != null) {
-                sourceTemplate.render(projectRoot, parameters);
-                filesToOpen.addAll(sourceTemplate.getFilesToOpen());
-            }
+        // create default source
+        Template sourceTemplate = TemplateManager.getInstance().getSourceTemplate(template.getProjectName());
+        if (sourceTemplate != null) {
+            sourceTemplate.render(projectRoot, parameters);
+            filesToOpen.addAll(sourceTemplate.getFilesToOpen());
+        }
 
-            if (!filesToOpen.isEmpty()) {
-                VirtualFile lastVirtualFile = null;
-                for (File file : filesToOpen) {
-                    if (file.exists()) {
-                        VirtualFile vFile = VfsUtil.findFileByIoFile(file, true);
-                        if (vFile != null) {
-                            OpenFileDescriptor descriptor = new OpenFileDescriptor(project, vFile);
-                            if (!FileEditorManager.getInstance(project).openEditor(descriptor, true).isEmpty()) {
-                                lastVirtualFile = vFile;
-                            }
+        if (!filesToOpen.isEmpty()) {
+            VirtualFile lastVirtualFile = null;
+            for (File file : filesToOpen) {
+                if (file.exists()) {
+                    VirtualFile vFile = VfsUtil.findFileByIoFile(file, true);
+                    if (vFile != null) {
+                        OpenFileDescriptor descriptor = new OpenFileDescriptor(project, vFile);
+                        if (!FileEditorManager.getInstance(project).openEditor(descriptor, true).isEmpty()) {
+                            lastVirtualFile = vFile;
                         }
                     }
                 }
+            }
 
-                if (lastVirtualFile != null) {
-                    ApplicationManager.getApplication().assertReadAccessAllowed();
-                    PsiFile psiFile = PsiManager.getInstance(project).findFile(lastVirtualFile);
-                    if (psiFile != null) {
-                        ProjectPaneSelectInTarget selectAction = new ProjectPaneSelectInTarget(project);
-                        selectAction.select(psiFile, false);
-                    }
+            if (lastVirtualFile != null) {
+                ApplicationManager.getApplication().assertReadAccessAllowed();
+                PsiFile psiFile = PsiManager.getInstance(project).findFile(lastVirtualFile);
+                if (psiFile != null) {
+                    ProjectPaneSelectInTarget selectAction = new ProjectPaneSelectInTarget(project);
+                    selectAction.select(psiFile, false);
                 }
             }
-        });
+        }
     }
 
-    private void linkProject(Project project) {
+    private void importProject(Project project) {
         File baseDir = VfsUtilCore.virtualToIoFile(project.getBaseDir());
         String baseFile = null;
-        ProjectImportProvider projectImportProvider = null;
         if (parameters.get(ProjectConstants.PARAM_BUILD_TOOL).equals("maven")) {
             final File[] files = baseDir.listFiles((dir, name) -> FileUtil.namesEqual(MavenConstants.POM_XML, name));
             if (files != null && files.length != 0) {
                 baseFile = files[0].getPath();
-                projectImportProvider = new MavenProjectImportProvider();
             }
         } else if (parameters.get(ProjectConstants.PARAM_BUILD_TOOL).equals("gradle")) {
             final File[] files = baseDir.listFiles((dir, name) -> FileUtil.namesEqual(GradleConstants.DEFAULT_SCRIPT_NAME, name));
             if (files != null && files.length != 0) {
                 baseFile = files[0].getPath();
-                GradleProjectImportBuilder gradleProjectImportBuilder = new GradleProjectImportBuilder(ProjectDataManager.getInstance());
-                projectImportProvider = new GradleProjectImportProvider(gradleProjectImportBuilder);
             }
         }
         if (baseFile != null) {
-            AddModuleWizard wizard = new AddModuleWizard(project, baseFile, projectImportProvider);
-            if (wizard.getStepCount() <= 0 || wizard.showAndGet()) {
-                ImportModuleAction.createFromWizard(project, wizard);
-            }
+            VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(baseFile);
+            final List<ProjectImportProvider> providers = ImportModuleAction.getProviders(project);
+            final ProjectImportProvider[] providersArray = providers.toArray(new ProjectImportProvider[0]);
+            final AddModuleWizard importWizard = ImportModuleAction.createImportWizard(project, null, virtualFile, providersArray);
+            ImportModuleAction.createFromWizard(project, importWizard);
         }
     }
 
