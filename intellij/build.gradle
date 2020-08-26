@@ -36,4 +36,5 @@ intellij {
 publishPlugin {
     username intellijPublishUsername
     password intellijPublishPassword
+    token = intellijPublishToken
 }
