@@ -24,7 +24,7 @@ dependencies {
 
 
 intellij {
-    version = 'IC-2019.2'
+    version = 'IC-2019.3'
     // localPath = 'path-to-local-installation'
     // downloadSources = true
     plugins = [ 'IntelliLang', 'gradle', 'maven', 'java' ]
