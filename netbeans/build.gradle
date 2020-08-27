@@ -1,5 +1,10 @@
+import java.time.Duration
+
 plugins {
-    id "cz.kubacki.nbm" version "1.17.0"
+    id 'signing'
+    id 'cz.kubacki.nbm' version '1.17.0'
+    id 'io.codearte.nexus-staging' version '0.21.1'
+    id 'de.marcphilipp.nexus-publish' version '0.4.0'
 }
 
 group = 'com.gluonhq.plugin'
@@ -128,4 +133,72 @@ task netBeansRun(type: Exec) {
         logger.warn('netBeansInstallDir property is not specified. Assuming \'netbeans\' executable is on PATH.')
     }
     commandLine executable, '--userdir', "testuserdir"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = 'substrate'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'Gluon Plugin for NetBeans'
+                description = ' Gluon Plugin allows developers to create Java applications and their native images targeting Android, iOS, Linux, MacOS and Windows platforms using the same codebase.'
+                url = 'https://github.com/gluonhq/ide-plugins'
+                licenses {
+                    license {
+                        name = 'BSD 3-clause "New" or "Revised" license'
+                        url = 'https://choosealicense.com/licenses/bsd-3-clause/'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Joeri Sykora'
+                        email = 'joeri.sykora@gluonhq.com'
+                    }
+                    developer {
+                        name = 'Abhinay Agarwal'
+                        email = 'abhinay.agarwal@gluonhq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com:gluonhq/ide-plugins.git'
+                    developerConnection = 'scm:git:ssh://github.com:gluonhq/ide-plugins.git'
+                    url = 'https://github.com/gluonhq/ide-plugins'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required = { gradle.taskGraph.hasTask(publish) && !version.endsWith("SNAPSHOT") }
+    sign publishing.publications.maven
+}
+
+nexusPublishing {
+    repositories {
+        sonatype()
+    }
+    // credentials are shared from staging plugin
+    clientTimeout = Duration.ofMinutes(5)
+    connectTimeout = Duration.ofMinutes(5)
+}
+
+nexusStaging {
+    username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
+    password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
+    numberOfRetries = 30
+    delayBetweenRetriesInMillis = 5000
 }
