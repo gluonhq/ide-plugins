@@ -55,6 +55,7 @@ compileJava {
 nbm {
     moduleName = 'com.gluon.plugin.netbeans'
     localizingBundle = 'com/gluonhq/plugin/netbeans/Bundle.properties'
+    licenseFile = "${project.rootDir}/license.txt"
 
     ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
     // TODO: Uncomment once signing key is available
@@ -65,6 +66,13 @@ nbm {
             password = tryGetProperty('gluonPluginKeyStorePass', '')
         }
     }*/
+}
+
+task nbmRelease(type: Copy) {
+    dependsOn 'nbm'
+    from "$buildDir/nbm"
+    into "$buildDir/libs"
+    rename "com-gluon-plugin-netbeans.nbm", "com-gluon-plugin-netbeans-${project.version}.nbm"
 }
 
 def netbeansModule = { String groupName, String moduleName ->
@@ -140,18 +148,19 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadocJar(type: Jar) {
-    from javadoc
-    classifier = 'javadoc'
+def nbmFile = file("$buildDir/libs/com-gluon-plugin-netbeans-${project.version}.nbm")
+def nbmArtifact = artifacts.add('archives', nbmFile) {
+    type 'nbm'
+    builtBy 'nbmRelease'
 }
 
 publishing {
     publications {
         maven(MavenPublication) {
-            artifactId = 'substrate'
+            artifactId = "${project.group}".replace(".", "-") + "-netbeans"
             from components.java
             artifact sourcesJar
-            artifact javadocJar
+            artifact nbmArtifact
             pom {
                 name = 'Gluon Plugin for NetBeans'
                 description = ' Gluon Plugin allows developers to create Java applications and their native images targeting Android, iOS, Linux, MacOS and Windows platforms using the same codebase.'
