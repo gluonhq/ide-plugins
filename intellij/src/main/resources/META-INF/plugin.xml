@@ -1,17 +1,17 @@
 <idea-plugin>
     <id>com.gluonhq.plugin.intellij</id>
-    <name>Gluon Plugin</name>
+    <name>Gluon</name>
     <version>2.8.0</version>
     <vendor email="support@gluonhq.com" url="http://gluonhq.com">Gluon</vendor>
 
     <description><![CDATA[
-      Gluon Plugin allows developers to create Java applications and their native images targeting Android, iOS, Linux, MacOS and Windows platforms using the same codebase.
+      Gluon allows developers to create Java applications and their native images targeting Android, iOS, Linux, MacOS and Windows platforms using the same codebase.
     ]]></description>
 
     <change-notes><![CDATA[
       <b>2.8.0</b>
       <ul>
-      <li>Add Gluon Client support to plugins</li>
+      <li>Add Gluon Client support</li>
       <li>Update templates to use Gluon Mobile 6</li>
       <li>Plugin can be used to create projects with either Maven or Gradle build tool</li>
       </ul>
