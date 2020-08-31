@@ -1,5 +1,10 @@
+import java.time.Duration
+
 plugins {
-    id "cz.kubacki.nbm" version "1.17.0"
+    id 'signing'
+    id 'cz.kubacki.nbm' version '1.17.0'
+    id 'io.codearte.nexus-staging' version '0.21.1'
+    id 'de.marcphilipp.nexus-publish' version '0.4.0'
 }
 
 group = 'com.gluonhq.plugin'
@@ -50,6 +55,7 @@ compileJava {
 nbm {
     moduleName = 'com.gluon.plugin.netbeans'
     localizingBundle = 'com/gluonhq/plugin/netbeans/Bundle.properties'
+    licenseFile = "${project.rootDir}/license.txt"
 
     ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
     // TODO: Uncomment once signing key is available
@@ -60,6 +66,13 @@ nbm {
             password = tryGetProperty('gluonPluginKeyStorePass', '')
         }
     }*/
+}
+
+task nbmRelease(type: Copy) {
+    dependsOn 'nbm'
+    from "$buildDir/nbm"
+    into "$buildDir/libs"
+    rename "com-gluon-plugin-netbeans.nbm", "com-gluon-plugin-netbeans-${project.version}.nbm"
 }
 
 def netbeansModule = { String groupName, String moduleName ->
@@ -128,4 +141,73 @@ task netBeansRun(type: Exec) {
         logger.warn('netBeansInstallDir property is not specified. Assuming \'netbeans\' executable is on PATH.')
     }
     commandLine executable, '--userdir', "testuserdir"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+def nbmFile = file("$buildDir/libs/com-gluon-plugin-netbeans-${project.version}.nbm")
+def nbmArtifact = artifacts.add('archives', nbmFile) {
+    type 'nbm'
+    builtBy 'nbmRelease'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = "${project.group}".replace(".", "-") + "-netbeans"
+            from components.java
+            artifact sourcesJar
+            artifact nbmArtifact
+            pom {
+                name = 'Gluon Plugin for NetBeans'
+                description = ' Gluon Plugin allows developers to create Java applications and their native images targeting Android, iOS, Linux, MacOS and Windows platforms using the same codebase.'
+                url = 'https://github.com/gluonhq/ide-plugins'
+                licenses {
+                    license {
+                        name = 'BSD 3-clause "New" or "Revised" license'
+                        url = 'https://choosealicense.com/licenses/bsd-3-clause/'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Joeri Sykora'
+                        email = 'joeri.sykora@gluonhq.com'
+                    }
+                    developer {
+                        name = 'Abhinay Agarwal'
+                        email = 'abhinay.agarwal@gluonhq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com:gluonhq/ide-plugins.git'
+                    developerConnection = 'scm:git:ssh://github.com:gluonhq/ide-plugins.git'
+                    url = 'https://github.com/gluonhq/ide-plugins'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required = { gradle.taskGraph.hasTask(publish) && !version.endsWith("SNAPSHOT") }
+    sign publishing.publications.maven
+}
+
+nexusPublishing {
+    repositories {
+        sonatype()
+    }
+    // credentials are shared from staging plugin
+    clientTimeout = Duration.ofMinutes(5)
+    connectTimeout = Duration.ofMinutes(5)
+}
+
+nexusStaging {
+    username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
+    password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
+    numberOfRetries = 30
+    delayBetweenRetriesInMillis = 5000
 }
