@@ -27,7 +27,7 @@ intellij {
     version = 'IC-2019.3'
     // localPath = 'path-to-local-installation'
     // downloadSources = true
-    plugins = [ 'IntelliLang', 'gradle', 'maven', 'java' ]
+    plugins = [ 'IntelliLang', 'gradle', 'maven', 'java', 'javaFX' ]
     pluginName 'Gluon Plugin'
     updateSinceUntilBuild false
     sandboxDirectory = "${rootProject.projectDir}/idea-sandbox"
@@ -36,5 +36,5 @@ intellij {
 publishPlugin {
     username intellijPublishUsername
     password intellijPublishPassword
-    token = intellijPublishToken
+    token intellijPublishToken
 }
