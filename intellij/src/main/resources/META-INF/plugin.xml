@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.gluonhq.plugin.intellij</id>
     <name>Gluon</name>
-    <version>2.8.1</version>
+    <version>2.8.2-201</version>
     <vendor email="support@gluonhq.com" url="http://gluonhq.com">Gluon</vendor>
 
     <description><![CDATA[
@@ -9,7 +9,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      <b>2.8.1</b>
+      <b>2.8.2-201</b>
       <ul>
       <li>Add Gluon Client support</li>
       <li>Update templates to use Gluon Mobile 6</li>
@@ -19,7 +19,7 @@
     </change-notes>
 
     <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-    <idea-version since-build="193"/>
+    <idea-version since-build="193" until-build="201.*"/>
 
     <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
          on how to target different products -->
