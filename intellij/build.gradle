@@ -24,10 +24,10 @@ dependencies {
 
 
 intellij {
-    version = 'IC-2019.3'
+    version = 'IC-2020.2'
     // localPath = 'path-to-local-installation'
     // downloadSources = true
-    plugins = [ 'IntelliLang', 'gradle', 'maven', 'java', 'javaFX' ]
+    plugins = [ 'IntelliLang', 'gradle', 'maven', 'java', 'com.intellij.javafx:1.0.1' ]
     pluginName 'Gluon Plugin'
     updateSinceUntilBuild false
     sandboxDirectory = "${rootProject.projectDir}/idea-sandbox"
