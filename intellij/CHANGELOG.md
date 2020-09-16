@@ -1,5 +1,9 @@
 ## Changelog IntelliJ IDEA
 
+#### 2.8.4
+_2020-09-16
+* Bug fixes in templates of Gluon Mobile projects
+
 #### 2.8.0
 _2020-08-26_
 * Add Gluon Client support to plugins
