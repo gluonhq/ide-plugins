@@ -1,5 +1,9 @@
 ## Changelog NetBeans
 
+#### 2.8.2
+_2020-09-17_
+* Bug fixes in templates of Gluon Mobile projects
+
 #### 2.8.0
 _2020-07-31_
 * Add Gluon Client support to plugins
