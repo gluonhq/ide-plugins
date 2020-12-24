@@ -126,8 +126,8 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
     public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
         if (template != null && template.getMetadata() != null) {
             String applicationName = template.getMetadata().getTitle();
-            if (!applicationName.isEmpty() && settingsStep.getModuleNameField() != null) {
-                settingsStep.getModuleNameField().setText(applicationName.replace(" ", ""));
+            if (!applicationName.isEmpty() && settingsStep.getModuleNameLocationSettings() != null) {
+                settingsStep.getModuleNameLocationSettings().setModuleName(applicationName.replace(" ", ""));
             }
         }
         return null;
@@ -190,7 +190,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         List<File> filesToOpen = new ArrayList<>(template.getFilesToOpen());
 
         // create default source
-        Template sourceTemplate = TemplateManager.getInstance().getSourceTemplate(template.getProjectName());
+        Template sourceTemplate = TemplateManager.getInstance().getSourceTemplate(template.getGluonProject());
         if (sourceTemplate != null) {
             sourceTemplate.render(projectRoot, parameters);
             filesToOpen.addAll(sourceTemplate.getFilesToOpen());
