@@ -33,9 +33,11 @@ import com.gluonhq.plugin.intellij.util.GluonIcons;
 import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.GluonProjectTarget;
 import com.gluonhq.plugin.templates.TemplateManager;
+import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.platform.ProjectTemplate;
 import com.intellij.platform.ProjectTemplatesFactory;
@@ -82,7 +84,8 @@ public class GluonProjectTemplatesFactory extends ProjectTemplatesFactory {
         List<ProjectTemplate> projectTemplates = new ArrayList<>();
         if (project == null) {
             TemplateManager templateManager = TemplateManager.getInstance();
-            List<GluonProject> gluonProjects = templateManager.getGluonProjects(GluonProjectTarget.IDE);
+            List<GluonProject> gluonProjects = templateManager.getGluonProjects(GluonProjectTarget.IDE,
+                    PluginManagerCore.getPlugin(PluginId.getId("com.gluonhq.plugin.intellij")).getPluginPath().resolve("config.json"));
             for (GluonProject gluonProject : gluonProjects) {
                 LOG.info("Gluon Project: " + gluonProject);
                 if (!(gluonProject.getName().contains("Function") || gluonProject.getName().contains("Desktop"))) {
