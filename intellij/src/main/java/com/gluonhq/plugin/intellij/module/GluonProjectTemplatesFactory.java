@@ -30,8 +30,8 @@
 package com.gluonhq.plugin.intellij.module;
 
 import com.gluonhq.plugin.intellij.util.GluonIcons;
+import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.GluonProjectTarget;
-import com.gluonhq.plugin.templates.Template;
 import com.gluonhq.plugin.templates.TemplateManager;
 import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -82,11 +82,11 @@ public class GluonProjectTemplatesFactory extends ProjectTemplatesFactory {
         List<ProjectTemplate> projectTemplates = new ArrayList<>();
         if (project == null) {
             TemplateManager templateManager = TemplateManager.getInstance();
-            List<Template> templates = templateManager.getProjectTemplates(GluonProjectTarget.IDE);
-            for (Template template : templates) {
-                LOG.info("Template: " + template);
-                if (!(template.getProjectName().contains("Function") || template.getProjectName().contains("Desktop"))) {
-                    projectTemplates.add(new GluonProjectTemplate(template));
+            List<GluonProject> gluonProjects = templateManager.getGluonProjects(GluonProjectTarget.IDE);
+            for (GluonProject gluonProject : gluonProjects) {
+                LOG.info("Gluon Project: " + gluonProject);
+                if (!(gluonProject.getName().contains("Function") || gluonProject.getName().contains("Desktop"))) {
+                    projectTemplates.add(new GluonProjectTemplate(gluonProject));
                 }
             }
         }

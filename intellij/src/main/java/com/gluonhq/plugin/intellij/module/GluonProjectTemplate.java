@@ -29,30 +29,30 @@
  */
 package com.gluonhq.plugin.intellij.module;
 
-import com.gluonhq.plugin.templates.Template;
+import com.gluonhq.plugin.templates.GluonProject;
 import com.intellij.platform.templates.BuilderBasedTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GluonProjectTemplate extends BuilderBasedTemplate {
 
-    private final Template template;
+    private final GluonProject gluonProject;
 
-    public GluonProjectTemplate(Template projectTemplate) {
-        super(new GluonTemplateModuleBuilder(projectTemplate));
+    public GluonProjectTemplate(GluonProject gluonProject) {
+        super(new GluonTemplateModuleBuilder(gluonProject));
 
-        this.template = projectTemplate;
+        this.gluonProject = gluonProject;
     }
 
     @Nullable
     @Override
     public String getDescription() {
-        return template.getMetadata().getDescription();
+        return gluonProject.getDescription();
     }
 
     @NotNull
     @Override
     public String getName() {
-        return template.getMetadata().getTitle();
+        return gluonProject.getName();
     }
 }
