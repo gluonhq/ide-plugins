@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonDesktopMultiFXMLWizardIterator extends GluonBaseWizardIterator {
 
     private GluonDesktopMultiFXMLWizardIterator() {
-        super(GluonProject.DESKTOP_MULTIVIEWFXML.getType());
+        super(GluonProject.DESKTOP_MULTIVIEWFXML);
     }
 
     public static GluonDesktopMultiFXMLWizardIterator createIterator() {
@@ -65,7 +65,7 @@ public class GluonDesktopMultiFXMLWizardIterator extends GluonBaseWizardIterator
 
     @Override
     protected String[] createSteps() {
-        if (!OptInHelper.alreadyOptedIn()) {	
+        if (!OptInHelper.alreadyOptedIn()) {
             return new String[]{
                 NbBundle.getMessage(GluonUserOptInPanel.class, "LBL_UserOptIn"),
                 NbBundle.getMessage(GluonUserOptInPanel.class, "LBL_CreateProjectStep"),

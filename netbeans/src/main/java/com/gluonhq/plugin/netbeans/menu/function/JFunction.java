@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2020, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,7 +121,7 @@ public class JFunction extends JFrame {
         handle.progress(15);
         List<File> filesToOpen = new ArrayList<>();
         TemplateManager templateManager = TemplateManager.getInstance();
-        Template template = templateManager.getProjectTemplate(GluonProject.FUNCTION.getType());
+        Template template = templateManager.getProjectTemplate(GluonProject.FUNCTION);
 
         template.render(rootFile, parameters);
         filesToOpen.addAll(template.getFilesToOpen());
@@ -133,7 +133,7 @@ public class JFunction extends JFrame {
         }
 
         // create template sources
-        Template sourceTemplate = templateManager.getSourceTemplate(template.getProjectName());
+        Template sourceTemplate = templateManager.getSourceTemplate(template.getGluonProject());
         if (sourceTemplate != null) {
             sourceTemplate.render(rootFile, parameters);
             filesToOpen.addAll(sourceTemplate.getFilesToOpen());

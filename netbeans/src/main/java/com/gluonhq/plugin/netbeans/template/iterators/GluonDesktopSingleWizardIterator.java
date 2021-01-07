@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2020, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonDesktopSingleWizardIterator extends GluonBaseWizardIterator {
 
     private GluonDesktopSingleWizardIterator() {
-        super(GluonProject.DESKTOP_SINGLE.getType());
+        super(GluonProject.DESKTOP_SINGLE);
     }
 
     public static GluonDesktopSingleWizardIterator createIterator() {

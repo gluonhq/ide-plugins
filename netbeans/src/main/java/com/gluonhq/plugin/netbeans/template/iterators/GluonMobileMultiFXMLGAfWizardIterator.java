@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2020, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@ import com.gluonhq.plugin.netbeans.template.OptInHelper;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonUserOptInPanel;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonViewWizardPanel;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonMobileWizardPanel;
-import com.gluonhq.plugin.templates.GluonProject;
+import com.gluonhq.plugin.templates.DownloadableGluonProject;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonMobileMultiFXMLGAfWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileMultiFXMLGAfWizardIterator() {
-        super(GluonProject.MOBILE_MULTIVIEW_GAF.getType());
+        super(DownloadableGluonProject.MOBILE_MULTIVIEW_GAF);
     }
 
     public static GluonMobileMultiFXMLGAfWizardIterator createIterator() {
@@ -78,5 +78,4 @@ public class GluonMobileMultiFXMLGAfWizardIterator extends GluonBaseWizardIterat
             };
         }
     }
-
 }
