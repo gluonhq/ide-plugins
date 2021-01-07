@@ -53,8 +53,8 @@ public class GluonProjectApplicationOperation  {
 
 		TemplateManager templateManager = TemplateManager.getInstance();
 
-		projectTemplate = templateManager.getProjectTemplate(projectData.projectType.getType());
-		sourceTemplate = templateManager.getSourceTemplate(projectTemplate.getProjectName());
+		projectTemplate = templateManager.getProjectTemplate(projectData.projectType);
+		sourceTemplate = templateManager.getSourceTemplate(projectData.projectType);
 	}
 
 	public void perform(IProgressMonitor mon, File projectDir) {

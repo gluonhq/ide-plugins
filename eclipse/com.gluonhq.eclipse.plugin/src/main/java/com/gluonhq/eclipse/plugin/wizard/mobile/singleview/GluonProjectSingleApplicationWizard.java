@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2020, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 package com.gluonhq.eclipse.plugin.wizard.mobile.singleview;
 
 import com.gluonhq.eclipse.plugin.wizard.*;
-import com.gluonhq.plugin.templates.GluonProject;
+import com.gluonhq.plugin.templates.DownloadableGluonProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
@@ -49,7 +49,7 @@ public class GluonProjectSingleApplicationWizard extends GluonProjectWizard {
 	}
 
 	public GluonProjectSingleApplicationWizard() {
-		super(GluonProject.MOBILE_SINGLE);
+		super(DownloadableGluonProject.MOBILE_SINGLE);
 	}
 
 	@Override
@@ -74,9 +74,6 @@ public class GluonProjectSingleApplicationWizard extends GluonProjectWizard {
 
 	@Override
 	public boolean canFinish() {
-		if (getContainer().getCurrentPage() == pageTwo) {
-			return true;
-		}
-		return false;
+		return getContainer().getCurrentPage() == pageTwo;
 	}
 }

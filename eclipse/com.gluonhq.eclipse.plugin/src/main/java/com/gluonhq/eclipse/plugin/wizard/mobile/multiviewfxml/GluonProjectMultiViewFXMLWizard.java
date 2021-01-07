@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2020, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 package com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxml;
 
 import com.gluonhq.eclipse.plugin.wizard.*;
-import com.gluonhq.plugin.templates.GluonProject;
+import com.gluonhq.plugin.templates.DownloadableGluonProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 
@@ -50,7 +50,7 @@ public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
 	}
 
 	public GluonProjectMultiViewFXMLWizard() {
-		super(GluonProject.MOBILE_MULTIVIEWFXML);
+		super(DownloadableGluonProject.MOBILE_MULTIVIEWFXML);
 	}
 
 	@Override
@@ -78,9 +78,6 @@ public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
 
 	@Override
 	public boolean canFinish() {
-		if (getContainer().getCurrentPage() == pageThree) {
-			return true;
-		}
-		return false;
+		return getContainer().getCurrentPage() == pageThree;
 	}	
 }
