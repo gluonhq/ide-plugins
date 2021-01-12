@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 2020, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@ package com.gluonhq.plugin.netbeans.template.iterators;
 import com.gluonhq.plugin.netbeans.template.OptInHelper;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonUserOptInPanel;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonMobileWizardPanel;
-import com.gluonhq.plugin.templates.DownloadableGluonProject;
+import com.gluonhq.plugin.templates.GluonProject;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -44,7 +44,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonMobileSingleWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileSingleWizardIterator() {
-        super(DownloadableGluonProject.MOBILE_SINGLE);
+        super(GluonProject.MOBILE_SINGLE);
     }
 
     public static GluonMobileSingleWizardIterator createIterator() {

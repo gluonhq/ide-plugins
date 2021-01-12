@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020, Gluon Software
+ * Copyright (c) 2017, 2021, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
  */
 package com.gluonhq.eclipse.plugin.wizard;
 
-import com.gluonhq.plugin.templates.DownloadableGluonProject;
 import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.TemplateUtils;
@@ -113,9 +112,9 @@ public class ProjectData {
 		
 		if (this.projectType.equals(GluonProject.DESKTOP_MULTIVIEW) || 
 			this.projectType.equals(GluonProject.DESKTOP_MULTIVIEWFXML) || 
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW)     || this.projectType.equals(DownloadableGluonProject.MOBILE_MULTIVIEW) ||
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) || this.projectType.equals(DownloadableGluonProject.MOBILE_MULTIVIEWFXML) ||
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW_GAF) || this.projectType.equals(DownloadableGluonProject.MOBILE_MULTIVIEW_GAF)) {
+			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW)     ||
+			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) ||
+			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW_GAF)) {
 			parameters.put(ProjectConstants.PARAM_PRIMARY_VIEW, primaryViewName);
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_VIEW, secondaryViewName);
 	        parameters.put(ProjectConstants.PARAM_PRIMARY_CSS, primaryViewCSS);
@@ -125,7 +124,7 @@ public class ProjectData {
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_CSS_ENABLED, secondaryViewSelected);
 		}
 		
-		if (this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) || this.projectType.equals(DownloadableGluonProject.MOBILE_MULTIVIEWFXML)) {
+		if (this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML)) {
 			parameters.put(ProjectConstants.PARAM_AFTERBURNER_ENABLED, afterburnerSelected);
 		}
 		
