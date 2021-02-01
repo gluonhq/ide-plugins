@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonMobileMultiFXMLWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileMultiFXMLWizardIterator() {
-        super(GluonProject.MOBILE_MULTIVIEWFXML.getType());
+        super(GluonProject.MOBILE_MULTIVIEWFXML);
     }
 
     public static GluonMobileMultiFXMLWizardIterator createIterator() {
@@ -65,7 +65,7 @@ public class GluonMobileMultiFXMLWizardIterator extends GluonBaseWizardIterator 
 
     @Override
     protected String[] createSteps() {
-        if (!OptInHelper.alreadyOptedIn()) {	
+        if (!OptInHelper.alreadyOptedIn()) {
             return new String[]{
                 NbBundle.getMessage(GluonUserOptInPanel.class, "LBL_UserOptIn"),
                 NbBundle.getMessage(GluonUserOptInPanel.class, "LBL_CreateProjectStep"),
@@ -78,5 +78,4 @@ public class GluonMobileMultiFXMLWizardIterator extends GluonBaseWizardIterator 
             };
         }
     }
-
 }

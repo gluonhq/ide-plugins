@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@
 package com.gluonhq.plugin.netbeans.template.iterators;
 
 import com.gluonhq.plugin.netbeans.template.OptInHelper;
+import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.Template;
 import com.gluonhq.plugin.templates.TemplateManager;
@@ -54,13 +55,13 @@ import java.util.*;
 
 public abstract class GluonBaseWizardIterator implements WizardDescriptor.InstantiatingIterator {
     
-    private final String typeProject;
+    private final GluonProject project;
     private int index;
     private WizardDescriptor.Panel[] panels;
     private WizardDescriptor wiz;
 
-    public GluonBaseWizardIterator(String typeProject) {
-        this.typeProject = typeProject;
+    public GluonBaseWizardIterator(GluonProject project) {
+        this.project = project;
     }
 
     @Override
@@ -122,8 +123,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
 
         List<File> filesToOpen = new ArrayList<>();
         TemplateManager templateManager = TemplateManager.getInstance();
-        Template template = templateManager.getProjectTemplate(typeProject);
-
+        Template template = templateManager.getProjectTemplate(project);
         template.render(dirF, wiz.getProperties());
         filesToOpen.addAll(template.getFilesToOpen());
 
@@ -146,7 +146,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
         }
 
         // create template sources
-        Template sourceTemplate = templateManager.getSourceTemplate(template.getProjectName());
+        Template sourceTemplate = templateManager.getSourceTemplate(project);
         if (sourceTemplate != null) {
             sourceTemplate.render(dirF, wiz.getProperties());
             filesToOpen.addAll(sourceTemplate.getFilesToOpen());
@@ -166,14 +166,6 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
         
         return resultSet;
     }
-    
-    protected void restoreOptIn() {
-        OptInHelper.restoreOptIn(wiz);
-    }
-    
-    protected abstract WizardDescriptor.Panel[] createPanels();
-    
-    protected abstract String[] createSteps();
 
     @Override
     public void uninitialize(WizardDescriptor wiz) {
@@ -228,5 +220,12 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
     @Override
     public final void removeChangeListener(ChangeListener l) {
     }
-    
+
+    protected abstract WizardDescriptor.Panel[] createPanels();
+
+    protected abstract String[] createSteps();
+
+    protected void restoreOptIn() {
+        OptInHelper.restoreOptIn(wiz);
+    }
 }

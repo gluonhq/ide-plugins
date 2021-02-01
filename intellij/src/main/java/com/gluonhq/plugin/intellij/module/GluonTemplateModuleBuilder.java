@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,15 +76,16 @@ import java.util.Map;
 
 public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
 
+    private GluonProject gluonProject;
     private Template template;
     private String builderId;
     private Icon icon;
 
     private Map<String, Object> parameters = new HashMap<>();
 
-    public GluonTemplateModuleBuilder(Template projectTemplate) {
-        this.template = projectTemplate;
-        this.builderId = this.template == null || this.template.getMetadata() == null ? null : this.template.getMetadata().getTitle();
+    public GluonTemplateModuleBuilder(GluonProject gluonProject) {
+        this.gluonProject = gluonProject;
+        this.builderId = this.gluonProject == null ? null : this.gluonProject.getName();
     }
 
     @Override
@@ -97,24 +98,24 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
             OptInHelper.restoreOptIn(this);
         }
 
-        if (template.getProjectName().equals(GluonProject.DESKTOP_SINGLE.getType()) ||
-                template.getProjectName().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
-                template.getProjectName().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
+        if (gluonProject.getType().equals(GluonProject.DESKTOP_SINGLE.getType()) ||
+                gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
+                gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
             icon = GluonIcons.GLUON_DESKTOP;
             steps.add(new GluonDesktopWizardStep(this, modulesProvider));
-            if (template.getProjectName().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
-                    template.getProjectName().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
+            if (gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
+                    gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
                 steps.add(new GluonViewWizardStep(this, modulesProvider, false));
             }
         } else {
             icon = GluonIcons.GLUON_MOBILE;
             steps.add(new GluonModuleWizardStep(this, modulesProvider));
-            if (template.getProjectName().equals(GluonProject.MOBILE_MULTIVIEW.getType()) ||
-                    template.getProjectName().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()) ||
-                    template.getProjectName().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())) {
+            if (gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW.getType()) ||
+                    gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()) ||
+                    gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())) {
                 steps.add(new GluonViewWizardStep(this, modulesProvider,
-                        template.getProjectName().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()),
-                        template.getProjectName().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())));
+                        gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()),
+                        gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())));
             }
         }
         steps.add(new ChooseJavaSdkStep(wizardContext, this));
@@ -124,10 +125,10 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
     @Nullable
     @Override
     public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
-        if (template != null && template.getMetadata() != null) {
-            String applicationName = template.getMetadata().getTitle();
-            if (!applicationName.isEmpty() && settingsStep.getModuleNameField() != null) {
-                settingsStep.getModuleNameField().setText(applicationName.replace(" ", ""));
+        if (gluonProject != null) {
+            String applicationName = gluonProject.getName();
+            if (!applicationName.isEmpty() && settingsStep.getModuleNameLocationSettings() != null) {
+                settingsStep.getModuleNameLocationSettings().setModuleName(applicationName.replace(" ", ""));
             }
         }
         return null;
@@ -147,6 +148,22 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
             importProject(project);
             openProjectFiles(project);
         }));
+    }
+
+    @Override
+    protected ProjectType getProjectType() {
+        return GluonConstants.PROJECT_TYPE;
+    }
+
+    @Override
+    public Icon getNodeIcon() {
+        return icon;
+    }
+
+    @Nullable
+    @Override
+    public String getBuilderId() {
+        return builderId;
     }
 
     public void updateParameter(String key, Object value) {
@@ -182,15 +199,16 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
 
         final File projectRoot = new File(project.getBasePath());
-        WriteCommandAction.runWriteCommandAction(project, () -> template.render(projectRoot, parameters));
+
+        WriteCommandAction.runWriteCommandAction(project, () -> getTemplate().render(projectRoot, parameters));
     }
 
     private void openProjectFiles(Project project) {
         final File projectRoot = new File(project.getBasePath());
-        List<File> filesToOpen = new ArrayList<>(template.getFilesToOpen());
+        List<File> filesToOpen = new ArrayList<>(getTemplate().getFilesToOpen());
 
         // create default source
-        Template sourceTemplate = TemplateManager.getInstance().getSourceTemplate(template.getProjectName());
+        Template sourceTemplate = TemplateManager.getInstance().getSourceTemplate(getTemplate().getGluonProject());
         if (sourceTemplate != null) {
             sourceTemplate.render(projectRoot, parameters);
             filesToOpen.addAll(sourceTemplate.getFilesToOpen());
@@ -244,20 +262,10 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         }
     }
 
-    @Override
-    protected ProjectType getProjectType() {
-        return GluonConstants.PROJECT_TYPE;
+    private Template getTemplate() {
+        if (template == null) {
+            template = TemplateManager.getInstance().getProjectTemplate(gluonProject);
+        }
+        return template;
     }
-
-    @Override
-    public Icon getNodeIcon() {
-        return icon;
-    }
-
-    @Nullable
-    @Override
-    public String getBuilderId() {
-        return builderId;
-    }
-
 }

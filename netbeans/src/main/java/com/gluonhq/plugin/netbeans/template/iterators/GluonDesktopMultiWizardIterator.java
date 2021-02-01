@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,6 @@ import com.gluonhq.plugin.netbeans.template.visuals.GluonUserOptInPanel;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonDesktopWizardPanel;
 import com.gluonhq.plugin.netbeans.template.visuals.GluonViewWizardPanel;
 import com.gluonhq.plugin.templates.GluonProject;
-import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -45,7 +44,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonDesktopMultiWizardIterator extends GluonBaseWizardIterator {
 
     private GluonDesktopMultiWizardIterator() {
-        super(GluonProject.DESKTOP_MULTIVIEW.getType());
+        super(GluonProject.DESKTOP_MULTIVIEW);
     }
 
     public static GluonDesktopMultiWizardIterator createIterator() {

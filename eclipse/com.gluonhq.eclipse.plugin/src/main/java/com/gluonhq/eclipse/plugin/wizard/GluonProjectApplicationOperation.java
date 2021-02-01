@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020, Gluon Software
+ * Copyright (c) 2017, 2021, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -53,8 +53,8 @@ public class GluonProjectApplicationOperation  {
 
 		TemplateManager templateManager = TemplateManager.getInstance();
 
-		projectTemplate = templateManager.getProjectTemplate(projectData.projectType.getType());
-		sourceTemplate = templateManager.getSourceTemplate(projectTemplate.getProjectName());
+		projectTemplate = templateManager.getProjectTemplate(projectData.projectType);
+		sourceTemplate = templateManager.getSourceTemplate(projectData.projectType);
 	}
 
 	public void perform(IProgressMonitor mon, File projectDir) {

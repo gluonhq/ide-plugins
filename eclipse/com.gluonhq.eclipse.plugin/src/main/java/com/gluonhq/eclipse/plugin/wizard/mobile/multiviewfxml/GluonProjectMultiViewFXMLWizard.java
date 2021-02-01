@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2021, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -78,9 +78,6 @@ public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
 
 	@Override
 	public boolean canFinish() {
-		if (getContainer().getCurrentPage() == pageThree) {
-			return true;
-		}
-		return false;
+		return getContainer().getCurrentPage() == pageThree;
 	}	
 }

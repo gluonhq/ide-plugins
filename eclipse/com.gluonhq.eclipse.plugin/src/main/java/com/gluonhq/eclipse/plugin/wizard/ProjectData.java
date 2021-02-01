@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2020, Gluon Software
+ * Copyright (c) 2017, 2021, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -112,7 +112,7 @@ public class ProjectData {
 		
 		if (this.projectType.equals(GluonProject.DESKTOP_MULTIVIEW) || 
 			this.projectType.equals(GluonProject.DESKTOP_MULTIVIEWFXML) || 
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW) || 
+			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW)     ||
 			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) ||
 			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW_GAF)) {
 			parameters.put(ProjectConstants.PARAM_PRIMARY_VIEW, primaryViewName);
