@@ -1,5 +1,9 @@
 ## Changelog Eclipse
 
+#### 2.8.2
+_2020-02-02_
+* Remote templates
+
 #### 2.8.0
 _2020-07-31_
 * Add Gluon Client support to plugins

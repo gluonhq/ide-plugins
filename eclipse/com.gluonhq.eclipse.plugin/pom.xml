@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.gluonhq</groupId>
       <artifactId>ide-plugin-templates</artifactId>
-      <version>2.10.3-SNAPSHOT</version>
+      <version>2.10.3</version>
     </dependency>
   </dependencies>
   <build>

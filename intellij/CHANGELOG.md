@@ -1,5 +1,9 @@
 ## Changelog IntelliJ IDEA
 
+#### 2.8.5
+_2021-02-02
+* Remote templates
+
 #### 2.8.4
 _2020-09-16
 * Bug fixes in templates of Gluon Mobile projects

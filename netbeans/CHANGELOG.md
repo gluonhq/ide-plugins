@@ -1,5 +1,9 @@
 ## Changelog NetBeans
 
+#### 2.8.3
+_2020-02-02_
+* Remote templates
+
 #### 2.8.2
 _2020-09-17_
 * Bug fixes in templates of Gluon Mobile projects
