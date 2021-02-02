@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.gluonhq.plugin.intellij</id>
     <name>Gluon</name>
-    <version>2.8.4</version>
+    <version>2.8.5</version>
     <vendor email="support@gluonhq.com" url="http://gluonhq.com">Gluon</vendor>
 
     <description><![CDATA[
@@ -9,9 +9,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      <b>2.8.4</b>
+      <b>2.8.5</b>
       <ul>
-      <li>Bug fixes in templates of Gluon Mobile projects</li>
+      <li>Remote templates</li>
       </ul>
     ]]>
     </change-notes>
