@@ -1,6 +1,12 @@
 # Gluon IDE Plugins
 
-Gluon integration with Java IDEs
+Gluon integration with Java IDEs. The repository contains Gluon plugin source for the following IDEs:
+
+* Eclipse
+* IntelliJ IDEA
+* Apache Netbeans
+
+To learn more about these plugins, please visit [Gluon documentation](https://docs.gluonhq.com/#_ide_plugins).
 
 ## Eclipse
 
