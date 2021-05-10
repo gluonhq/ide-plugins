@@ -44,6 +44,7 @@ import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
@@ -78,6 +79,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
+
+    private static final Logger LOG = Logger.getInstance("GluonTemplateModuleBuilder");
 
     private GluonProject gluonProject;
     private Template template;
@@ -285,7 +288,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
             getTemplate().getGluonProject().getProjectLocation();
             long end = System.nanoTime();
             long elapsedTime = end - start;
-            System.out.println("Time taken for downloading: " + ((double)elapsedTime / 1_000_000_000.0) + " seconds");
+            LOG.info("Time taken for downloading template: " + ((double)elapsedTime / 1_000_000_000.0) + " seconds");
         }
 
         @Override
@@ -295,7 +298,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
                 createProject(project);
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
-                System.out.println("Time taken for creation: " + ((double)elapsedTime / 1_000_000_000.0) + " seconds");
+                LOG.info("Time taken for project creation: " + ((double)elapsedTime / 1_000_000_000.0) + " seconds");
             });
             StartupManager.getInstance(project).runWhenProjectIsInitialized((DumbAwareRunnable)() -> DumbService.getInstance(project).smartInvokeLater(() -> {
                 importProject(project);
