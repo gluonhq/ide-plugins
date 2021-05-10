@@ -47,6 +47,9 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -143,11 +146,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         }
 
         final Project project = rootModel.getProject();
-        ApplicationManager.getApplication().runWriteAction(() -> createProject(project));
-        StartupManager.getInstance(project).runWhenProjectIsInitialized((DumbAwareRunnable)() -> DumbService.getInstance(project).smartInvokeLater(() -> {
-            importProject(project);
-            openProjectFiles(project);
-        }));
+        ProgressManager.getInstance().run(new GluonProjectCreationTask(project, "Downloading Gluon project template..", false));
     }
 
     @Override
@@ -267,5 +266,41 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
             template = TemplateManager.getInstance().getProjectTemplate(gluonProject);
         }
         return template;
+    }
+
+    private class GluonProjectCreationTask extends Task.Backgroundable {
+
+        @Nullable
+        private final Project project;
+
+        public GluonProjectCreationTask(@Nullable Project project, @NotNull String title, boolean canBeCancelled) {
+            super(project, title, canBeCancelled);
+            this.project = project;
+        }
+
+        @Override
+        public void run(@NotNull ProgressIndicator indicator) {
+            long start = System.nanoTime();
+            // Download and unzip project template
+            getTemplate().getGluonProject().getProjectLocation();
+            long end = System.nanoTime();
+            long elapsedTime = end - start;
+            System.out.println("Time taken for downloading: " + ((double)elapsedTime / 1_000_000_000.0) + " seconds");
+        }
+
+        @Override
+        public void onSuccess() {
+            ApplicationManager.getApplication().runWriteAction(() -> {
+                long start = System.nanoTime();
+                createProject(project);
+                long end = System.nanoTime();
+                long elapsedTime = end - start;
+                System.out.println("Time taken for creation: " + ((double)elapsedTime / 1_000_000_000.0) + " seconds");
+            });
+            StartupManager.getInstance(project).runWhenProjectIsInitialized((DumbAwareRunnable)() -> DumbService.getInstance(project).smartInvokeLater(() -> {
+                importProject(project);
+                openProjectFiles(project);
+            }));
+        }
     }
 }
