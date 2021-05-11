@@ -34,6 +34,7 @@ import com.gluonhq.plugin.templates.GluonProject;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.Template;
 import com.gluonhq.plugin.templates.TemplateManager;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
@@ -53,7 +54,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
 
-public abstract class GluonBaseWizardIterator implements WizardDescriptor.InstantiatingIterator {
+public abstract class GluonBaseWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator {
     
     private final GluonProject project;
     private int index;
@@ -89,9 +90,14 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
             }
         }
     }
+
+    @Override
+    public Set/*<FileObject>*/ instantiate() throws IOException {
+        throw new AssertionError("instantiate(ProgressHandle) should have been called");
+    }
     
     @Override
-    public Set/*<FileObject>*/ instantiate(/*ProgressHandle handle*/) throws IOException {
+    public Set/*<FileObject>*/ instantiate(ProgressHandle handle) throws IOException {
         if (!OptInHelper.alreadyOptedIn()) {
             OptInHelper.persistOptIn((String) wiz.getProperty(ProjectConstants.PARAM_USER_EMAIL), 
                     (Boolean) wiz.getProperty(ProjectConstants.PARAM_USER_UPTODATE), 
@@ -116,6 +122,9 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
         wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
+
+        handle.start();
+        handle.progress("Downloading template...");
         
         Set<FileObject> resultSet = new LinkedHashSet<>();
         File dirF = FileUtil.normalizeFile((File) wiz.getProperty(ProjectConstants.PARAM_PROJECT_DIR));
@@ -145,6 +154,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
             ProjectChooser.setProjectsFolder(parent);
         }
 
+        handle.progress("Creating project...");
         // create template sources
         Template sourceTemplate = templateManager.getSourceTemplate(project);
         if (sourceTemplate != null) {
@@ -152,6 +162,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Instan
             filesToOpen.addAll(sourceTemplate.getFilesToOpen());
         }
 
+        handle.progress("Opening project...");
         if (!filesToOpen.isEmpty()) {
             for (File file : filesToOpen) {
                 if (file.exists()) {
