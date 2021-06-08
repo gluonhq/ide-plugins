@@ -196,8 +196,8 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         parameters.put(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());
+        parameters.put(ProjectConstants.PARAM_GLUONFX_MAVEN_PLUGIN, ProjectConstants.getGluonFXMavenPluginVersion());
+        parameters.put(ProjectConstants.PARAM_GLUONFX_GRADLE_PLUGIN, ProjectConstants.getGluonFXGradlePluginVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
 
         final File projectRoot = new File(project.getBasePath());
