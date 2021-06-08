@@ -12,14 +12,14 @@ tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
     maven {
         url 'https://nexus.gluonhq.com/nexus/content/repositories/releases'
     }
 }
 
 dependencies {
-    compile 'com.gluonhq:ide-plugin-templates:2.10.3'
+    compile 'com.gluonhq:ide-plugin-templates:2.10.4-SNAPSHOT'
 }
 
 

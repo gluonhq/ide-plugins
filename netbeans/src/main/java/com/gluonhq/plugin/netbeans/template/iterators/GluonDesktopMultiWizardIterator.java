@@ -64,7 +64,7 @@ public class GluonDesktopMultiWizardIterator extends GluonBaseWizardIterator {
 
     @Override
     protected String[] createSteps() {
-        if (!OptInHelper.alreadyOptedIn()) {	
+        if (!OptInHelper.alreadyOptedIn()) {
             return new String[]{
                 NbBundle.getMessage(GluonUserOptInPanel.class, "LBL_UserOptIn"),
                 NbBundle.getMessage(GluonUserOptInPanel.class, "LBL_CreateProjectStep"),

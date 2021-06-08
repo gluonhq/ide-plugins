@@ -108,7 +108,7 @@ dependencies {
     providedCompile netbeansApi('org-openide-util-lookup')
     providedCompile files(findToolsJar(javaVersion))
 
-    compile 'com.gluonhq:ide-plugin-templates:2.10.3'
+    compile 'com.gluonhq:ide-plugin-templates:2.10.4-SNAPSHOT'
     compile 'org.apache.logging.log4j:log4j-1.2-api:2.5'
 }
 
