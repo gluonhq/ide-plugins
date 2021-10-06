@@ -50,7 +50,7 @@ public class GluonProjectMultiViewFXMLWizard extends GluonProjectWizard {
 	}
 
 	public GluonProjectMultiViewFXMLWizard() {
-		super(GluonProject.MOBILE_MULTIVIEWFXML);
+		super(GluonProject.MULTIVIEW_FXML);
 	}
 
 	@Override

@@ -110,11 +110,9 @@ public class ProjectData {
 		parameters.put(ProjectConstants.PARAM_EMBEDDED_ENABLED, embeddedSelected);
 		parameters.put(ProjectConstants.PARAM_BUILD_TOOL, buildTool);
 		
-		if (this.projectType.equals(GluonProject.DESKTOP_MULTIVIEW) || 
-			this.projectType.equals(GluonProject.DESKTOP_MULTIVIEWFXML) || 
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW)     ||
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) ||
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW_GAF)) {
+		if (this.projectType.equals(GluonProject.MULTIVIEW)     ||
+			this.projectType.equals(GluonProject.MULTIVIEW_FXML) ||
+			this.projectType.equals(GluonProject.MULTIVIEW_GAF)) {
 			parameters.put(ProjectConstants.PARAM_PRIMARY_VIEW, primaryViewName);
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_VIEW, secondaryViewName);
 	        parameters.put(ProjectConstants.PARAM_PRIMARY_CSS, primaryViewCSS);
@@ -124,7 +122,7 @@ public class ProjectData {
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_CSS_ENABLED, secondaryViewSelected);
 		}
 		
-		if (this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML)) {
+		if (this.projectType.equals(GluonProject.MULTIVIEW_FXML)) {
 			parameters.put(ProjectConstants.PARAM_AFTERBURNER_ENABLED, afterburnerSelected);
 		}
 		

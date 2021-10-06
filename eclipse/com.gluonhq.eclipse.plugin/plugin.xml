@@ -15,43 +15,10 @@
                 id="com.gluonhq.plugin"
                 name="Gluon">
         </category>
-        <!--<wizard
-                id="com.gluonhq.eclipse.plugin.wizard.desktop.singleviewproject"
-                class="com.gluonhq.eclipse.plugin.wizard.desktop.singleview.GluonProjectSingleApplicationWizard"
-                name="Gluon Desktop - Single View Project"
-                icon="icons/GluonDesktop_16x16.png"
-                category="com.gluonhq.plugin"
-                canFinishEarly="false"
-                hasPages="true"
-                project="true">
-            <description>Create a Single View Project</description>
-        </wizard>
-        <wizard
-                id="com.gluonhq.eclipse.plugin.wizard.desktop.multiviewproject"
-                class="com.gluonhq.eclipse.plugin.wizard.desktop.multiview.GluonProjectMultiViewWizard"
-                name="Gluon Desktop - Multi View Project"
-                icon="icons/GluonDesktop_16x16.png"
-                category="com.gluonhq.plugin"
-                canFinishEarly="false"
-                hasPages="true"
-                project="true">
-            <description>Create a Multi View Project</description>
-        </wizard>
-        <wizard
-                id="com.gluonhq.eclipse.plugin.wizard.desktop.multiviewfxmlproject"
-                class="com.gluonhq.eclipse.plugin.wizard.desktop.multiviewfxml.GluonProjectMultiViewFXMLWizard"
-                name="Gluon Desktop - Multi View Project (FXML)"
-                icon="icons/GluonDesktop_16x16.png"
-                category="com.gluonhq.plugin"
-                canFinishEarly="false"
-                hasPages="true"
-                project="true">
-            <description>Create a Multi View Project with FXML</description>
-        </wizard>-->
         <wizard
                 id="com.gluonhq.eclipse.plugin.wizard.mobile.singleviewproject"
                 class="com.gluonhq.eclipse.plugin.wizard.mobile.singleview.GluonProjectSingleApplicationWizard"
-                name="Gluon Mobile - Single View Project"
+                name="Gluon - Single View Project"
                 category="com.gluonhq.plugin"
                 icon="icons/GluonMobile_16x16.png"
                 canFinishEarly="false"
@@ -62,7 +29,7 @@
         <wizard
                 id="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewproject"
                 class="com.gluonhq.eclipse.plugin.wizard.mobile.multiview.GluonProjectMultiViewWizard"
-                name="Gluon Mobile - Multi View Project"
+                name="Gluon - Multi View Project"
                 category="com.gluonhq.plugin"
                 icon="icons/GluonMobile_16x16.png"
                 canFinishEarly="false"
@@ -73,7 +40,7 @@
         <wizard
                 id="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxmlproject"
                 class="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxml.GluonProjectMultiViewFXMLWizard"
-                name="Gluon Mobile - Multi View Project (FXML)"
+                name="Gluon - Multi View Project (FXML)"
                 category="com.gluonhq.plugin"
                 icon="icons/GluonMobile_16x16.png"
                 canFinishEarly="false"
@@ -84,7 +51,7 @@
         <wizard
                 id="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxmlgafproject"
                 class="com.gluonhq.eclipse.plugin.wizard.mobile.multiviewfxmlgaf.GluonProjectMultiViewFXMLGAfWizard"
-                name="Gluon Mobile - Glisten-Afterburner Project"
+                name="Gluon - Glisten-Afterburner Project"
                 category="com.gluonhq.plugin"
                 icon="icons/GluonMobile_16x16.png"
                 canFinishEarly="false"

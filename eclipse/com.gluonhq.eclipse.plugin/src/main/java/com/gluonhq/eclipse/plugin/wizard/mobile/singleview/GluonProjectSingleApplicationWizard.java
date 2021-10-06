@@ -49,7 +49,7 @@ public class GluonProjectSingleApplicationWizard extends GluonProjectWizard {
 	}
 
 	public GluonProjectSingleApplicationWizard() {
-		super(GluonProject.MOBILE_SINGLE);
+		super(GluonProject.SINGLEVIEW);
 	}
 
 	@Override
