@@ -103,27 +103,17 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         } else {
             OptInHelper.restoreOptIn(this);
         }
-
-        if (gluonProject.getType().equals(GluonProject.DESKTOP_SINGLE.getType()) ||
-                gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
-                gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
-            icon = GluonIcons.GLUON_DESKTOP;
-            steps.add(new GluonDesktopWizardStep(this, modulesProvider));
-            if (gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
-                    gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
-                steps.add(new GluonViewWizardStep(this, modulesProvider, false));
-            }
-        } else {
-            icon = GluonIcons.GLUON_MOBILE;
-            steps.add(new GluonModuleWizardStep(this, modulesProvider));
-            if (gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW.getType()) ||
-                    gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()) ||
-                    gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())) {
-                steps.add(new GluonViewWizardStep(this, modulesProvider,
-                        gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()),
-                        gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())));
-            }
+        
+        icon = GluonIcons.GLUON_MODULE;
+        steps.add(new GluonModuleWizardStep(this, modulesProvider));
+        if (gluonProject.getType().equals(GluonProject.MULTIVIEW.getType()) ||
+                gluonProject.getType().equals(GluonProject.MULTIVIEW_FXML.getType()) ||
+                gluonProject.getType().equals(GluonProject.MULTIVIEW_GAF.getType())) {
+            steps.add(new GluonViewWizardStep(this, modulesProvider,
+                    gluonProject.getType().equals(GluonProject.MULTIVIEW_FXML.getType()),
+                    gluonProject.getType().equals(GluonProject.MULTIVIEW_GAF.getType())));
         }
+
         steps.add(new ChooseJavaSdkStep(wizardContext, this));
         return steps.toArray(new ModuleWizardStep[steps.size()]);
     }
@@ -176,9 +166,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
 
         if (!OptInHelper.alreadyOptedIn()) {
             OptInHelper.persistOptIn((String) parameters.get(ProjectConstants.PARAM_USER_EMAIL),
-                    Boolean.parseBoolean((String) parameters.get(ProjectConstants.PARAM_USER_UPTODATE)),
-                    (String) parameters.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE),
-                    (String) parameters.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP));
+                    Boolean.parseBoolean((String) parameters.get(ProjectConstants.PARAM_USER_UPTODATE)));
 
             // only send once
             com.gluonhq.plugin.templates.OptInHelper.optIn((String) parameters.get(ProjectConstants.PARAM_USER_EMAIL),

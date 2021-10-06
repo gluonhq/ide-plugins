@@ -54,8 +54,6 @@ public class OptInHelper {
         if (alreadyOptedIn()) {
             moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_EMAIL, PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, ""));
             moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_UPTODATE, PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true));
-            moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_LICENSE_MOBILE, PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, ""));
-            moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, ""));
             moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_MAC_ADDRESS, PREFERENCES.get(ProjectConstants.PARAM_USER_MAC_ADDRESS, ""));
             moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_PLUGIN_VERSION, PREFERENCES.get(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION));
         }
@@ -64,15 +62,11 @@ public class OptInHelper {
     public static boolean alreadyOptedIn() {
         if ("true".equals(LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_IDE_OPTIN, ""))) {
             persistOptIn(LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_EMAIL, ""),
-                    LEGACY_PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE),
-                    LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_LICENSE_MOBILE, ""),
-                    LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, ""));
+                    LEGACY_PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE));
 
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_IDE_OPTIN);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_EMAIL);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_UPTODATE);
-            LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_LICENSE_MOBILE);
-            LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_LICENSE_DESKTOP);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_MAC_ADDRESS);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_PLUGIN_VERSION);
         }
@@ -80,12 +74,10 @@ public class OptInHelper {
         return "true".equals(PREFERENCES.get(ProjectConstants.PARAM_USER_IDE_OPTIN, ""));
     }
 
-    public static void persistOptIn(String email, boolean uptodate, String mobileLicense, String desktopLicense) {
+    public static void persistOptIn(String email, boolean uptodate) {
         PREFERENCES.put(ProjectConstants.PARAM_USER_IDE_OPTIN, "true");
         PREFERENCES.put(ProjectConstants.PARAM_USER_EMAIL, email);
         PREFERENCES.putBoolean(ProjectConstants.PARAM_USER_UPTODATE, uptodate);
-        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE_MOBILE, mobileLicense);
-        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, desktopLicense);
         PREFERENCES.put(ProjectConstants.PARAM_USER_MAC_ADDRESS, TemplateUtils.getMacAddress());
         PREFERENCES.put(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
         try {

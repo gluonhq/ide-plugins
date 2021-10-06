@@ -1,9 +1,7 @@
 plugins {
-    id "org.jetbrains.intellij" version "0.4.16"
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.7.2'
 }
-
-apply plugin: 'java'
-apply plugin: 'org.jetbrains.intellij'
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
@@ -12,16 +10,15 @@ tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
     maven {
         url 'https://nexus.gluonhq.com/nexus/content/repositories/releases'
     }
 }
 
 dependencies {
-    compile 'com.gluonhq:ide-plugin-templates:2.10.3'
+    implementation 'com.gluonhq:ide-plugin-templates:2.10.4-SNAPSHOT'
 }
-
 
 intellij {
     version = 'IC-2020.2'

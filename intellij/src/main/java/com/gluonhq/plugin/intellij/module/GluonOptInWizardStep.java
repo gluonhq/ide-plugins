@@ -32,7 +32,6 @@ package com.gluonhq.plugin.intellij.module;
 import com.gluonhq.plugin.templates.ProjectConstants;
 import com.gluonhq.plugin.templates.TemplateUtils;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import org.jetbrains.annotations.NotNull;
@@ -90,8 +89,6 @@ public class GluonOptInWizardStep extends ModuleWizardStep {
     public void updateDataModel() {
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_EMAIL, optInStep.getEmailAddress().getText().trim());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_UPTODATE, Boolean.toString(optInStep.getSubscribe()));
-        moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_LICENSE_MOBILE, optInStep.getMobileLicense().getText());
-        moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, optInStep.getDesktopLicense().getText());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_MAC_ADDRESS, TemplateUtils.getMacAddress());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
     }
