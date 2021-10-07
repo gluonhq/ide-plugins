@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2021, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -57,15 +57,13 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
 	private final static IEclipsePreferences PREFERENCES = ConfigurationScope.INSTANCE.getNode("com.gluonhq.eclipse.plugin");
 	private Text emailName;
 	private Button uptodateCheckBox;
-	private Text mobileLicense;
-	private Text desktopLicense;
+	private Text gluonLicense;
 	private Label error;
 	
 	public String userEmail = "";
 	public boolean userUptodate = true;
-	public String userMobileLicense = "";
-	public String userDesktopLicense = "";
-	
+	public String userGluonLicense = "";
+
 	private final org.eclipse.swt.graphics.Color color;
 	
 	public OptionsPage() {
@@ -74,8 +72,7 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
 		if (ProjectData.alreadyOptedIn()) {
 			this.userEmail = PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, "");
 			this.userUptodate = PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true);
-			this.userMobileLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, "");
-			this.userDesktopLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, "");
+			this.userGluonLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, "");
 		}
 		color = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 	}
@@ -113,24 +110,14 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
 	    }
 	    {
 	    	Label l = new Label(composite, SWT.NONE);
-			l.setText("Mobile License Key:");
+			l.setText("Gluon License Key:");
 			
-			mobileLicense = new Text(composite, SWT.BORDER);
+			gluonLicense = new Text(composite, SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
-			mobileLicense.setLayoutData(layoutData);
-			mobileLicense.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, ""));
+			gluonLicense.setLayoutData(layoutData);
+			gluonLicense.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, ""));
 		}
-	    {
-			Label l = new Label(composite, SWT.NONE);
-			l.setText("Desktop License Key:");
-			
-			desktopLicense = new Text(composite, SWT.BORDER);
-			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-			layoutData.grabExcessHorizontalSpace = true;
-			desktopLicense.setLayoutData(layoutData);
-			desktopLicense.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, ""));
-	    }
 	    {
 	    	new Label(composite, SWT.NONE);
 	    	new Label(composite, SWT.NONE);
@@ -150,8 +137,7 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
 	protected void performDefaults() {
 		emailName.setText(userEmail);
 		uptodateCheckBox.setSelection(userUptodate);
-		mobileLicense.setText(userMobileLicense);
-		desktopLicense.setText(userDesktopLicense);
+		gluonLicense.setText(userGluonLicense);
 	}
 	
 	@Override
@@ -165,9 +151,8 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
 		
 		if (!emailName.getText().equals(userEmail) ||
 			uptodateCheckBox.getSelection() != userUptodate ||
-			!mobileLicense.getText().equals(userMobileLicense) ||
-			!desktopLicense.getText().equals(userDesktopLicense) ||
-			PREFERENCES.get(ProjectConstants.PARAM_USER_MAC_ADDRESS, "").isEmpty() || 
+			!gluonLicense.getText().equals(userGluonLicense) ||
+			PREFERENCES.get(ProjectConstants.PARAM_USER_MAC_ADDRESS, "").isEmpty() ||
 			PREFERENCES.get(ProjectConstants.PARAM_USER_PLUGIN_VERSION, "").isEmpty()) {
 			changed = true;
 		}
@@ -175,8 +160,7 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
         // store modified settings
         ProjectData.persistOptIn(emailName.getText(), 
 				uptodateCheckBox.getSelection(), 
-				mobileLicense.getText(), 
-				desktopLicense.getText());
+				gluonLicense.getText());
 
         if (changed) {
 			// send modified settings
@@ -188,8 +172,7 @@ public class OptionsPage extends FieldEditorPreferencePage implements IWorkbench
         
 		this.userEmail = PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, "");
 		this.userUptodate = PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true);
-		this.userMobileLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, "");
-		this.userDesktopLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, "");
+		this.userGluonLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, "");
 
 		return super.performOk();
 	}

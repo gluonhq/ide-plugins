@@ -63,7 +63,7 @@ public class GluonProjectApplicationOperation  {
 		// OptIn
 	    if (!ProjectData.alreadyOptedIn()) {
 	    	ProjectData.persistOptIn(projectData.userEmail, projectData.userUptodate, 
-	        		projectData.userMobileLicense, projectData.userDesktopLicense);
+	        		projectData.userGluonLicense);
 	    	
 	    	// only send data once
 	    	OptInHelper.optIn(projectData.userEmail, projectData.userUptodate, "plugineclipse",
@@ -81,8 +81,7 @@ public class GluonProjectApplicationOperation  {
             parameters.put(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
             parameters.put(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
             parameters.put(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
-			parameters.put(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
-			parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
+			parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_VERSION, ProjectConstants.getGlistenVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
 			parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());
