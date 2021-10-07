@@ -103,7 +103,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         } else {
             OptInHelper.restoreOptIn(this);
         }
-        
+
         icon = GluonIcons.GLUON_MODULE;
         steps.add(new GluonModuleWizardStep(this, modulesProvider));
         if (gluonProject.getType().equals(GluonProject.MULTIVIEW.getType()) ||
@@ -166,7 +166,8 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
 
         if (!OptInHelper.alreadyOptedIn()) {
             OptInHelper.persistOptIn((String) parameters.get(ProjectConstants.PARAM_USER_EMAIL),
-                    Boolean.parseBoolean((String) parameters.get(ProjectConstants.PARAM_USER_UPTODATE)));
+                    Boolean.parseBoolean((String) parameters.get(ProjectConstants.PARAM_USER_UPTODATE)),
+                    (String) parameters.get(ProjectConstants.PARAM_USER_LICENSE));
 
             // only send once
             com.gluonhq.plugin.templates.OptInHelper.optIn((String) parameters.get(ProjectConstants.PARAM_USER_EMAIL),
@@ -181,8 +182,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         parameters.put(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
+        parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_VERSION, ProjectConstants.getGlistenVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());

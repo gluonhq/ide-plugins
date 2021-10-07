@@ -68,7 +68,7 @@ public class GluonOptInWizardStep extends ModuleWizardStep {
     }
 
     @Override
-    public boolean validate() throws ConfigurationException {
+    public boolean validate() {
         return optInStep.isValid();
     }
 
@@ -89,6 +89,7 @@ public class GluonOptInWizardStep extends ModuleWizardStep {
     public void updateDataModel() {
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_EMAIL, optInStep.getEmailAddress().getText().trim());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_UPTODATE, Boolean.toString(optInStep.getSubscribe()));
+        moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_LICENSE, optInStep.getGluonLicense().getText().trim());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_MAC_ADDRESS, TemplateUtils.getMacAddress());
         moduleBuilder.updateParameter(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
     }

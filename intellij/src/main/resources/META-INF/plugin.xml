@@ -50,7 +50,7 @@
                     text="Upload Gluon Function" description="Upload Gluon Function"/>
             <separator />
             <action id="AttachConfig" class="com.gluonhq.plugin.intellij.menu.down.GluonMobileSettingsAction"
-                    text="Gluon Mobile" description="Edit Gluon Mobile settings"/>
+                    text="Gluon App" description="Edit Gluon Application settings"/>
             <action id="CloudLinkConfig" class="com.gluonhq.plugin.intellij.menu.cloudlink.GluonCloudLinkSettingsAction"
                     text="Gluon CloudLink" description="Edit Gluon CloudLink settings"/>
         </group>

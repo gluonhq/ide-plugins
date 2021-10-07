@@ -13,12 +13,14 @@ public class OptionsForm {
     private JCheckBox jCheckUpToDate;
     private JPanel contentPanel;
     private JLabel errorLabel;
+    private JTextField jTextGluonLicense;
 
     private final static Preferences PREFERENCES = Preferences.userRoot().node("com.gluonhq.plugin.intellij");
     private final static PropertiesComponent LEGACY_PREFERENCES = PropertiesComponent.getInstance();
 
     private String iniEmailAddress;
     private boolean iniCheck;
+    private String iniGluonLicenseKey;
 
     public OptionsForm() {
         errorLabel.setVisible(false);
@@ -32,7 +34,8 @@ public class OptionsForm {
     public boolean isModified() {
         errorLabel.setVisible(!isValid());
         return (!jTextEmailAddress.getText().equals(iniEmailAddress) && isValid()) ||
-                jCheckUpToDate.isSelected() != iniCheck;
+                jCheckUpToDate.isSelected() != iniCheck ||
+                !jTextGluonLicense.getText().equals(iniGluonLicenseKey);
     }
 
     public boolean isValid() {
@@ -52,7 +55,9 @@ public class OptionsForm {
         }
 
         // store modified settings
-        OptInHelper.persistOptIn(jTextEmailAddress.getText(), jCheckUpToDate.isSelected());
+        OptInHelper.persistOptIn(jTextEmailAddress.getText(),
+                jCheckUpToDate.isSelected(),
+                jTextGluonLicense.getText());
     
         if (changed) {
             // send modified settings
@@ -69,19 +74,23 @@ public class OptionsForm {
 
         if ("true".equals(LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_IDE_OPTIN, ""))) {
             OptInHelper.persistOptIn(LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_EMAIL, ""),
-                    LEGACY_PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE));
+                    LEGACY_PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE),
+                    LEGACY_PREFERENCES.getValue(ProjectConstants.PARAM_USER_LICENSE, ""));
 
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_IDE_OPTIN);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_EMAIL);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_UPTODATE);
+            LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_LICENSE);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_MAC_ADDRESS);
             LEGACY_PREFERENCES.unsetValue(ProjectConstants.PARAM_USER_PLUGIN_VERSION);
         }
 
         iniEmailAddress = PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, "");
         iniCheck = PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true);
+        iniGluonLicenseKey = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, "");
 
         jTextEmailAddress.setText(iniEmailAddress);
         jCheckUpToDate.setSelected(iniCheck);
+        jTextGluonLicense.setText(iniGluonLicenseKey);
     }
 }
