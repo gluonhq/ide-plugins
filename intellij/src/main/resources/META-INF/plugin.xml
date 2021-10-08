@@ -40,26 +40,6 @@
         <!-- Add your project components here -->
     </project-components>
 
-    <actions>
-        <group id="GluonRoot" class="com.gluonhq.plugin.intellij.menu.GluonAction" text="Gluon" popup="true"
-               icon="/com/gluonhq/plugin/templates/icons/Gluon_16x16.png">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-            <action id="FunctionConfig" class="com.gluonhq.plugin.intellij.menu.function.AddGluonFunctionAction"
-                    text="Gluon Function" description="Add a Gluon Function project"/>
-            <action id="UploadConfig" class="com.gluonhq.plugin.intellij.menu.function.UploadGluonFunctionAction"
-                    text="Upload Gluon Function" description="Upload Gluon Function"/>
-            <separator />
-            <action id="AttachConfig" class="com.gluonhq.plugin.intellij.menu.down.GluonMobileSettingsAction"
-                    text="Gluon App" description="Edit Gluon Application settings"/>
-            <action id="CloudLinkConfig" class="com.gluonhq.plugin.intellij.menu.cloudlink.GluonCloudLinkSettingsAction"
-                    text="Gluon CloudLink" description="Edit Gluon CloudLink settings"/>
-        </group>
-        <action id="GluonCode" class="com.gluonhq.plugin.intellij.menu.code.FunctionGenerator"
-                text="Gluon Function..." description="Generate Function Code">
-            <add-to-group group-id="GenerateGroup" anchor="first" />
-        </action>
-    </actions>
-
     <module-components>
         <!-- Add your module components here -->
     </module-components>
