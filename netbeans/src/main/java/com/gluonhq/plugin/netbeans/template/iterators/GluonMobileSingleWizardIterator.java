@@ -44,7 +44,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonMobileSingleWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileSingleWizardIterator() {
-        super(GluonProject.MOBILE_SINGLE);
+        super(GluonProject.SINGLEVIEW);
     }
 
     public static GluonMobileSingleWizardIterator createIterator() {

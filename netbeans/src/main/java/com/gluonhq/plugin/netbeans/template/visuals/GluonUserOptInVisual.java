@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,8 +41,7 @@ public class GluonUserOptInVisual extends GluonBasePanelVisual {
         // Register listener on the textFields to make the automatic updates
         emailTextField.getDocument().addDocumentListener(this);
         uptodateCheckbox.addChangeListener(this);
-        mobileLicenseTextField.getDocument().addDocumentListener(this);
-        desktopLicenseTextField.getDocument().addDocumentListener(this);
+        gluonLicenseTextField.getDocument().addDocumentListener(this);
     }
 
     /**
@@ -58,9 +57,7 @@ public class GluonUserOptInVisual extends GluonBasePanelVisual {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        mobileLicenseTextField = new javax.swing.JTextField();
-        desktopLicenseTextField = new javax.swing.JTextField();
+        gluonLicenseTextField = new javax.swing.JTextField();
 
         emailLabel.setLabelFor(emailTextField);
         org.openide.awt.Mnemonics.setLocalizedText(emailLabel, org.openide.util.NbBundle.getMessage(GluonUserOptInVisual.class, "GluonUserOptInVisual.emailLabel.text")); // NOI18N
@@ -79,11 +76,7 @@ public class GluonUserOptInVisual extends GluonBasePanelVisual {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GluonUserOptInVisual.class, "GluonUserOptInVisual.jLabel4.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GluonUserOptInVisual.class, "GluonUserOptInVisual.jLabel5.text")); // NOI18N
-
-        mobileLicenseTextField.setText(org.openide.util.NbBundle.getMessage(GluonUserOptInVisual.class, "GluonUserOptInVisual.mobileLicenseTextField.text")); // NOI18N
-
-        desktopLicenseTextField.setText(org.openide.util.NbBundle.getMessage(GluonUserOptInVisual.class, "GluonUserOptInVisual.desktopLicenseTextField.text")); // NOI18N
+        gluonLicenseTextField.setText(org.openide.util.NbBundle.getMessage(GluonUserOptInVisual.class, "GluonUserOptInVisual.gluonLicenseTextField.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -107,13 +100,9 @@ public class GluonUserOptInVisual extends GluonBasePanelVisual {
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
+                        .addComponent(jLabel4)
                         .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(mobileLicenseTextField)
-                            .addComponent(desktopLicenseTextField))))
+                        .addComponent(gluonLicenseTextField)))
                 .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
@@ -134,25 +123,19 @@ public class GluonUserOptInVisual extends GluonBasePanelVisual {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(mobileLicenseTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(desktopLicenseTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(89, Short.MAX_VALUE))
+                    .addComponent(gluonLicenseTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField desktopLicenseTextField;
     private javax.swing.JLabel emailLabel;
     private javax.swing.JTextField emailTextField;
+    private javax.swing.JTextField gluonLicenseTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField mobileLicenseTextField;
     private javax.swing.JCheckBox uptodateCheckbox;
     // End of variables declaration//GEN-END:variables
 
@@ -179,13 +162,11 @@ public class GluonUserOptInVisual extends GluonBasePanelVisual {
     protected void store(WizardDescriptor d) {
         String email = emailTextField.getText().trim();
         boolean uptodate = uptodateCheckbox.isSelected();
-        String mobileLicense = mobileLicenseTextField.getText();
-        String desktopLicense = desktopLicenseTextField.getText();
+        String gluonLicense = gluonLicenseTextField.getText();
 
         d.putProperty(ProjectConstants.PARAM_USER_EMAIL, email);
         d.putProperty(ProjectConstants.PARAM_USER_UPTODATE, uptodate);
-        d.putProperty(ProjectConstants.PARAM_USER_LICENSE_MOBILE, mobileLicense);
-        d.putProperty(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, desktopLicense);
+        d.putProperty(ProjectConstants.PARAM_USER_LICENSE, gluonLicense);
         d.putProperty(ProjectConstants.PARAM_USER_MAC_ADDRESS, TemplateUtils.getMacAddress());
         d.putProperty(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
     }

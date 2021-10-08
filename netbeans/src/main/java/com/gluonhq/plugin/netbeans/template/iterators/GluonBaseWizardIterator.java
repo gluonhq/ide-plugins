@@ -101,8 +101,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Progre
         if (!OptInHelper.alreadyOptedIn()) {
             OptInHelper.persistOptIn((String) wiz.getProperty(ProjectConstants.PARAM_USER_EMAIL), 
                     (Boolean) wiz.getProperty(ProjectConstants.PARAM_USER_UPTODATE), 
-                    (String) wiz.getProperty(ProjectConstants.PARAM_USER_LICENSE_MOBILE), 
-                    (String) wiz.getProperty(ProjectConstants.PARAM_USER_LICENSE_DESKTOP));
+                    (String) wiz.getProperty(ProjectConstants.PARAM_USER_LICENSE));
             
             // only send once
             com.gluonhq.plugin.templates.OptInHelper.optIn((String) wiz.getProperty(ProjectConstants.PARAM_USER_EMAIL), 
@@ -115,9 +114,7 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Progre
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUON_GLISTEN_VERSION, ProjectConstants.getGlistenVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());

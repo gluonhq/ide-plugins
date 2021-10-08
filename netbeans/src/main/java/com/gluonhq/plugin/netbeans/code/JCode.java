@@ -29,29 +29,29 @@
  */
 package com.gluonhq.plugin.netbeans.code;
 
-import com.gluonhq.plugin.code.Code;
-import com.gluonhq.plugin.code.CodeFX;
-import com.gluonhq.plugin.netbeans.menu.ProjectUtils;
-import com.sun.source.tree.*;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.ModificationResult;
-import org.netbeans.api.java.source.TreeMaker;
-import org.openide.util.Exceptions;
-
-import javax.lang.model.element.Modifier;
+//import com.gluonhq.plugin.code.Code;
+//import com.gluonhq.plugin.code.CodeFX;
+//import com.gluonhq.plugin.netbeans.menu.ProjectUtils;
+//import com.sun.source.tree.*;
+//import javafx.application.Platform;
+//import javafx.embed.swing.JFXPanel;
+//import javafx.scene.Scene;
+//import org.netbeans.api.java.source.JavaSource;
+//import org.netbeans.api.java.source.JavaSource.Phase;
+//import org.netbeans.api.java.source.ModificationResult;
+//import org.netbeans.api.java.source.TreeMaker;
+//import org.openide.util.Exceptions;
+//
+//import javax.lang.model.element.Modifier;
 import javax.swing.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+//import java.io.IOException;
+//import java.util.ArrayList;
+//import java.util.Collections;
+//import java.util.List;
 
 public class JCode extends JFrame {
     
-    private final ProjectUtils utils;
+    /*private final ProjectUtils utils;
     private final JavaSource source;
 
     public JCode(ProjectUtils utils, JavaSource source) {
@@ -175,5 +175,5 @@ public class JCode extends JFrame {
             } catch (InterruptedException ex) { }
         }
     }
-    
+    */
 }

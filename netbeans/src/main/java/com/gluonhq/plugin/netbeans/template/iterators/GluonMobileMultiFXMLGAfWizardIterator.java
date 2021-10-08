@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonMobileMultiFXMLGAfWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileMultiFXMLGAfWizardIterator() {
-        super(GluonProject.MOBILE_MULTIVIEW_GAF);
+        super(GluonProject.MULTIVIEW_GAF);
     }
 
     public static GluonMobileMultiFXMLGAfWizardIterator createIterator() {

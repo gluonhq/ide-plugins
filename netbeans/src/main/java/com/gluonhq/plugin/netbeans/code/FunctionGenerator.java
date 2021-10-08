@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.gluonhq.plugin.netbeans.code;
-
+/*
 import com.gluonhq.plugin.netbeans.menu.ProjectUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.JavaSource;
@@ -43,19 +43,19 @@ import org.openide.util.Lookup;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import java.util.Collections;
-import java.util.List;
+import java.util.List;*/
 
-public class FunctionGenerator implements CodeGenerator {
+public class FunctionGenerator {/* implements CodeGenerator {
     
     private final ProjectUtils utils;
     private final JTextComponent textComp;
     private final boolean gluonMobile;
 
-    /**
+    *//**
      *
      * @param context containing JTextComponent
      * registered by {@link CodeGeneratorContextProvider}
-     */
+     *//*
     private FunctionGenerator(Lookup context) { 
         textComp = context.lookup(JTextComponent.class);
         Document document = textComp.getDocument();
@@ -91,19 +91,19 @@ public class FunctionGenerator implements CodeGenerator {
         
     }
 
-    /**
+    *//**
      * The name which will be inserted inside Insert Code dialog
      * @return 
-     */
+     *//*
     @Override
     public String getDisplayName() {
         return "Gluon Function...";
     }
 
-    /**
+    *//**
      * This will be invoked when user chooses this Generator from Insert Code
      * dialog
-     */
+     *//*
     @Override
     public void invoke() {
         try {
@@ -123,6 +123,6 @@ public class FunctionGenerator implements CodeGenerator {
         } catch (IllegalArgumentException ex) {
             Exceptions.printStackTrace(ex);
         }
-    }
+    }*/
     
 }

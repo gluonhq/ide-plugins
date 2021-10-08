@@ -2,6 +2,9 @@
 build/
 .gradle/
 
+# Maven
+target/
+
 # IntelliJ IDEA
 .idea/
 

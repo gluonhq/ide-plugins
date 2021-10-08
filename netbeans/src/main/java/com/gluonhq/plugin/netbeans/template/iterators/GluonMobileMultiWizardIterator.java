@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 public class GluonMobileMultiWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileMultiWizardIterator() {
-        super(GluonProject.MOBILE_MULTIVIEW);
+        super(GluonProject.MULTIVIEW);
     }
 
     public static GluonMobileMultiWizardIterator createIterator() {
