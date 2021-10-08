@@ -37,19 +37,6 @@
                    <includeAllDependencies>true</includeAllDependencies>
                 </configuration> -->
             </plugin>
-            <plugin>
-                <!-- 
-                    Can be removed after usage of internal classes
-                    are removed from JCode class
-                -->
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-compiler-plugin</artifactId>
-                <version>${tycho.plugin.version}</version>
-                    <configuration>
-                    <compilerArgument>-err:-forbidden</compilerArgument>
-                    <useProjectSettings>false</useProjectSettings>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <profiles>
