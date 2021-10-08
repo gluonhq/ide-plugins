@@ -63,8 +63,8 @@ public final class AddGluonFunctionAction implements ActionListener {
             return;
         }
 
-        JFunction jFunction = new JFunction(projectUtils);
-        projectUtils.showDialog(jFunction);
+        /*JFunction jFunction = new JFunction(projectUtils);
+        projectUtils.showDialog(jFunction);*/
     }
     
 }

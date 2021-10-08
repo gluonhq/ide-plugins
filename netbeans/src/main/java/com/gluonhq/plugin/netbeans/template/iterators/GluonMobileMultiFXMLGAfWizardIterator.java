@@ -41,7 +41,7 @@ import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
 @TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonMobileMultiFXMLGAf_displayName", description = "gluonMobileMultiFXMLGAfDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonMobile_16x16.png")
-@Messages("gluonMobileMultiFXMLGAf_displayName=Gluon Mobile - Glisten-Afterburner Project")
+@Messages("gluonMobileMultiFXMLGAf_displayName=Gluon - Glisten-Afterburner Project")
 public class GluonMobileMultiFXMLGAfWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileMultiFXMLGAfWizardIterator() {
