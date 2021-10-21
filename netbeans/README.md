@@ -11,7 +11,7 @@ The following Maven goals can be used to build and run the module in an instance
 Build the module:
 
 ```
-mvn install nbm:nbm
+mvn clean install nbm:nbm nbm:cluster
 ```
 
 Run NetBeans with this module:
