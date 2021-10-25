@@ -98,11 +98,11 @@
   <repositories>
     <repository>
       <id>gluon</id>
-      <url>http://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
+      <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
     </repository>
     <repository>
       <id>gluon-nexus</id>
-      <url>http://nexus.gluonhq.com/nexus/content/repositories/snapshots/</url>
+      <url>https://nexus.gluonhq.com/nexus/content/repositories/snapshots/</url>
     </repository>
   </repositories>
 
@@ -168,8 +168,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com:gluonhq/ide-plugins.git</connection>
-        <developerConnection>scm:git:ssh://github.com:gluonhq/ide-plugins.git</developerConnection>
+        <connection>scm:git:https://github.com/gluonhq/ide-plugins.git</connection>
+        <developerConnection>scm:git:https://github.com/gluonhq/ide-plugins.git</developerConnection>
         <url>https://github.com/gluonhq/ide-plugins</url>
         <tag>HEAD</tag>
     </scm>
