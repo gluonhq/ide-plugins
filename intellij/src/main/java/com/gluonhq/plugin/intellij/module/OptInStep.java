@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,14 +39,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class OptInStep  implements ChangeListener, DocumentListener {
+
     private JTextField emailAddress;
     private JCheckBox keepMeUpToCheckBox;
     private JPanel contentPanel;
     private JLabel emailAddressLabel;
     private JLabel label1;
     private JLabel errorLabel;
-    private JTextField mobileLicenseTextField;
-    private JTextField desktopLicenseTextField;
+    private JTextField gluonLicenseTextField;
     private ModulesProvider modulesProvider;
 
     public OptInStep(String moduleName, ModulesProvider modulesProvider) {
@@ -64,9 +64,9 @@ public class OptInStep  implements ChangeListener, DocumentListener {
         return emailAddress;
     }
 
-    public JTextField getMobileLicense() { return mobileLicenseTextField; }
-
-    public JTextField getDesktopLicense() { return desktopLicenseTextField; }
+    public JTextField getGluonLicense() {
+        return gluonLicenseTextField;
+    }
 
     public boolean getSubscribe() {
         return keepMeUpToCheckBox.isSelected();
@@ -93,7 +93,6 @@ public class OptInStep  implements ChangeListener, DocumentListener {
     }
 
     public boolean isValid() {
-
         boolean valid = TemplateUtils.isValidEmail(emailAddress.getText());
         errorLabel.setVisible(!valid);
         return valid;

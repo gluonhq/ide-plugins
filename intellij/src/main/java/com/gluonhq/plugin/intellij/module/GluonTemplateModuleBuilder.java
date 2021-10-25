@@ -104,26 +104,16 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
             OptInHelper.restoreOptIn(this);
         }
 
-        if (gluonProject.getType().equals(GluonProject.DESKTOP_SINGLE.getType()) ||
-                gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
-                gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
-            icon = GluonIcons.GLUON_DESKTOP;
-            steps.add(new GluonDesktopWizardStep(this, modulesProvider));
-            if (gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEW.getType()) ||
-                    gluonProject.getType().equals(GluonProject.DESKTOP_MULTIVIEWFXML.getType())) {
-                steps.add(new GluonViewWizardStep(this, modulesProvider, false));
-            }
-        } else {
-            icon = GluonIcons.GLUON_MOBILE;
-            steps.add(new GluonModuleWizardStep(this, modulesProvider));
-            if (gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW.getType()) ||
-                    gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()) ||
-                    gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())) {
-                steps.add(new GluonViewWizardStep(this, modulesProvider,
-                        gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEWFXML.getType()),
-                        gluonProject.getType().equals(GluonProject.MOBILE_MULTIVIEW_GAF.getType())));
-            }
+        icon = GluonIcons.GLUON_MODULE;
+        steps.add(new GluonModuleWizardStep(this, modulesProvider));
+        if (gluonProject.getType().equals(GluonProject.MULTIVIEW.getType()) ||
+                gluonProject.getType().equals(GluonProject.MULTIVIEW_FXML.getType()) ||
+                gluonProject.getType().equals(GluonProject.MULTIVIEW_GAF.getType())) {
+            steps.add(new GluonViewWizardStep(this, modulesProvider,
+                    gluonProject.getType().equals(GluonProject.MULTIVIEW_FXML.getType()),
+                    gluonProject.getType().equals(GluonProject.MULTIVIEW_GAF.getType())));
         }
+
         steps.add(new ChooseJavaSdkStep(wizardContext, this));
         return steps.toArray(new ModuleWizardStep[steps.size()]);
     }
@@ -177,8 +167,7 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         if (!OptInHelper.alreadyOptedIn()) {
             OptInHelper.persistOptIn((String) parameters.get(ProjectConstants.PARAM_USER_EMAIL),
                     Boolean.parseBoolean((String) parameters.get(ProjectConstants.PARAM_USER_UPTODATE)),
-                    (String) parameters.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE),
-                    (String) parameters.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP));
+                    (String) parameters.get(ProjectConstants.PARAM_USER_LICENSE));
 
             // only send once
             com.gluonhq.plugin.templates.OptInHelper.optIn((String) parameters.get(ProjectConstants.PARAM_USER_EMAIL),
@@ -193,11 +182,10 @@ public class GluonTemplateModuleBuilder extends JavaModuleBuilder {
         parameters.put(ProjectConstants.PARAM_JAVAFX_VERSION, ProjectConstants.getJavaFXVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_MAVEN_PLUGIN, ProjectConstants.getJavaFXMavenPluginVersion());
         parameters.put(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_DESKTOP_VERSION, ProjectConstants.getDesktopVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_MOBILE_VERSION, ProjectConstants.getMobileVersion());
+        parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_VERSION, ProjectConstants.getGlistenVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
-        parameters.put(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());
+        parameters.put(ProjectConstants.PARAM_GLUONFX_MAVEN_PLUGIN, ProjectConstants.getGluonFXMavenPluginVersion());
+        parameters.put(ProjectConstants.PARAM_GLUONFX_GRADLE_PLUGIN, ProjectConstants.getGluonFXGradlePluginVersion());
         parameters.put(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
 
         final File projectRoot = new File(project.getBasePath());
