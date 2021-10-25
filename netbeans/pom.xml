@@ -171,6 +171,7 @@
         <connection>scm:git:git://github.com:gluonhq/ide-plugins.git</connection>
         <developerConnection>scm:git:ssh://github.com:gluonhq/ide-plugins.git</developerConnection>
         <url>https://github.com/gluonhq/ide-plugins</url>
+        <tag>HEAD</tag>
     </scm>
     
     <distributionManagement>
@@ -201,6 +202,32 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <tagNameFormat>netbeans/@{project.version}</tagNameFormat>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <version>1.11.2</version>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>add</goal>
+                                    <goal>checkin</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>**/target/**</excludes>
+                                    <message>Changing the Netbeans files versions</message>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
