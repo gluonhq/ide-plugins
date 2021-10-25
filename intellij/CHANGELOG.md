@@ -1,5 +1,9 @@
 ## Changelog IntelliJ IDEA
 
+#### 2.8.6
+_2021-10-25
+* Plugin now supports Gluon Glisten v6.1.0 and Glisten Afterburner v2.1.0
+
 #### 2.8.5
 _2021-02-02
 * Remote templates
