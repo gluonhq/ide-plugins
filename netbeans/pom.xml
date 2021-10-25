@@ -94,7 +94,18 @@
       <version>${netbeans.api.version}</version>
     </dependency>
   </dependencies>
-  
+
+  <repositories>
+    <repository>
+      <id>gluon</id>
+      <url>http://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <id>gluon-nexus</id>
+      <url>http://nexus.gluonhq.com/nexus/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
         <plugin>

@@ -1,5 +1,9 @@
 ## Changelog NetBeans
 
+#### 2.8.4
+_2021-10-25_
+* Plugin now supports Gluon Glisten v6.1.0 and Glisten Afterburner v2.1.0
+
 #### 2.8.3
 _2020-02-02_
 * Remote templates
