@@ -41,11 +41,11 @@ import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
 @TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonMobileMultiFXML_displayName", description = "gluonMobileMultiFXMLDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonMobile_16x16.png")
-@Messages("gluonMobileMultiFXML_displayName=Gluon Mobile - Multi View Project (FXML)")
+@Messages("gluonMobileMultiFXML_displayName=Gluon - Multi View Project (FXML)")
 public class GluonMobileMultiFXMLWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileMultiFXMLWizardIterator() {
-        super(GluonProject.MOBILE_MULTIVIEWFXML);
+        super(GluonProject.MULTIVIEW_FXML);
     }
 
     public static GluonMobileMultiFXMLWizardIterator createIterator() {

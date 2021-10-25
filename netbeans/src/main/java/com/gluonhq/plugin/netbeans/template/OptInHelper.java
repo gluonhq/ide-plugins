@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,8 +46,7 @@ public class OptInHelper {
         if (alreadyOptedIn()) {
             wiz.putProperty(ProjectConstants.PARAM_USER_EMAIL, PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, ""));
             wiz.putProperty(ProjectConstants.PARAM_USER_UPTODATE, PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true));
-            wiz.putProperty(ProjectConstants.PARAM_USER_LICENSE_MOBILE, PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, ""));
-            wiz.putProperty(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, ""));
+            wiz.putProperty(ProjectConstants.PARAM_USER_LICENSE, PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, ""));
             wiz.putProperty(ProjectConstants.PARAM_USER_MAC_ADDRESS, PREFERENCES.get(ProjectConstants.PARAM_USER_MAC_ADDRESS, ""));
             wiz.putProperty(ProjectConstants.PARAM_USER_PLUGIN_VERSION, PREFERENCES.get(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION));
         }
@@ -57,12 +56,11 @@ public class OptInHelper {
         return "true".equals(PREFERENCES.get(ProjectConstants.PARAM_USER_IDE_OPTIN, ""));
     }
 
-    public static void persistOptIn(String email, boolean uptodate, String mobileLicense, String desktopLicense) {
+    public static void persistOptIn(String email, boolean uptodate, String gluonLicense) {
         PREFERENCES.put(ProjectConstants.PARAM_USER_IDE_OPTIN, "true");
         PREFERENCES.put(ProjectConstants.PARAM_USER_EMAIL, email);
         PREFERENCES.putBoolean(ProjectConstants.PARAM_USER_UPTODATE, uptodate);
-        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE_MOBILE, mobileLicense);
-        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, desktopLicense);
+        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE, gluonLicense);
         PREFERENCES.put(ProjectConstants.PARAM_USER_MAC_ADDRESS, TemplateUtils.getMacAddress());
         PREFERENCES.put(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
         try {

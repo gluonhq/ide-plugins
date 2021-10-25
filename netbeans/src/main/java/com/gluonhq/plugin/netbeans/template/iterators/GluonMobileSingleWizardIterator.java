@@ -40,11 +40,11 @@ import org.openide.util.NbBundle.Messages;
 
 // TODO define position attribute
 @TemplateRegistration(folder = "Project/Gluon", displayName = "#gluonMobileSingle_displayName", description = "gluonMobileSingleDescription.html", iconBase = "com/gluonhq/plugin/templates/icons/GluonMobile_16x16.png")
-@Messages("gluonMobileSingle_displayName=Gluon Mobile - Single View Project")
+@Messages("gluonMobileSingle_displayName=Gluon - Single View Project")
 public class GluonMobileSingleWizardIterator extends GluonBaseWizardIterator {
 
     private GluonMobileSingleWizardIterator() {
-        super(GluonProject.MOBILE_SINGLE);
+        super(GluonProject.SINGLEVIEW);
     }
 
     public static GluonMobileSingleWizardIterator createIterator() {

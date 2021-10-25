@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.gluonhq.plugin</groupId>
+  <artifactId>gluon-netbeans-module</artifactId>
+  <version>2.8.4-SNAPSHOT</version>
+  <packaging>nbm</packaging>
+
+  <name>Gluon Plugin for NetBeans</name>
+  <description>Gluon Plugin allows developers to create Java applications and their native images targeting Android, iOS, Linux, MacOS and Windows platforms using the same codebase.</description>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <netbeans.api.version>RELEASE110</netbeans.api.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <netbeans.installation.path>C:\\Program Files\\NetBeans-11.1\\netbeans\\</netbeans.installation.path>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.gluonhq</groupId>
+      <artifactId>ide-plugin-templates</artifactId>
+     <version>2.10.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-api-progress</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-api-progress-nb</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-modules</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-nodes</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-filesystems</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-awt</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-util</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-util-ui</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-util-lookup</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-projectapi</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-options-api</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-projectuiapi</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-dialogs</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-loaders</artifactId>
+      <version>${netbeans.api.version}</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.netbeans.utilities</groupId>
+            <artifactId>nbm-maven-plugin</artifactId>
+            <version>4.6</version>
+            <extensions>true</extensions>
+            <configuration>
+                <netbeansInstallation>${netbeans.installation.path}</netbeansInstallation>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+            <configuration>
+                <forceJavacCompilerUse>true</forceJavacCompilerUse>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+                <archive>
+                    <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                </archive>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+  
+  <url>https://github.com/gluonhq/ide-plugins</url>
+
+    <organization>
+        <name>Gluon</name>
+        <url>https://gluonhq.com/</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>BSD 3-clause "New" or "Revised" license</name>
+            <url>https://choosealicense.com/licenses/bsd-3-clause/</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Joeri Sykora</name>
+            <organization>Gluon</organization>
+            <organizationUrl>https://gluonhq.com/</organizationUrl>
+            <email>joeri.sykora@gluonhq.com</email>
+        </developer>
+        <developer>
+            <name>Abhinay Agarwal</name>
+            <organization>Gluon</organization>
+            <organizationUrl>https://gluonhq.com/</organizationUrl>
+            <email>abhinay.agarwal@gluonhq.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com:gluonhq/ide-plugins.git</connection>
+        <developerConnection>scm:git:ssh://github.com:gluonhq/ide-plugins.git</developerConnection>
+        <url>https://github.com/gluonhq/ide-plugins</url>
+    </scm>
+    
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <profiles>
+        <!-- GPG Signature on release -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+  
+</project>

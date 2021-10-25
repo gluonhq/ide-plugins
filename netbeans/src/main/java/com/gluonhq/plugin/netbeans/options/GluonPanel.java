@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Gluon Software
+ * Copyright (c) 2018, 2021, Gluon Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,8 +72,7 @@ final class GluonPanel extends JPanel {
         
         errorLabel.setVisible(false);
         jTextEmailAddress.getDocument().addDocumentListener(docListener);
-        jTextMobileLicense.getDocument().addDocumentListener(docListener);
-        jTextDesktopLicense.getDocument().addDocumentListener(docListener);
+        jTextGluonLicense.getDocument().addDocumentListener(docListener);
         jCheckUpToDate.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -92,16 +91,14 @@ final class GluonPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new JPanel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTextEmailAddress = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jCheckUpToDate = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         errorLabel = new javax.swing.JLabel();
-        jTextMobileLicense = new javax.swing.JTextField();
-        jTextDesktopLicense = new javax.swing.JTextField();
+        jTextGluonLicense = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.border.title"))); // NOI18N
         setLayout(new java.awt.BorderLayout());
@@ -116,14 +113,10 @@ final class GluonPanel extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.jLabel3.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.jLabel4.text")); // NOI18N
-
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         org.openide.awt.Mnemonics.setLocalizedText(errorLabel, org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.errorLabel.text")); // NOI18N
 
-        jTextMobileLicense.setText(org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.jTextMobileLicense.text")); // NOI18N
-
-        jTextDesktopLicense.setText(org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.jTextDesktopLicense.text")); // NOI18N
+        jTextGluonLicense.setText(org.openide.util.NbBundle.getMessage(GluonPanel.class, "GluonPanel.jTextGluonLicense.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -137,15 +130,13 @@ final class GluonPanel extends JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(55, 55, 55)
+                            .addComponent(jLabel3))
+                        .addGap(64, 64, 64)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jCheckUpToDate)
                             .addComponent(jTextEmailAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
-                            .addComponent(jTextMobileLicense)
-                            .addComponent(jTextDesktopLicense))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jTextGluonLicense))))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,12 +152,8 @@ final class GluonPanel extends JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextMobileLicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextDesktopLicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                    .addComponent(jTextGluonLicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addComponent(errorLabel)
                 .addGap(29, 29, 29))
         );
@@ -178,16 +165,14 @@ final class GluonPanel extends JPanel {
         // read settings and initialize GUI
         jTextEmailAddress.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, ""));
         jCheckUpToDate.setSelected(PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true));
-        jTextMobileLicense.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, ""));
-        jTextDesktopLicense.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, ""));
+        jTextGluonLicense.setText(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, ""));
     }
 
     void store() {
         boolean changed = false;
         if (!jTextEmailAddress.getText().equals(PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, "")) ||
             jCheckUpToDate.isSelected() != PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true) ||
-            !jTextMobileLicense.getText().equals(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, "")) ||
-            !jTextDesktopLicense.getText().equals(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, "")) ||
+            !jTextGluonLicense.getText().equals(PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, "")) ||
             PREFERENCES.get(ProjectConstants.PARAM_USER_MAC_ADDRESS, "").isEmpty() ||
             PREFERENCES.get(ProjectConstants.PARAM_USER_PLUGIN_VERSION, "").isEmpty()) {
             changed = true;
@@ -195,7 +180,7 @@ final class GluonPanel extends JPanel {
             
         // store modified settings
         OptInHelper.persistOptIn(jTextEmailAddress.getText(), jCheckUpToDate.isSelected(),
-                jTextMobileLicense.getText(), jTextDesktopLicense.getText());
+                jTextGluonLicense.getText());
         
         if (changed) {
             // send modified settings
@@ -217,10 +202,8 @@ final class GluonPanel extends JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private JPanel jPanel1;
-    private javax.swing.JTextField jTextDesktopLicense;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextEmailAddress;
-    private javax.swing.JTextField jTextMobileLicense;
+    private javax.swing.JTextField jTextGluonLicense;
     // End of variables declaration//GEN-END:variables
 }
