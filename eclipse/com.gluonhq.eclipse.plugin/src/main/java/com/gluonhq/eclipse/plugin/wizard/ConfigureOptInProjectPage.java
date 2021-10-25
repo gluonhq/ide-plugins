@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Gluon Software
+ * Copyright (c) 2017, 2021, Gluon Software
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -149,33 +149,10 @@ public class ConfigureOptInProjectPage extends WizardPage {
 			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			layoutData.grabExcessHorizontalSpace = true;
 			mobileLicense.setLayoutData(layoutData);
-			mobileLicense.setText(projectData.userMobileLicense);
-			mobileLicense.addModifyListener(new ModifyListener() {
-				
-				@Override
-				public void modifyText(ModifyEvent e) {
-					projectData.userMobileLicense = mobileLicense.getText();
-					validate();
-				}
-			});
-		}
-
-		{
-			Label l = new Label(container, SWT.NONE);
-			l.setText("Desktop License Key:");
-			
-			desktopLicense = new Text(container, SWT.BORDER);
-			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-			layoutData.grabExcessHorizontalSpace = true;
-			desktopLicense.setLayoutData(layoutData);
-			desktopLicense.setText(projectData.userDesktopLicense);
-			desktopLicense.addModifyListener(new ModifyListener() {
-				
-				@Override
-				public void modifyText(ModifyEvent e) {
-					projectData.userDesktopLicense = desktopLicense.getText();
-					validate();
-				}
+			mobileLicense.setText(projectData.userGluonLicense);
+			mobileLicense.addModifyListener(e -> {
+				projectData.userGluonLicense = mobileLicense.getText();
+				validate();
 			});
 		}
 

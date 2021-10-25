@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.gluonhq</groupId>
       <artifactId>ide-plugin-templates</artifactId>
-      <version>2.10.3</version>
+      <version>2.10.4-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
@@ -66,6 +66,14 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+            <source>8</source>
+            <target>8</target>
+        </configuration>
       </plugin>
     </plugins>
   </build>

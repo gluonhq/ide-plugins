@@ -51,7 +51,7 @@ public class GluonProjectMultiViewWizard extends GluonProjectWizard {
 	}
 
 	public GluonProjectMultiViewWizard() {
-		super(GluonProject.MOBILE_MULTIVIEW);
+		super(GluonProject.MULTIVIEW);
 	}
 
 	@Override

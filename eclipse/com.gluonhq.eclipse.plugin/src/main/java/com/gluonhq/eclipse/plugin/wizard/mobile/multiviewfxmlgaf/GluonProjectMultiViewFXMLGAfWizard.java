@@ -55,7 +55,7 @@ public class GluonProjectMultiViewFXMLGAfWizard extends GluonProjectWizard {
 	}
 
 	public GluonProjectMultiViewFXMLGAfWizard() {
-		super(GluonProject.MOBILE_MULTIVIEW_GAF);
+		super(GluonProject.MULTIVIEW_GAF);
 	}
 
 	@Override

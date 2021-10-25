@@ -45,8 +45,7 @@ public class ProjectData {
 	
 	public String userEmail = "";
 	public boolean userUptodate = true;
-	public String userMobileLicense = "";
-	public String userDesktopLicense = "";
+	public String userGluonLicense = "";
 	public String userMacAddress = "";
 	public String userPluginVersion = "";
 	
@@ -83,8 +82,7 @@ public class ProjectData {
 		if (alreadyOptedIn()) {
 			this.userEmail = PREFERENCES.get(ProjectConstants.PARAM_USER_EMAIL, "");
 			this.userUptodate = PREFERENCES.getBoolean(ProjectConstants.PARAM_USER_UPTODATE, true);
-			this.userMobileLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_MOBILE, "");
-			this.userDesktopLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, "");
+			this.userGluonLicense = PREFERENCES.get(ProjectConstants.PARAM_USER_LICENSE, "");
 			this.userMacAddress = PREFERENCES.get(ProjectConstants.PARAM_USER_MAC_ADDRESS, "");
 			this.userPluginVersion = PREFERENCES.get(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
 		}
@@ -95,8 +93,7 @@ public class ProjectData {
 		
 		parameters.put(ProjectConstants.PARAM_USER_EMAIL, userEmail);
 		parameters.put(ProjectConstants.PARAM_USER_UPTODATE, userUptodate);
-		parameters.put(ProjectConstants.PARAM_USER_LICENSE_MOBILE, userMobileLicense);
-		parameters.put(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, userDesktopLicense);
+		parameters.put(ProjectConstants.PARAM_USER_LICENSE, userGluonLicense);
 		parameters.put(ProjectConstants.PARAM_USER_MAC_ADDRESS, userMacAddress);
 		parameters.put(ProjectConstants.PARAM_USER_PLUGIN_VERSION, userPluginVersion);
 		
@@ -110,11 +107,9 @@ public class ProjectData {
 		parameters.put(ProjectConstants.PARAM_EMBEDDED_ENABLED, embeddedSelected);
 		parameters.put(ProjectConstants.PARAM_BUILD_TOOL, buildTool);
 		
-		if (this.projectType.equals(GluonProject.DESKTOP_MULTIVIEW) || 
-			this.projectType.equals(GluonProject.DESKTOP_MULTIVIEWFXML) || 
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW)     ||
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML) ||
-			this.projectType.equals(GluonProject.MOBILE_MULTIVIEW_GAF)) {
+		if (this.projectType.equals(GluonProject.MULTIVIEW)     ||
+			this.projectType.equals(GluonProject.MULTIVIEW_FXML) ||
+			this.projectType.equals(GluonProject.MULTIVIEW_GAF)) {
 			parameters.put(ProjectConstants.PARAM_PRIMARY_VIEW, primaryViewName);
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_VIEW, secondaryViewName);
 	        parameters.put(ProjectConstants.PARAM_PRIMARY_CSS, primaryViewCSS);
@@ -124,7 +119,7 @@ public class ProjectData {
 	        parameters.put(ProjectConstants.PARAM_SECONDARY_CSS_ENABLED, secondaryViewSelected);
 		}
 		
-		if (this.projectType.equals(GluonProject.MOBILE_MULTIVIEWFXML)) {
+		if (this.projectType.equals(GluonProject.MULTIVIEW_FXML)) {
 			parameters.put(ProjectConstants.PARAM_AFTERBURNER_ENABLED, afterburnerSelected);
 		}
 		
@@ -135,12 +130,11 @@ public class ProjectData {
         return "true".equals(PREFERENCES.get(ProjectConstants.PARAM_USER_IDE_OPTIN, ""));
     }
 	
-	public static void persistOptIn(String email, boolean uptodate, String mobileLicense, String desktopLicense) {
+	public static void persistOptIn(String email, boolean uptodate, String gluonLicense) {
         PREFERENCES.put(ProjectConstants.PARAM_USER_IDE_OPTIN, "true");
         PREFERENCES.put(ProjectConstants.PARAM_USER_EMAIL, email);
         PREFERENCES.putBoolean(ProjectConstants.PARAM_USER_UPTODATE, uptodate);
-        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE_MOBILE, mobileLicense);
-        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE_DESKTOP, desktopLicense);
+        PREFERENCES.put(ProjectConstants.PARAM_USER_LICENSE, gluonLicense);
         PREFERENCES.put(ProjectConstants.PARAM_USER_MAC_ADDRESS, TemplateUtils.getMacAddress());
         PREFERENCES.put(ProjectConstants.PARAM_USER_PLUGIN_VERSION, ProjectConstants.PLUGIN_VERSION);
 		try {
