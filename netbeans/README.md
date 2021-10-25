@@ -14,7 +14,7 @@ Build the module:
 mvn clean install nbm:nbm nbm:cluster
 ```
 
-Run NetBeans with this module:
+Run NetBeans with this module after updating `netbeansInstallation` in `nbm-maven-plugin` configuration to reflect local Netbeans installation path:
 
 ```
 mvn nbm:run-ide
