@@ -116,8 +116,8 @@ public abstract class GluonBaseWizardIterator implements WizardDescriptor.Progre
         wiz.putProperty(ProjectConstants.PARAM_JAVAFX_GRADLE_PLUGIN, ProjectConstants.getJavaFXGradlePluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_GLISTEN_VERSION, ProjectConstants.getGlistenVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_ATTACH_VERSION, ProjectConstants.getAttachVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_MAVEN_PLUGIN, ProjectConstants.getClientMavenPluginVersion());
-        wiz.putProperty(ProjectConstants.PARAM_GLUON_CLIENT_GRADLE_PLUGIN, ProjectConstants.getClientGradlePluginVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUONFX_MAVEN_PLUGIN, ProjectConstants.getGluonFXMavenPluginVersion());
+        wiz.putProperty(ProjectConstants.PARAM_GLUONFX_GRADLE_PLUGIN, ProjectConstants.getGluonFXGradlePluginVersion());
         wiz.putProperty(ProjectConstants.PARAM_GLUON_GLISTEN_AFTERBURNER_VERSION, ProjectConstants.getGlistenAfterburnerVersion());
 
         handle.start();
