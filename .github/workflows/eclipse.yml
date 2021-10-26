@@ -1,0 +1,43 @@
+name: Release Eclipse Plugin
+on:
+  push:
+    tags:
+      - 'eclipse/*'
+
+jobs:
+  build:
+    name: eclipse
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 5
+          persist-credentials: false
+
+      - name: Setup Java 8 and Apache Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: 'temurin'
+
+      - name: Configure GIT
+        run: |
+          git config --global user.name "Gluon Bot"
+          git config --global user.email "githubbot@gluonhq.com"
+          
+      - name: Download jks
+        run: |
+          aws s3 cp s3://download.gluonhq.com/ideplugins/assets/OS201612134678.jks eclipse/ --region us-east-1 --debug
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+
+      - name: Publish to Maven Central
+        run: |
+          TAG=${GITHUB_REF/refs\/tags\//}
+          TAG_VERSION=$(echo $TAG | cut -d/ -f2)
+          NEXT_VERSION=${TAG_VERSION%.*}.$((${TAG_VERSION##*.} + 1))
+          mvn -f eclipse/pom.xml -Dusername=gluon-bot -Dpassword=$PAT release:prepare -Prelease,latest -DreleaseVersion=$TAG_VERSION -DdevelopmentVersion=$NEXT_VERSION -Dtag=eclipse/$TAG_VERSION"
+        env:
+          PAT: ${{ secrets.PAT }}
