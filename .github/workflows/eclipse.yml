@@ -20,6 +20,11 @@ jobs:
         with:
           java-version: 8
           distribution: 'temurin'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Configure GIT
         run: |
@@ -32,12 +37,33 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          
+      - name: Update feature and manifest 
+        run: |
+          mvn -f eclipse org.eclipse.tycho:tycho-versions-plugin:1.6.0:update-eclipse-metadata
+          git add .
+          git commit -m "Update metadata to current release version"
+          
+      - name: Publish to Maven Central
+        id: deploy
+        run: |
+          mvn -f eclipse deploy -DskipTests=true -B -U -Prelease
+          echo ::set-output name=exit_code::$?
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Maven Central
         run: |
           TAG=${GITHUB_REF/refs\/tags\//}
           TAG_VERSION=$(echo $TAG | cut -d/ -f2)
           NEXT_VERSION=${TAG_VERSION%.*}.$((${TAG_VERSION##*.} + 1))
-          mvn -f eclipse/pom.xml -Dusername=gluon-bot -Dpassword=$PAT release:prepare -Prelease,latest -DreleaseVersion=$TAG_VERSION -DdevelopmentVersion=$NEXT_VERSION -Dtag=eclipse/$TAG_VERSION"
+          echo "Update eclipse version to next snapshot version"
+          mvn -f eclipse versions:set -DnewVersion=$NEXT_VERSION-SNAPSHOT -DgenerateBackupPoms=false
+          mvn -f eclipse org.eclipse.tycho:tycho-versions-plugin:1.6.0:update-eclipse-metadata
+          git add .
+          git commit -m "Prepare development of $NEXT_VERSION"
+          git push https://gluon-bot:$PAT@github.com/$GITHUB_REPOSITORY HEAD:master
         env:
           PAT: ${{ secrets.PAT }}
