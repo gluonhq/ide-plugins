@@ -29,7 +29,9 @@ jobs:
       - name: Publish to IntelliJ Marketplace
         run: |
           chmod +x intellij/gradlew
-          ./gradlew clean publishPlugin -p intellij
+          ./gradlew clean publishPlugin -p intellij -Dorg.gradle.project.intellijPublishToken=$HUB_TOKEN
+        env:
+          HUB_TOKEN: ${{ secrets.JETBRAINS_HUB_TOKEN }}
 
       - name: Commit next development version
         if: steps.deploy.outputs.exit_code == 0
