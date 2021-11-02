@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: com.gluon.plugin.netbeans
 OpenIDE-Module-Localizing-Bundle: com/gluonhq/plugin/netbeans/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.2.0
+OpenIDE-Module-Specification-Version: 2.8.4
 OpenIDE-Module-Java-Dependencies: Java > 1.8
