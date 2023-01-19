@@ -15,10 +15,10 @@ jobs:
           fetch-depth: 5
           persist-credentials: false
 
-      - name: Setup Java 8 and Apache Maven
-        uses: actions/setup-java@v2
+      - name: Setup Java 17 and Apache Maven
+        uses: actions/setup-java@v3
         with:
-          java-version: 8
+          java-version: 17
           distribution: 'temurin'
           server-id: ossrh
           server-username: MAVEN_USERNAME
