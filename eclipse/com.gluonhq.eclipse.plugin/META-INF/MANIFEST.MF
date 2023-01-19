@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.gluonhq.eclipse.plugin;singleton:=true
 Bundle-Version: 2.8.4.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: com.gluonhq.eclipse.plugin.UiPlugin
 Require-Bundle: org.eclipse.buildship.core;bundle-version="[3.0.1,4.0.0)",
  org.eclipse.m2e.core,
@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.buildship.core;bundle-version="[3.0.1,4.0.0)",
  org.eclipse.jface.databinding,
  org.eclipse.jface.text,
  com.ibm.icu,
- com.google.guava;bundle-version="[21.0.0,27.1.0)",
+ com.google.guava;bundle-version="[21.0.0,30.1.0)",
  org.eclipse.ui.workbench.texteditor
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
